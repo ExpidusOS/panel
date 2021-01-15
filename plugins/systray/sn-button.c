@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@xfce.org>
- *  Copyright (c) 2017      Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@expidus.org>
+ *  Copyright (c) 2017      Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -146,7 +146,7 @@ sn_button_init (SnButton *button)
 SnItem *
 sn_button_get_item (SnButton *button)
 {
-  g_return_val_if_fail (XFCE_IS_SN_BUTTON (button), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_BUTTON (button), NULL);
 
   return button->item;
 }
@@ -156,7 +156,7 @@ sn_button_get_item (SnButton *button)
 const gchar *
 sn_button_get_name (SnButton *button)
 {
-  g_return_val_if_fail (XFCE_IS_SN_BUTTON (button), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_BUTTON (button), NULL);
 
   return sn_item_get_name (button->item);
 }
@@ -169,10 +169,10 @@ sn_button_new (SnItem              *item,
                gpointer             pos_func_data,
                SnConfig            *config)
 {
-  SnButton *button = g_object_new (XFCE_TYPE_SN_BUTTON, NULL);
+  SnButton *button = g_object_new (EXPIDUS_TYPE_SN_BUTTON, NULL);
 
-  g_return_val_if_fail (XFCE_IS_SN_ITEM (item), NULL);
-  g_return_val_if_fail (XFCE_IS_SN_CONFIG (config), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_ITEM (item), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_CONFIG (config), NULL);
 
   button->item = item;
   button->config = config;
@@ -201,7 +201,7 @@ sn_button_new (SnItem              *item,
 static void
 sn_button_finalize (GObject *object)
 {
-  SnButton *button = XFCE_SN_BUTTON (object);
+  SnButton *button = EXPIDUS_SN_BUTTON (object);
 
   if (button->menu_deactivate_handler != 0)
     g_signal_handler_disconnect (button->menu, button->menu_deactivate_handler);
@@ -221,7 +221,7 @@ static void
 sn_button_menu_deactivate (GtkWidget *widget,
                            GtkMenu   *menu)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
 
   if (button->menu_deactivate_handler != 0)
   {
@@ -238,7 +238,7 @@ static gboolean
 sn_button_button_press (GtkWidget      *widget,
                         GdkEventButton *event)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
   gboolean  menu_is_primary;
 
   menu_is_primary = sn_config_get_menu_is_primary (button->config);
@@ -295,7 +295,7 @@ static gboolean
 sn_button_button_release (GtkWidget      *widget,
                           GdkEventButton *event)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
   gboolean  menu_is_primary;
 
   menu_is_primary = sn_config_get_menu_is_primary (button->config);
@@ -326,7 +326,7 @@ static gboolean
 sn_button_scroll_event (GtkWidget      *widget,
                         GdkEventScroll *event)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
   gdouble   delta_x, delta_y;
 
   if (!gdk_event_get_scroll_deltas ((GdkEvent *)event, &delta_x, &delta_y))
@@ -365,7 +365,7 @@ sn_button_menu_size_changed_idle (gpointer user_data)
 static void
 sn_button_menu_size_changed (GtkWidget *widget)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
 
   /* defer gtk_menu_reposition call since it may not work in size event handler */
   if (button->menu_size_allocate_idle_handler == 0)
@@ -381,7 +381,7 @@ static void
 sn_button_menu_changed (GtkWidget *widget,
                         SnItem    *item)
 {
-  SnButton *button = XFCE_SN_BUTTON (widget);
+  SnButton *button = EXPIDUS_SN_BUTTON (widget);
 
   if (button->menu != NULL)
     {
@@ -432,7 +432,7 @@ sn_button_query_tooltip (GtkWidget  *widget,
                          GtkTooltip *tooltip,
                          gpointer    user_data)
 {
-  SnButton    *button = XFCE_SN_BUTTON (widget);
+  SnButton    *button = EXPIDUS_SN_BUTTON (widget);
   const gchar *tooltip_title;
   const gchar *tooltip_subtitle;
   gchar       *full;

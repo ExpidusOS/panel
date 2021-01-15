@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -285,7 +285,7 @@ sn_item_init (SnItem *item)
 static void
 sn_item_finalize (GObject *object)
 {
-  SnItem *item = XFCE_SN_ITEM (object);
+  SnItem *item = EXPIDUS_SN_ITEM (object);
 
   g_object_unref (item->cancellable);
 
@@ -336,7 +336,7 @@ sn_item_get_property (GObject    *object,
                       GValue     *value,
                       GParamSpec *pspec)
 {
-  SnItem *item = XFCE_SN_ITEM (object);
+  SnItem *item = EXPIDUS_SN_ITEM (object);
 
   switch (prop_id)
     {
@@ -362,7 +362,7 @@ sn_item_set_property (GObject      *object,
                       const GValue *value,
                       GParamSpec   *pspec)
 {
-  SnItem *item = XFCE_SN_ITEM (object);
+  SnItem *item = EXPIDUS_SN_ITEM (object);
 
   switch (prop_id)
     {
@@ -500,7 +500,7 @@ sn_item_start_failed (gpointer user_data)
 void
 sn_item_start (SnItem *item)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (!item->started);
 
   if (!g_dbus_is_name (item->bus_name))
@@ -547,7 +547,7 @@ sn_item_perform_invalidate (gpointer user_data)
 void
 sn_item_invalidate (SnItem *item)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->properties_proxy != NULL);
 
   /* same approach as in Plasma Workspace */
@@ -905,7 +905,7 @@ sn_item_get_all_properties_result (GObject      *source_object,
 const gchar *
 sn_item_get_name (SnItem *item)
 {
-  g_return_val_if_fail (XFCE_IS_SN_ITEM (item), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_ITEM (item), NULL);
   g_return_val_if_fail (item->initialized, NULL);
 
   return item->id;
@@ -921,7 +921,7 @@ sn_item_get_icon (SnItem       *item,
                   const gchar **overlay_icon_name,
                   GdkPixbuf   **overlay_icon_pixbuf)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->initialized);
 
   if (icon_name != NULL)
@@ -957,7 +957,7 @@ sn_item_get_tooltip (SnItem       *item,
 {
   gchar *stub;
 
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->initialized);
 
   if (title == NULL)
@@ -1034,7 +1034,7 @@ sn_item_get_tooltip (SnItem       *item,
 gboolean
 sn_item_is_menu_only (SnItem *item)
 {
-  g_return_val_if_fail (XFCE_IS_SN_ITEM (item), FALSE);
+  g_return_val_if_fail (EXPIDUS_IS_SN_ITEM (item), FALSE);
   g_return_val_if_fail (item->initialized, FALSE);
 
   return item->item_is_menu;
@@ -1048,7 +1048,7 @@ sn_item_get_menu (SnItem *item)
   #ifdef HAVE_DBUSMENU
   DbusmenuGtkMenu *menu;
 
-  g_return_val_if_fail (XFCE_IS_SN_ITEM (item), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_ITEM (item), NULL);
   g_return_val_if_fail (item->initialized, NULL);
 
   if (item->cached_menu == NULL && item->menu_object_path != NULL)
@@ -1074,7 +1074,7 @@ sn_item_activate (SnItem *item,
                   gint    x_root,
                   gint    y_root)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->initialized);
   g_return_if_fail (item->item_proxy != NULL);
 
@@ -1091,7 +1091,7 @@ sn_item_secondary_activate (SnItem *item,
                             gint    x_root,
                             gint    y_root)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->initialized);
   g_return_if_fail (item->item_proxy != NULL);
 
@@ -1108,7 +1108,7 @@ sn_item_scroll (SnItem *item,
                 gint    delta_x,
                 gint    delta_y)
 {
-  g_return_if_fail (XFCE_IS_SN_ITEM (item));
+  g_return_if_fail (EXPIDUS_IS_SN_ITEM (item));
   g_return_if_fail (item->initialized);
   g_return_if_fail (item->item_proxy != NULL);
 

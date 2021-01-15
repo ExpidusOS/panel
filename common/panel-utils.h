@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,14 +20,14 @@
 #define __PANEL_BUILDER_H__
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
-/* Hook to make sure GtkBuilder knows are the XfceTitledDialog object */
+/* Hook to make sure GtkBuilder knows are the ExpidusTitledDialog object */
 #define PANEL_UTILS_LINK_4UI \
-  if (xfce_titled_dialog_get_type () == 0) \
+  if (expidus_titled_dialog_get_type () == 0) \
     return;
 
-GtkBuilder *panel_utils_builder_new    (XfcePanelPlugin  *panel_plugin,
+GtkBuilder *panel_utils_builder_new    (ExpidusPanelPlugin  *panel_plugin,
                                         const gchar      *buffer,
                                         gsize             length,
                                         GObject         **dialog_return) G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;

@@ -1,11 +1,11 @@
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
-	-DG_LOG_DOMAIN=\"xfce4-panel-wrapper\" \
+	-DG_LOG_DOMAIN=\"expidus1-panel-wrapper\" \
 	-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
 	$(PLATFORM_CPPFLAGS)
 
-wrapperdir = $(HELPER_PATH_PREFIX)/xfce4/panel
+wrapperdir = $(HELPER_PATH_PREFIX)/expidus1/panel
 
 wrapper_PROGRAMS = \
 	wrapper-2.0
@@ -21,7 +21,7 @@ wrapper_2_0_CFLAGS = \
 	$(GTK_CFLAGS) \
 	$(GIO_CFLAGS) \
 	$(GMODULE_CFLAGS) \
-	$(LIBXFCE4UTIL_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 wrapper_2_0_LDFLAGS = \
@@ -29,14 +29,14 @@ wrapper_2_0_LDFLAGS = \
 	$(PLATFORM_LDFLAGS)
 
 wrapper_2_0_LDADD = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(GTK_LIBS) \
 	$(GIO_LIBS) \
 	$(GMODULE_LIBS) \
-	$(LIBXFCE4UTIL_LIBS)
+	$(LIBEXPIDUS1UTIL_LIBS)
 
 wrapper_2_0_DEPENDENCIES = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la
 
 if MAINTAINER_MODE
 

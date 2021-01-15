@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,12 @@
 #include <time.h>
 #endif
 
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
 
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include <panel/panel-module.h>
 #include <panel/panel-module-factory.h>
@@ -276,8 +276,8 @@ panel_module_factory_unique_id_exists (PanelModuleFactory *factory,
   GSList *li;
 
   for (li = factory->plugins; li != NULL; li = li->next)
-    if (xfce_panel_plugin_provider_get_unique_id (
-        XFCE_PANEL_PLUGIN_PROVIDER (li->data)) == unique_id)
+    if (expidus_panel_plugin_provider_get_unique_id (
+        EXPIDUS_PANEL_PLUGIN_PROVIDER (li->data)) == unique_id)
       return TRUE;
 
   return FALSE;
@@ -389,17 +389,17 @@ panel_module_factory_get_plugins (PanelModuleFactory *factory,
   /* first assume a global plugin name is provided (ie. no name with id) */
   for (li = factory->plugins; li != NULL; li = li->next)
     {
-      panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (li->data), NULL);
-      if (strcmp (xfce_panel_plugin_provider_get_name (li->data), plugin_name) == 0)
+      panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (li->data), NULL);
+      if (strcmp (expidus_panel_plugin_provider_get_name (li->data), plugin_name) == 0)
         plugins = g_slist_prepend (plugins, li->data);
     }
 
   /* try the unique plugin name (with id) if nothing is found */
   for (li = factory->plugins; plugins == NULL && li != NULL; li = li->next)
     {
-      panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (li->data), NULL);
-      unique_name = g_strdup_printf ("%s-%d", xfce_panel_plugin_provider_get_name (li->data),
-                                     xfce_panel_plugin_provider_get_unique_id (li->data));
+      panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (li->data), NULL);
+      unique_name = g_strdup_printf ("%s-%d", expidus_panel_plugin_provider_get_name (li->data),
+                                     expidus_panel_plugin_provider_get_unique_id (li->data));
 
       if (strcmp (unique_name, plugin_name) == 0)
         plugins = g_slist_prepend (plugins, li->data);

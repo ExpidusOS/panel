@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -33,18 +33,18 @@
 
 
 
-static void      xfce_clock_binary_set_property  (GObject              *object,
+static void      expidus_clock_binary_set_property  (GObject              *object,
                                                   guint                 prop_id,
                                                   const GValue         *value,
                                                   GParamSpec           *pspec);
-static void      xfce_clock_binary_get_property  (GObject              *object,
+static void      expidus_clock_binary_get_property  (GObject              *object,
                                                   guint                 prop_id,
                                                   GValue               *value,
                                                   GParamSpec           *pspec);
-static void      xfce_clock_binary_finalize      (GObject              *object);
-static gboolean  xfce_clock_binary_draw          (GtkWidget            *widget,
+static void      expidus_clock_binary_finalize      (GObject              *object);
+static gboolean  expidus_clock_binary_draw          (GtkWidget            *widget,
                                                   cairo_t              *cr);
-static gboolean  xfce_clock_binary_update        (XfceClockBinary      *binary,
+static gboolean  expidus_clock_binary_update        (ExpidusClockBinary      *binary,
                                                   ClockTime            *time);
 
 
@@ -61,12 +61,12 @@ enum
   PROP_ORIENTATION
 };
 
-struct _XfceClockBinaryClass
+struct _ExpidusClockBinaryClass
 {
   GtkImageClass __parent__;
 };
 
-struct _XfceClockBinary
+struct _ExpidusClockBinary
 {
   GtkImage  __parent__;
 
@@ -82,23 +82,23 @@ struct _XfceClockBinary
 
 
 
-XFCE_PANEL_DEFINE_TYPE (XfceClockBinary, xfce_clock_binary, GTK_TYPE_IMAGE)
+EXPIDUS_PANEL_DEFINE_TYPE (ExpidusClockBinary, expidus_clock_binary, GTK_TYPE_IMAGE)
 
 
 
 static void
-xfce_clock_binary_class_init (XfceClockBinaryClass *klass)
+expidus_clock_binary_class_init (ExpidusClockBinaryClass *klass)
 {
   GObjectClass   *gobject_class;
   GtkWidgetClass *gtkwidget_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
-  gobject_class->set_property = xfce_clock_binary_set_property;
-  gobject_class->get_property = xfce_clock_binary_get_property;
-  gobject_class->finalize = xfce_clock_binary_finalize;
+  gobject_class->set_property = expidus_clock_binary_set_property;
+  gobject_class->get_property = expidus_clock_binary_get_property;
+  gobject_class->finalize = expidus_clock_binary_finalize;
 
   gtkwidget_class = GTK_WIDGET_CLASS (klass);
-  gtkwidget_class->draw = xfce_clock_binary_draw;
+  gtkwidget_class->draw = expidus_clock_binary_draw;
 
   g_object_class_install_property (gobject_class,
                                    PROP_SIZE_RATIO,
@@ -147,7 +147,7 @@ xfce_clock_binary_class_init (XfceClockBinaryClass *klass)
 
 
 static void
-xfce_clock_binary_init (XfceClockBinary *binary)
+expidus_clock_binary_init (ExpidusClockBinary *binary)
 {
   binary->show_seconds = FALSE;
   binary->true_binary = FALSE;
@@ -159,12 +159,12 @@ xfce_clock_binary_init (XfceClockBinary *binary)
 
 
 static void
-xfce_clock_binary_set_property (GObject      *object,
+expidus_clock_binary_set_property (GObject      *object,
                                 guint         prop_id,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-  XfceClockBinary *binary = XFCE_CLOCK_BINARY (object);
+  ExpidusClockBinary *binary = EXPIDUS_CLOCK_BINARY (object);
 
   switch (prop_id)
     {
@@ -203,12 +203,12 @@ xfce_clock_binary_set_property (GObject      *object,
 
 
 static void
-xfce_clock_binary_get_property (GObject    *object,
+expidus_clock_binary_get_property (GObject    *object,
                                 guint       prop_id,
                                 GValue     *value,
                                 GParamSpec *pspec)
 {
-  XfceClockBinary *binary = XFCE_CLOCK_BINARY (object);
+  ExpidusClockBinary *binary = EXPIDUS_CLOCK_BINARY (object);
   gdouble          ratio;
 
   switch (prop_id)
@@ -246,18 +246,18 @@ xfce_clock_binary_get_property (GObject    *object,
 
 
 static void
-xfce_clock_binary_finalize (GObject *object)
+expidus_clock_binary_finalize (GObject *object)
 {
   /* stop the timeout */
-  clock_time_timeout_free (XFCE_CLOCK_BINARY (object)->timeout);
+  clock_time_timeout_free (EXPIDUS_CLOCK_BINARY (object)->timeout);
 
-  (*G_OBJECT_CLASS (xfce_clock_binary_parent_class)->finalize) (object);
+  (*G_OBJECT_CLASS (expidus_clock_binary_parent_class)->finalize) (object);
 }
 
 
 
 static void
-xfce_clock_binary_draw_true_binary (XfceClockBinary *binary,
+expidus_clock_binary_draw_true_binary (ExpidusClockBinary *binary,
                                     cairo_t         *cr,
                                     GtkAllocation   *alloc)
 {
@@ -353,7 +353,7 @@ xfce_clock_binary_draw_true_binary (XfceClockBinary *binary,
 
 
 static void
-xfce_clock_binary_draw_binary (XfceClockBinary *binary,
+expidus_clock_binary_draw_binary (ExpidusClockBinary *binary,
                                      cairo_t         *cr,
                                      GtkAllocation   *alloc)
 {
@@ -451,10 +451,10 @@ xfce_clock_binary_draw_binary (XfceClockBinary *binary,
 
 
 static gboolean
-xfce_clock_binary_draw (GtkWidget *widget,
+expidus_clock_binary_draw (GtkWidget *widget,
                         cairo_t   *cr)
 {
-  XfceClockBinary  *binary = XFCE_CLOCK_BINARY (widget);
+  ExpidusClockBinary  *binary = EXPIDUS_CLOCK_BINARY (widget);
   gint              col, cols;
   gint              row, rows;
   GtkAllocation     alloc;
@@ -467,7 +467,7 @@ xfce_clock_binary_draw (GtkWidget *widget,
   GdkRGBA           grid_rgba;
   GtkBorder         padding;
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_BINARY (binary), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_BINARY (binary), FALSE);
   //panel_return_val_if_fail (gtk_widget_get_has_window (widget), FALSE);
   panel_return_val_if_fail (cr != NULL, FALSE);
 
@@ -530,9 +530,9 @@ xfce_clock_binary_draw (GtkWidget *widget,
     }
 
   if (binary->true_binary)
-    xfce_clock_binary_draw_true_binary (binary, cr, &alloc);
+    expidus_clock_binary_draw_true_binary (binary, cr, &alloc);
   else
-    xfce_clock_binary_draw_binary (binary, cr, &alloc);
+    expidus_clock_binary_draw_binary (binary, cr, &alloc);
 
   return FALSE;
 }
@@ -540,12 +540,12 @@ xfce_clock_binary_draw (GtkWidget *widget,
 
 
 static gboolean
-xfce_clock_binary_update (XfceClockBinary     *binary,
+expidus_clock_binary_update (ExpidusClockBinary     *binary,
                           ClockTime           *time)
 {
   GtkWidget *widget = GTK_WIDGET (binary);
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_BINARY (binary), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_BINARY (binary), FALSE);
 
   /* update if the widget if visible */
   if (G_LIKELY (gtk_widget_get_visible (widget)))
@@ -557,14 +557,14 @@ xfce_clock_binary_update (XfceClockBinary     *binary,
 
 
 GtkWidget *
-xfce_clock_binary_new (ClockTime *time)
+expidus_clock_binary_new (ClockTime *time)
 {
-  XfceClockBinary *binary = g_object_new (XFCE_CLOCK_TYPE_BINARY, NULL);
+  ExpidusClockBinary *binary = g_object_new (EXPIDUS_CLOCK_TYPE_BINARY, NULL);
 
   binary->time = time;
   binary->timeout = clock_time_timeout_new (CLOCK_INTERVAL_MINUTE,
                                             binary->time,
-                                            G_CALLBACK (xfce_clock_binary_update), binary);
+                                            G_CALLBACK (expidus_clock_binary_update), binary);
 
   return GTK_WIDGET (binary);
 }

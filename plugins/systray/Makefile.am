@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"libsystray\" \
 	$(PLATFORM_CPPFLAGS)
 
-plugindir = $(libdir)/xfce4/panel/plugins
+plugindir = $(libdir)/expidus1/panel/plugins
 
 # Keep the legacy "systray" name to ease the migration for users
 plugin_LTLIBRARIES = \
@@ -49,9 +49,9 @@ libsystray_la_SOURCES = \
 libsystray_la_CFLAGS = \
 	$(LIBX11_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(XFCONF_CFLAGS) \
-	$(LIBXFCE4UTIL_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
+	$(ESCONF_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
 	$(PLATFORM_CFLAGS) \
 	$(DBUSMENU_CFLAGS)
 
@@ -59,27 +59,27 @@ libsystray_la_LDFLAGS = \
 	-avoid-version \
 	-module \
 	-no-undefined \
-	-export-symbols-regex '^xfce_panel_module_(preinit|init|construct)' \
+	-export-symbols-regex '^expidus_panel_module_(preinit|init|construct)' \
 	$(PLATFORM_LDFLAGS)
 
 libsystray_la_LIBADD = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la \
 	$(LIBX11_LIBS) \
 	$(GTK_LIBS) \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(LIBXFCE4UI_LIBS) \
-	$(XFCONF_LIBS) \
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(LIBEXPIDUS1UI_LIBS) \
+	$(ESCONF_LIBS) \
 	$(DBUSMENU_LIBS)
 
 libsystray_la_DEPENDENCIES = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la
 
 #
 # .desktop file
 #
-desktopdir = $(datadir)/xfce4/panel/plugins
+desktopdir = $(datadir)/expidus1/panel/plugins
 desktop_in_files = systray.desktop.in.in
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@

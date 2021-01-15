@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -37,28 +37,28 @@
 
 
 
-static void      xfce_clock_lcd_set_property (GObject           *object,
+static void      expidus_clock_lcd_set_property (GObject           *object,
                                               guint              prop_id,
                                               const GValue      *value,
                                               GParamSpec        *pspec);
-static void      xfce_clock_lcd_get_property (GObject           *object,
+static void      expidus_clock_lcd_get_property (GObject           *object,
                                               guint              prop_id,
                                               GValue            *value,
                                               GParamSpec        *pspec);
-static void      xfce_clock_lcd_finalize     (GObject           *object);
-static gboolean  xfce_clock_lcd_draw         (GtkWidget         *widget,
+static void      expidus_clock_lcd_finalize     (GObject           *object);
+static gboolean  expidus_clock_lcd_draw         (GtkWidget         *widget,
                                               cairo_t           *cr);
-static gdouble   xfce_clock_lcd_get_ratio    (XfceClockLcd      *lcd);
-static gdouble   xfce_clock_lcd_draw_dots    (cairo_t           *cr,
+static gdouble   expidus_clock_lcd_get_ratio    (ExpidusClockLcd      *lcd);
+static gdouble   expidus_clock_lcd_draw_dots    (cairo_t           *cr,
                                               gdouble            size,
                                               gdouble            offset_x,
                                               gdouble            offset_y);
-static gdouble   xfce_clock_lcd_draw_digit   (cairo_t           *cr,
+static gdouble   expidus_clock_lcd_draw_digit   (cairo_t           *cr,
                                               guint              number,
                                               gdouble            size,
                                               gdouble            offset_x,
                                               gdouble            offset_y);
-static gboolean  xfce_clock_lcd_update       (XfceClockLcd      *lcd,
+static gboolean  expidus_clock_lcd_update       (ExpidusClockLcd      *lcd,
                                               ClockTime         *time);
 
 
@@ -75,12 +75,12 @@ enum
   PROP_ORIENTATION
 };
 
-struct _XfceClockLcdClass
+struct _ExpidusClockLcdClass
 {
   GtkImageClass __parent__;
 };
 
-struct _XfceClockLcd
+struct _ExpidusClockLcd
 {
   GtkImage __parent__;
 
@@ -103,23 +103,23 @@ LcdPoint;
 
 
 
-XFCE_PANEL_DEFINE_TYPE (XfceClockLcd, xfce_clock_lcd, GTK_TYPE_IMAGE)
+EXPIDUS_PANEL_DEFINE_TYPE (ExpidusClockLcd, expidus_clock_lcd, GTK_TYPE_IMAGE)
 
 
 
 static void
-xfce_clock_lcd_class_init (XfceClockLcdClass *klass)
+expidus_clock_lcd_class_init (ExpidusClockLcdClass *klass)
 {
   GObjectClass   *gobject_class;
   GtkWidgetClass *gtkwidget_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
-  gobject_class->set_property = xfce_clock_lcd_set_property;
-  gobject_class->get_property = xfce_clock_lcd_get_property;
-  gobject_class->finalize = xfce_clock_lcd_finalize;
+  gobject_class->set_property = expidus_clock_lcd_set_property;
+  gobject_class->get_property = expidus_clock_lcd_get_property;
+  gobject_class->finalize = expidus_clock_lcd_finalize;
 
   gtkwidget_class = GTK_WIDGET_CLASS (klass);
-  gtkwidget_class->draw = xfce_clock_lcd_draw;
+  gtkwidget_class->draw = expidus_clock_lcd_draw;
 
   g_object_class_install_property (gobject_class,
                                    PROP_SIZE_RATIO,
@@ -168,7 +168,7 @@ xfce_clock_lcd_class_init (XfceClockLcdClass *klass)
 
 
 static void
-xfce_clock_lcd_init (XfceClockLcd *lcd)
+expidus_clock_lcd_init (ExpidusClockLcd *lcd)
 {
   lcd->show_seconds = FALSE;
   lcd->show_meridiem = FALSE;
@@ -179,12 +179,12 @@ xfce_clock_lcd_init (XfceClockLcd *lcd)
 
 
 static void
-xfce_clock_lcd_set_property (GObject      *object,
+expidus_clock_lcd_set_property (GObject      *object,
                              guint         prop_id,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  XfceClockLcd *lcd = XFCE_CLOCK_LCD (object);
+  ExpidusClockLcd *lcd = EXPIDUS_CLOCK_LCD (object);
   gboolean      show_seconds;
 
   switch (prop_id)
@@ -225,12 +225,12 @@ xfce_clock_lcd_set_property (GObject      *object,
 
 
 static void
-xfce_clock_lcd_get_property (GObject    *object,
+expidus_clock_lcd_get_property (GObject    *object,
                              guint       prop_id,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  XfceClockLcd *lcd = XFCE_CLOCK_LCD (object);
+  ExpidusClockLcd *lcd = EXPIDUS_CLOCK_LCD (object);
   gdouble       ratio;
 
   switch (prop_id)
@@ -252,7 +252,7 @@ xfce_clock_lcd_get_property (GObject    *object,
       break;
 
     case PROP_SIZE_RATIO:
-      ratio = xfce_clock_lcd_get_ratio (lcd);
+      ratio = expidus_clock_lcd_get_ratio (lcd);
       g_value_set_double (value, ratio);
       break;
 
@@ -265,21 +265,21 @@ xfce_clock_lcd_get_property (GObject    *object,
 
 
 static void
-xfce_clock_lcd_finalize (GObject *object)
+expidus_clock_lcd_finalize (GObject *object)
 {
   /* stop the timeout */
-  clock_time_timeout_free (XFCE_CLOCK_LCD (object)->timeout);
+  clock_time_timeout_free (EXPIDUS_CLOCK_LCD (object)->timeout);
 
-  (*G_OBJECT_CLASS (xfce_clock_lcd_parent_class)->finalize) (object);
+  (*G_OBJECT_CLASS (expidus_clock_lcd_parent_class)->finalize) (object);
 }
 
 
 
 static gboolean
-xfce_clock_lcd_draw (GtkWidget *widget,
+expidus_clock_lcd_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
-  XfceClockLcd *lcd = XFCE_CLOCK_LCD (widget);
+  ExpidusClockLcd *lcd = EXPIDUS_CLOCK_LCD (widget);
   gdouble       offset_x, offset_y;
   gint          ticks, i;
   gdouble       size;
@@ -289,11 +289,11 @@ xfce_clock_lcd_draw (GtkWidget *widget,
   GtkStyleContext *ctx;
   GdkRGBA          fg_rgba;
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_LCD (lcd), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_LCD (lcd), FALSE);
   panel_return_val_if_fail (cr != NULL, FALSE);
 
   /* get the width:height ratio */
-  ratio = xfce_clock_lcd_get_ratio (XFCE_CLOCK_LCD (widget));
+  ratio = expidus_clock_lcd_get_ratio (EXPIDUS_CLOCK_LCD (widget));
 
   /* make sure we also fit on small vertical panels */
   gtk_widget_get_allocation (widget, &allocation);
@@ -341,11 +341,11 @@ xfce_clock_lcd_draw (GtkWidget *widget,
   if (ticks >= 10)
     {
       /* draw the number and increase the offset */
-      offset_x = xfce_clock_lcd_draw_digit (cr, ticks >= 20 ? 2 : 1, size, offset_x, offset_y);
+      offset_x = expidus_clock_lcd_draw_digit (cr, ticks >= 20 ? 2 : 1, size, offset_x, offset_y);
     }
 
   /* draw the other number of the hour and increase the offset */
-  offset_x = xfce_clock_lcd_draw_digit (cr, ticks % 10, size, offset_x, offset_y);
+  offset_x = expidus_clock_lcd_draw_digit (cr, ticks % 10, size, offset_x, offset_y);
 
   for (i = 0; i < 2; i++)
     {
@@ -369,13 +369,13 @@ xfce_clock_lcd_draw (GtkWidget *widget,
       if (lcd->flash_separators && (g_date_time_get_second (time) % 2) == 1)
         offset_x += size * RELATIVE_SPACE * 2;
       else
-        offset_x = xfce_clock_lcd_draw_dots (cr, size, offset_x, offset_y);
+        offset_x = expidus_clock_lcd_draw_dots (cr, size, offset_x, offset_y);
 
       /* draw the first digit */
-      offset_x = xfce_clock_lcd_draw_digit (cr, (ticks - (ticks % 10)) / 10, size, offset_x, offset_y);
+      offset_x = expidus_clock_lcd_draw_digit (cr, (ticks - (ticks % 10)) / 10, size, offset_x, offset_y);
 
       /* draw the second digit */
-      offset_x = xfce_clock_lcd_draw_digit (cr, ticks % 10, size, offset_x, offset_y);
+      offset_x = expidus_clock_lcd_draw_digit (cr, ticks % 10, size, offset_x, offset_y);
     }
 
   if (lcd->show_meridiem)
@@ -384,7 +384,7 @@ xfce_clock_lcd_draw (GtkWidget *widget,
       ticks = g_date_time_get_hour (time) >= 12 ? 11 : 10;
 
       /* draw the digit */
-      offset_x = xfce_clock_lcd_draw_digit (cr, ticks, size, offset_x, offset_y);
+      offset_x = expidus_clock_lcd_draw_digit (cr, ticks, size, offset_x, offset_y);
     }
 
   /* drop the pushed group */
@@ -398,7 +398,7 @@ xfce_clock_lcd_draw (GtkWidget *widget,
 
 
 static gdouble
-xfce_clock_lcd_get_ratio (XfceClockLcd *lcd)
+expidus_clock_lcd_get_ratio (ExpidusClockLcd *lcd)
 {
   gdouble    ratio;
   gint       ticks;
@@ -436,7 +436,7 @@ xfce_clock_lcd_get_ratio (XfceClockLcd *lcd)
 
 
 static gdouble
-xfce_clock_lcd_draw_dots (cairo_t *cr,
+expidus_clock_lcd_draw_dots (cairo_t *cr,
                           gdouble  size,
                           gdouble  offset_x,
                           gdouble  offset_y)
@@ -476,7 +476,7 @@ xfce_clock_lcd_draw_dots (cairo_t *cr,
  * ##4##
  */
 static gdouble
-xfce_clock_lcd_draw_digit (cairo_t *cr,
+expidus_clock_lcd_draw_digit (cairo_t *cr,
                            guint    number,
                            gdouble  size,
                            gdouble  offset_x,
@@ -582,12 +582,12 @@ xfce_clock_lcd_draw_digit (cairo_t *cr,
 
 
 static gboolean
-xfce_clock_lcd_update (XfceClockLcd *lcd,
+expidus_clock_lcd_update (ExpidusClockLcd *lcd,
                        ClockTime    *time)
 {
   GtkWidget *widget = GTK_WIDGET (lcd);
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_LCD (lcd), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_LCD (lcd), FALSE);
 
   /* update if the widget if visible */
   if (G_LIKELY (gtk_widget_get_visible (widget)))
@@ -599,14 +599,14 @@ xfce_clock_lcd_update (XfceClockLcd *lcd,
 
 
 GtkWidget *
-xfce_clock_lcd_new (ClockTime *time)
+expidus_clock_lcd_new (ClockTime *time)
 {
-  XfceClockLcd *lcd = g_object_new (XFCE_CLOCK_TYPE_LCD, NULL);
+  ExpidusClockLcd *lcd = g_object_new (EXPIDUS_CLOCK_TYPE_LCD, NULL);
 
   lcd->time = time;
   lcd->timeout = clock_time_timeout_new (CLOCK_INTERVAL_MINUTE,
                                          lcd->time,
-                                         G_CALLBACK (xfce_clock_lcd_update), lcd);
+                                         G_CALLBACK (expidus_clock_lcd_update), lcd);
 
   return GTK_WIDGET (lcd);
 }

@@ -3,11 +3,11 @@ panel-preferences.desktop.in
 
 common/panel-utils.c
 
-libxfce4panel/xfce-arrow-button.c
-libxfce4panel/xfce-panel-convenience.c
-libxfce4panel/xfce-panel-image.c
-libxfce4panel/xfce-panel-plugin-provider.c
-libxfce4panel/xfce-panel-plugin.c
+libexpidus1panel/expidus-arrow-button.c
+libexpidus1panel/expidus-panel-convenience.c
+libexpidus1panel/expidus-panel-image.c
+libexpidus1panel/expidus-panel-plugin-provider.c
+libexpidus1panel/expidus-panel-plugin.c
 
 panel/main.c
 panel/panel-application.c
@@ -39,7 +39,7 @@ plugins/actions/actions.desktop.in.in
 plugins/applicationsmenu/applicationsmenu-dialog.glade
 plugins/applicationsmenu/applicationsmenu.c
 plugins/applicationsmenu/applicationsmenu.desktop.in.in
-plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh
+plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh
 
 plugins/clock/clock.c
 plugins/clock/clock-analog.c
@@ -54,7 +54,7 @@ plugins/clock/clock.desktop.in.in
 plugins/directorymenu/directorymenu.c
 plugins/directorymenu/directorymenu.desktop.in.in
 plugins/directorymenu/directorymenu-dialog.glade
-plugins/directorymenu/xfce4-popup-directorymenu.sh
+plugins/directorymenu/expidus1-popup-directorymenu.sh
 
 plugins/launcher/launcher.c
 plugins/launcher/launcher-dialog.c
@@ -94,4 +94,4 @@ plugins/tasklist/tasklist.desktop.in.in
 plugins/windowmenu/windowmenu.c
 plugins/windowmenu/windowmenu-dialog.glade
 plugins/windowmenu/windowmenu.desktop.in.in
-plugins/windowmenu/xfce4-popup-windowmenu.sh
+plugins/windowmenu/expidus1-popup-windowmenu.sh

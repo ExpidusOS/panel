@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -26,16 +26,16 @@ G_BEGIN_DECLS
 typedef struct _ActionsPluginClass ActionsPluginClass;
 typedef struct _ActionsPlugin      ActionsPlugin;
 
-#define XFCE_TYPE_ACTIONS_PLUGIN            (actions_plugin_get_type ())
-#define XFCE_ACTIONS_PLUGIN(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_ACTIONS_PLUGIN, ActionsPlugin))
-#define XFCE_ACTIONS_PLUGIN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_ACTIONS_PLUGIN, ActionsPluginClass))
-#define XFCE_IS_ACTIONS_PLUGIN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_ACTIONS_PLUGIN))
-#define XFCE_IS_ACTIONS_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_ACTIONS_PLUGIN))
-#define XFCE_ACTIONS_PLUGIN_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_ACTIONS_PLUGIN, ActionsPluginClass))
+#define EXPIDUS_TYPE_ACTIONS_PLUGIN            (actions_plugin_get_type ())
+#define EXPIDUS_ACTIONS_PLUGIN(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_ACTIONS_PLUGIN, ActionsPlugin))
+#define EXPIDUS_ACTIONS_PLUGIN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_ACTIONS_PLUGIN, ActionsPluginClass))
+#define EXPIDUS_IS_ACTIONS_PLUGIN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_ACTIONS_PLUGIN))
+#define EXPIDUS_IS_ACTIONS_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_ACTIONS_PLUGIN))
+#define EXPIDUS_ACTIONS_PLUGIN_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_ACTIONS_PLUGIN, ActionsPluginClass))
 
 GType actions_plugin_get_type      (void) G_GNUC_CONST;
 
-void  actions_plugin_register_type (XfcePanelTypeModule *type_module);
+void  actions_plugin_register_type (ExpidusPanelTypeModule *type_module);
 
 G_END_DECLS
 

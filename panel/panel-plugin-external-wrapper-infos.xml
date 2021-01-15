@@ -1,12 +1,12 @@
-<node name="/org/xfce/Panel/Wrapper">
+<node name="/com/expidus/Panel/Wrapper">
   <!--
-    org.xfce.Panel.Wrapper
+    com.expidus.Panel.Wrapper
   -->
-  <interface name="org.xfce.Panel.Wrapper">
+  <interface name="com.expidus.Panel.Wrapper">
     <annotation name="org.gtk.GDBus.C.Name" value="Exported" />
 
     <!--
-      i : unsigned integer : enum from XfcePanelPluginProviderPropType.
+      i : unsigned integer : enum from ExpidusPanelPluginProviderPropType.
       v : value            : GValue with the value for the property.
     -->
     <signal name="Set">
@@ -25,7 +25,7 @@
     </signal>
 
     <!--
-      signal : A provider signal from XfcePanelPluginProviderSignal.
+      signal : A provider signal from ExpidusPanelPluginProviderSignal.
     -->
     <method name="ProviderSignal">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true" />

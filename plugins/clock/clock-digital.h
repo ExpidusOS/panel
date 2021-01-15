@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -24,21 +24,21 @@ G_BEGIN_DECLS
 /* TRANSLATORS: adjust this accordingly for your locale format */
 #define DEFAULT_DIGITAL_FORMAT NC_("Time", "%a %_d %b, %R")
 
-typedef struct _XfceClockDigitalClass XfceClockDigitalClass;
-typedef struct _XfceClockDigital      XfceClockDigital;
+typedef struct _ExpidusClockDigitalClass ExpidusClockDigitalClass;
+typedef struct _ExpidusClockDigital      ExpidusClockDigital;
 
-#define XFCE_CLOCK_TYPE_DIGITAL            (xfce_clock_digital_get_type ())
-#define XFCE_CLOCK_DIGITAL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_CLOCK_TYPE_DIGITAL, XfceClockDigital))
-#define XFCE_CLOCK_DIGITAL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_CLOCK_TYPE_DIGITAL, XfceClockDigitalClass))
-#define XFCE_CLOCK_IS_DIGITAL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_CLOCK_TYPE_DIGITAL))
-#define XFCE_CLOCK_IS_DIGITAL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_CLOCK_TYPE_DIGITAL))
-#define XFCE_CLOCK_DIGITAL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_CLOCK_TYPE_DIGITAL, XfceClockDigitalClass))
+#define EXPIDUS_CLOCK_TYPE_DIGITAL            (expidus_clock_digital_get_type ())
+#define EXPIDUS_CLOCK_DIGITAL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_CLOCK_TYPE_DIGITAL, ExpidusClockDigital))
+#define EXPIDUS_CLOCK_DIGITAL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_CLOCK_TYPE_DIGITAL, ExpidusClockDigitalClass))
+#define EXPIDUS_CLOCK_IS_DIGITAL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_CLOCK_TYPE_DIGITAL))
+#define EXPIDUS_CLOCK_IS_DIGITAL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_CLOCK_TYPE_DIGITAL))
+#define EXPIDUS_CLOCK_DIGITAL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_CLOCK_TYPE_DIGITAL, ExpidusClockDigitalClass))
 
-GType      xfce_clock_digital_get_type      (void) G_GNUC_CONST;
+GType      expidus_clock_digital_get_type      (void) G_GNUC_CONST;
 
-void       xfce_clock_digital_register_type (XfcePanelTypeModule *type_module);
+void       expidus_clock_digital_register_type (ExpidusPanelTypeModule *type_module);
 
-GtkWidget *xfce_clock_digital_new           (ClockTime           *time) G_GNUC_MALLOC;
+GtkWidget *expidus_clock_digital_new           (ClockTime           *time) G_GNUC_MALLOC;
 
 G_END_DECLS
 

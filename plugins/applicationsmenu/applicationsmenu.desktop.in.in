@@ -1,8 +1,8 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
 _Name=Applications Menu
 _Comment=Show a menu containing categories of installed applications
-Icon=org.xfce.panel.applicationsmenu
-X-XFCE-Module=applicationsmenu
-X-XFCE-Internal=TRUE
-X-XFCE-API=@LIBXFCE4PANEL_VERSION_API@
+Icon=com.expidus.panel.applicationsmenu
+X-EXPIDUS-Module=applicationsmenu
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
- * Copyright (c) 2017      Ali Abdallah  <ali@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
+ * Copyright (c) 2017      Ali Abdallah  <ali@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,11 +26,11 @@
 #endif
 
 #include <gio/gio.h>
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 #include <common/panel-private.h>
 #include <common/panel-dbus.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 #include <panel/panel-dbus-client.h>
 #include <panel/panel-dbus-service.h>
@@ -49,10 +49,10 @@ enum
 
 
 
-static XfcePanelExportedService *
+static ExpidusPanelExportedService *
 panel_dbus_client_get_proxy (GError **error)
 {
-  return xfce_panel_exported_service_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
+  return expidus_panel_exported_service_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
                                                              G_DBUS_PROXY_FLAGS_NONE,
                                                              PANEL_DBUS_NAME,
                                                              PANEL_DBUS_PATH,
@@ -67,7 +67,7 @@ panel_dbus_client_display_preferences_dialog (guint         active,
                                               guint         socket_id,
                                               GError      **error)
 {
-  XfcePanelExportedService *dbus_proxy;
+  ExpidusPanelExportedService *dbus_proxy;
   gboolean                  result;
 
   panel_return_val_if_fail (error == NULL || *error == NULL, FALSE);
@@ -76,7 +76,7 @@ panel_dbus_client_display_preferences_dialog (guint         active,
   if (G_UNLIKELY (dbus_proxy == NULL))
     return FALSE;
 
-  result = xfce_panel_exported_service_call_display_preferences_dialog_sync (dbus_proxy,
+  result = expidus_panel_exported_service_call_display_preferences_dialog_sync (dbus_proxy,
                                                                              active,
                                                                              socket_id,
                                                                              NULL,
@@ -93,7 +93,7 @@ gboolean
 panel_dbus_client_display_items_dialog (guint    active,
                                         GError **error)
 {
-  XfcePanelExportedService *dbus_proxy;
+  ExpidusPanelExportedService *dbus_proxy;
   gboolean                  result;
 
 
@@ -103,7 +103,7 @@ panel_dbus_client_display_items_dialog (guint    active,
   if (G_UNLIKELY (dbus_proxy == NULL))
     return FALSE;
 
-  result = xfce_panel_exported_service_call_display_items_dialog_sync (dbus_proxy,
+  result = expidus_panel_exported_service_call_display_items_dialog_sync (dbus_proxy,
                                                                        active,
                                                                        NULL,
                                                                        error);
@@ -118,7 +118,7 @@ panel_dbus_client_display_items_dialog (guint    active,
 gboolean
 panel_dbus_client_save (GError **error)
 {
-  XfcePanelExportedService *dbus_proxy;
+  ExpidusPanelExportedService *dbus_proxy;
   gboolean                  result;
 
   panel_return_val_if_fail (error == NULL || *error == NULL, FALSE);
@@ -127,7 +127,7 @@ panel_dbus_client_save (GError **error)
   if (G_UNLIKELY (dbus_proxy == NULL))
     return FALSE;
 
-  result = xfce_panel_exported_service_call_save_sync (dbus_proxy, NULL, error);
+  result = expidus_panel_exported_service_call_save_sync (dbus_proxy, NULL, error);
 
   g_object_unref (G_OBJECT (dbus_proxy));
 
@@ -142,7 +142,7 @@ panel_dbus_client_add_new_item (const gchar  *plugin_name,
                                 GError      **error)
 {
 
-  XfcePanelExportedService *dbus_proxy;
+  ExpidusPanelExportedService *dbus_proxy;
   gboolean                  result;
   const gchar              *empty_arguments[] = {"", NULL};
 
@@ -153,12 +153,12 @@ panel_dbus_client_add_new_item (const gchar  *plugin_name,
     return FALSE;
 
   if (arguments != NULL && *arguments != NULL)
-    result = xfce_panel_exported_service_call_add_new_item_sync (dbus_proxy, plugin_name,
+    result = expidus_panel_exported_service_call_add_new_item_sync (dbus_proxy, plugin_name,
                                                                  (const gchar **) arguments,
                                                                  NULL,
                                                                  error);
   else
-    result = xfce_panel_exported_service_call_add_new_item_sync (dbus_proxy, plugin_name,
+    result = expidus_panel_exported_service_call_add_new_item_sync (dbus_proxy, plugin_name,
                                                                  empty_arguments,
                                                                  NULL,
                                                                  error);
@@ -194,7 +194,7 @@ panel_dbus_client_plugin_event (const gchar  *plugin_event,
                                 gboolean     *return_succeed,
                                 GError      **error)
 {
-  XfcePanelExportedService  *dbus_proxy;
+  ExpidusPanelExportedService  *dbus_proxy;
   gchar                    **tokens;
   GType                      type;
   guint                      n_tokens;
@@ -259,7 +259,7 @@ panel_dbus_client_plugin_event (const gchar  *plugin_event,
 
   /* send value over dbus */
   panel_return_val_if_fail (variant != NULL, FALSE);
-  result = xfce_panel_exported_service_call_plugin_event_sync (dbus_proxy,
+  result = expidus_panel_exported_service_call_plugin_event_sync (dbus_proxy,
                                                                tokens[PLUGIN_NAME],
                                                                tokens[NAME],
                                                                g_variant_new_variant(variant),
@@ -279,7 +279,7 @@ gboolean
 panel_dbus_client_terminate (gboolean   restart,
                              GError   **error)
 {
-  XfcePanelExportedService *dbus_proxy;
+  ExpidusPanelExportedService *dbus_proxy;
   gboolean                  result;
 
   panel_return_val_if_fail (error == NULL || *error == NULL, FALSE);
@@ -288,7 +288,7 @@ panel_dbus_client_terminate (gboolean   restart,
   if (G_UNLIKELY (dbus_proxy == NULL))
     return FALSE;
 
-  result = xfce_panel_exported_service_call_terminate_sync (dbus_proxy, restart, NULL, error);
+  result = expidus_panel_exported_service_call_terminate_sync (dbus_proxy, restart, NULL, error);
 
   g_object_unref (G_OBJECT (dbus_proxy));
 

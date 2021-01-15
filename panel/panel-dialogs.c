@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@
 #include <string.h>
 #endif
 
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
 #include <common/panel-private.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include <panel/panel-dialogs.h>
 #include <panel/panel-application.h>
@@ -43,7 +43,7 @@ panel_dialogs_show_about_email_hook (GtkAboutDialog *dialog,
 {
   GError *error = NULL;
 
-  if (g_strcmp0 ("mailto:tictactoe%40xfce.org", uri) == 0)
+  if (g_strcmp0 ("mailto:rosscomputerguy%40protonmail.com", uri) == 0)
     {
       /* open tic-tac-toe */
       panel_tic_tac_toe_show ();
@@ -54,7 +54,7 @@ panel_dialogs_show_about_email_hook (GtkAboutDialog *dialog,
   else if (!gtk_show_uri_on_window (GTK_WINDOW (dialog),
                                     uri, gtk_get_current_event_time (), &error))
     {
-      xfce_dialog_show_error (GTK_WINDOW (dialog), error,
+      expidus_dialog_show_error (GTK_WINDOW (dialog), error,
                               _("Unable to open the e-mail address"));
       g_error_free (error);
       return FALSE;
@@ -76,18 +76,19 @@ panel_dialogs_show_about (void)
   authors[2] = g_strdup ("Simon Steinbeiß <simon@xfce.org>");
   authors[3] = g_strdup ("Jasper Huijsmans <jasper@xfce.org>");
   authors[4] = g_strdup ("Tic-Tac-Toe <tictactoe@xfce.org>");
+  authors[4] = g_strdup ("Tristan Ross <rosscomputerguy@protonmail.com>");
 
   about_dialog = gtk_about_dialog_new ();
   gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (about_dialog), (const gchar**) authors);
   g_strfreev (authors);
-  gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (about_dialog), _("The panel of the Xfce Desktop Environment"));
-  gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (about_dialog), "Copyright \302\251 2004-2018 Xfce Development Team");
-  gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (about_dialog), XFCE_LICENSE_GPL);
+  gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (about_dialog), _("The panel of the Expidus Desktop Environment"));
+  gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (about_dialog), "Copyright \302\251 2004-2018 XFCE and ExpidusOS Development Team");
+  gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (about_dialog), EXPIDUS_LICENSE_GPL);
   gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (about_dialog), PACKAGE_NAME);
   gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (about_dialog), _("translator-credits"));
   gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (about_dialog), PACKAGE_VERSION);
-  gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (about_dialog), "http://www.xfce.org/");
-  gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (about_dialog), "org.xfce.panel");
+  gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (about_dialog), "http://www.expidusos.com");
+  gtk_about_dialog_set_logo_icon_name (GTK_ABOUT_DIALOG (about_dialog), "com.expidus.panel");
   gtk_window_set_destroy_with_parent (GTK_WINDOW (about_dialog), TRUE);
   g_signal_connect (G_OBJECT (about_dialog), "activate-link",
                     G_CALLBACK (panel_dialogs_show_about_email_hook), NULL);
@@ -231,7 +232,7 @@ panel_dialogs_kiosk_warning (void)
 
   if (locked)
     {
-      xfce_dialog_show_warning (NULL,
+      expidus_dialog_show_warning (NULL,
           _("Because the panel is running in kiosk mode, you are not allowed "
             "to make changes to the panel configuration as a regular user"),
           _("Modifying the panel is not allowed"));

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -21,8 +21,8 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <common/panel-private.h>
 
 #include "pager-buttons.h"
@@ -97,7 +97,7 @@ enum
 
 
 
-XFCE_PANEL_DEFINE_TYPE (PagerButtons, pager_buttons, GTK_TYPE_GRID)
+EXPIDUS_PANEL_DEFINE_TYPE (PagerButtons, pager_buttons, GTK_TYPE_GRID)
 
 
 
@@ -169,7 +169,7 @@ pager_buttons_get_property (GObject    *object,
                             GValue     *value,
                             GParamSpec *pspec)
 {
-  PagerButtons *pager = XFCE_PAGER_BUTTONS (object);
+  PagerButtons *pager = EXPIDUS_PAGER_BUTTONS (object);
 
   switch (prop_id)
     {
@@ -199,7 +199,7 @@ pager_buttons_set_property (GObject      *object,
                             const GValue *value,
                             GParamSpec   *pspec)
 {
-  PagerButtons *pager = XFCE_PAGER_BUTTONS (object);
+  PagerButtons *pager = EXPIDUS_PAGER_BUTTONS (object);
 
   switch (prop_id)
     {
@@ -242,7 +242,7 @@ pager_buttons_set_property (GObject      *object,
 static void
 pager_buttons_finalize (GObject *object)
 {
-  PagerButtons *pager = XFCE_PAGER_BUTTONS (object);
+  PagerButtons *pager = EXPIDUS_PAGER_BUTTONS (object);
 
   if (pager->rebuild_id != 0)
     g_source_remove (pager->rebuild_id);
@@ -292,7 +292,7 @@ pager_buttons_button_press_event (GtkWidget      *button,
 static gboolean
 pager_buttons_rebuild_idle (gpointer user_data)
 {
-  PagerButtons  *pager = XFCE_PAGER_BUTTONS (user_data);
+  PagerButtons  *pager = EXPIDUS_PAGER_BUTTONS (user_data);
   GList         *li, *workspaces;
   WnckWorkspace *active_ws;
   gint           n, n_workspaces;
@@ -310,7 +310,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
   gint          *vp_info;
   gchar          text[8];
 
-  panel_return_val_if_fail (XFCE_IS_PAGER_BUTTONS (pager), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager), FALSE);
   panel_return_val_if_fail (WNCK_IS_SCREEN (pager->wnck_screen), FALSE);
 
   gtk_container_foreach (GTK_CONTAINER (pager),
@@ -369,7 +369,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
     }
 
 
-  panel_plugin = gtk_widget_get_ancestor (GTK_WIDGET (pager), XFCE_TYPE_PANEL_PLUGIN);
+  panel_plugin = gtk_widget_get_ancestor (GTK_WIDGET (pager), EXPIDUS_TYPE_PANEL_PLUGIN);
 
   if (G_UNLIKELY (viewport_mode))
     {
@@ -384,7 +384,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
           vp_info[VIEWPORT_X] = (n % (workspace_height / screen_height)) * screen_width;
           vp_info[VIEWPORT_Y] = (n / (workspace_height / screen_height)) * screen_height;
 
-          button = xfce_panel_create_toggle_button ();
+          button = expidus_panel_create_toggle_button ();
           gtk_widget_add_events (GTK_WIDGET (button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
           if (viewport_x >= vp_info[VIEWPORT_X] && viewport_x < vp_info[VIEWPORT_X] + screen_width
               && viewport_y >= vp_info[VIEWPORT_Y] && viewport_y < vp_info[VIEWPORT_Y] + screen_height)
@@ -393,7 +393,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
               G_CALLBACK (pager_buttons_viewport_button_toggled), pager);
           g_signal_connect (G_OBJECT (button), "button-press-event",
               G_CALLBACK (pager_buttons_button_press_event), NULL);
-          xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (panel_plugin), button);
+          expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (panel_plugin), button);
           gtk_widget_show (button);
 
           g_object_set_data_full (G_OBJECT (button), "viewport-info", vp_info,
@@ -427,7 +427,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
         {
           workspace = WNCK_WORKSPACE (li->data);
 
-          button = xfce_panel_create_toggle_button ();
+          button = expidus_panel_create_toggle_button ();
           gtk_widget_add_events (GTK_WIDGET (button), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
           if (workspace == active_ws)
             gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
@@ -435,7 +435,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
               G_CALLBACK (pager_buttons_workspace_button_toggled), workspace);
           g_signal_connect (G_OBJECT (button), "button-press-event",
               G_CALLBACK (pager_buttons_button_press_event), NULL);
-          xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (panel_plugin), button);
+          expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (panel_plugin), button);
           gtk_widget_show (button);
 
           label = gtk_label_new (NULL);
@@ -478,7 +478,7 @@ pager_buttons_rebuild_idle (gpointer user_data)
 static void
 pager_buttons_rebuild_idle_destroyed (gpointer user_data)
 {
-  XFCE_PAGER_BUTTONS (user_data)->rebuild_id = 0;
+  EXPIDUS_PAGER_BUTTONS (user_data)->rebuild_id = 0;
 }
 
 
@@ -486,7 +486,7 @@ pager_buttons_rebuild_idle_destroyed (gpointer user_data)
 static void
 pager_buttons_queue_rebuild (PagerButtons *pager)
 {
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
 
   if (pager->rebuild_id == 0)
     {
@@ -508,7 +508,7 @@ pager_buttons_screen_workspace_changed (WnckScreen    *screen,
 
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (previous_workspace == NULL || WNCK_IS_WORKSPACE (previous_workspace));
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
   panel_return_if_fail (pager->wnck_screen == screen);
 
   active_ws = wnck_screen_get_active_workspace (screen);
@@ -528,7 +528,7 @@ pager_buttons_screen_workspace_created (WnckScreen    *screen,
 {
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (WNCK_IS_WORKSPACE (created_workspace));
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
   panel_return_if_fail (pager->wnck_screen == screen);
 
   pager_buttons_queue_rebuild (pager);
@@ -543,7 +543,7 @@ pager_buttons_screen_workspace_destroyed (WnckScreen    *screen,
 {
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (WNCK_IS_WORKSPACE (destroyed_workspace));
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
   panel_return_if_fail (pager->wnck_screen == screen);
 
   pager_buttons_queue_rebuild (pager);
@@ -556,7 +556,7 @@ pager_buttons_screen_viewports_changed (WnckScreen    *screen,
                                         PagerButtons  *pager)
 {
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
   panel_return_if_fail (pager->wnck_screen == screen);
 
   /* yes we are extremely lazy here, but this event is
@@ -630,7 +630,7 @@ pager_buttons_viewport_button_toggled (GtkWidget    *button,
   gint *vp_info;
 
   panel_return_if_fail (GTK_IS_TOGGLE_BUTTON (button));
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
   panel_return_if_fail (WNCK_IS_SCREEN (pager->wnck_screen));
 
   vp_info = g_object_get_data (G_OBJECT (button), "viewport-info");
@@ -649,7 +649,7 @@ pager_buttons_new (WnckScreen *screen)
 {
   panel_return_val_if_fail (WNCK_IS_SCREEN (screen), NULL);
 
-  return g_object_new (XFCE_TYPE_PAGER_BUTTONS,
+  return g_object_new (EXPIDUS_TYPE_PAGER_BUTTONS,
                        "screen", screen, NULL);
 }
 
@@ -659,7 +659,7 @@ void
 pager_buttons_set_orientation (PagerButtons   *pager,
                                GtkOrientation  orientation)
 {
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
 
   if (pager->orientation == orientation)
    return;
@@ -674,7 +674,7 @@ void
 pager_buttons_set_n_rows (PagerButtons *pager,
                           gint          rows)
 {
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
 
   if (pager->rows == rows)
    return;
@@ -689,7 +689,7 @@ void
 pager_buttons_set_numbering (PagerButtons *pager,
                              gboolean      numbering)
 {
-  panel_return_if_fail (XFCE_IS_PAGER_BUTTONS (pager));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_BUTTONS (pager));
 
   if (pager->numbering == numbering)
    return;

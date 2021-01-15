@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,12 +26,12 @@ G_BEGIN_DECLS
 typedef struct _SnBackendClass SnBackendClass;
 typedef struct _SnBackend      SnBackend;
 
-#define XFCE_TYPE_SN_BACKEND            (sn_backend_get_type ())
-#define XFCE_SN_BACKEND(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_SN_BACKEND, SnBackend))
-#define XFCE_SN_BACKEND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_SN_BACKEND, SnBackendClass))
-#define XFCE_IS_SN_BACKEND(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_SN_BACKEND))
-#define XFCE_IS_SN_BACKEND_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_SN_BACKEND))
-#define XFCE_SN_BACKEND_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_SN_BACKEND, SnBackendClass))
+#define EXPIDUS_TYPE_SN_BACKEND            (sn_backend_get_type ())
+#define EXPIDUS_SN_BACKEND(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_SN_BACKEND, SnBackend))
+#define EXPIDUS_SN_BACKEND_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_SN_BACKEND, SnBackendClass))
+#define EXPIDUS_IS_SN_BACKEND(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_SN_BACKEND))
+#define EXPIDUS_IS_SN_BACKEND_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_SN_BACKEND))
+#define EXPIDUS_SN_BACKEND_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_SN_BACKEND, SnBackendClass))
 
 GType                  sn_backend_get_type                     (void) G_GNUC_CONST;
 

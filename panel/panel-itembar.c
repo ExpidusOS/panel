@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2011 Nick Schermer <nick@expidus.org>
  * Copyright (C)      2011 Andrzej <ndrwrdck@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,11 +25,11 @@
 #include <gtk/gtk.h>
 
 #include <common/panel-private.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include <panel/panel-itembar.h>
 
-#define IS_HORIZONTAL(itembar) ((itembar)->mode == XFCE_PANEL_PLUGIN_MODE_HORIZONTAL)
+#define IS_HORIZONTAL(itembar) ((itembar)->mode == EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL)
 #define HIGHLIGHT_SIZE         2
 
 
@@ -96,7 +96,7 @@ struct _PanelItembar
   GSList              *children;
 
   /* some properties we clone from the panel window */
-  XfcePanelPluginMode  mode;
+  ExpidusPanelPluginMode  mode;
   gint                 size;
   gboolean             dark_mode;
   gint                 icon_size;
@@ -196,8 +196,8 @@ panel_itembar_class_init (PanelItembarClass *klass)
                                    PROP_MODE,
                                    g_param_spec_enum ("mode",
                                                       NULL, NULL,
-                                                      XFCE_TYPE_PANEL_PLUGIN_MODE,
-                                                      XFCE_PANEL_PLUGIN_MODE_HORIZONTAL,
+                                                      EXPIDUS_TYPE_PANEL_PLUGIN_MODE,
+                                                      EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL,
                                                       G_PARAM_WRITABLE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
@@ -256,7 +256,7 @@ static void
 panel_itembar_init (PanelItembar *itembar)
 {
   itembar->children = NULL;
-  itembar->mode = XFCE_PANEL_PLUGIN_MODE_HORIZONTAL;
+  itembar->mode = EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL;
   itembar->size = 30;
   itembar->icon_size = 0;
   itembar->dark_mode = FALSE;

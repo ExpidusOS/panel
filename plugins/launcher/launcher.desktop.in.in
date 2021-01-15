@@ -1,8 +1,8 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
 _Name=Launcher
 _Comment=Program launcher with optional menu
-Icon=org.xfce.panel.launcher
-X-XFCE-Module=launcher
-X-XFCE-Internal=TRUE
-X-XFCE-API=@LIBXFCE4PANEL_VERSION_API@
+Icon=com.expidus.panel.launcher
+X-EXPIDUS-Module=launcher
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

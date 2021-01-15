@@ -1,40 +1,40 @@
 dnl
-dnl Copyright (c) 2004 - 2020 The Xfce development team
+dnl Copyright (c) 2004 - 2020 The Expidus development team
 dnl
-dnl 2005-2007 Jasper Huijsmans <jasper@xfce.org>
-dnl 2006-2008 Nick Schermer <nick@xfce.org>
+dnl 2005-2007 Jasper Huijsmans <jasper@expidus.org>
+dnl 2006-2008 Nick Schermer <nick@expidus.org>
 dnl
 
 dnl ***************************
 dnl *** Version information ***
 dnl ***************************
-m4_define([libxfce4panel_verinfo], [4:0:0]) dnl current:revision:age
-m4_define([libxfce4panel_version_api], [2.0])
-m4_define([xfce4_panel_config_version], [2])
-m4_define([xfce4_panel_version_major], [4])
-m4_define([xfce4_panel_version_minor], [16])
-m4_define([xfce4_panel_version_micro], [0])
-m4_define([xfce4_panel_version_nano],  []) dnl leave this empty to have no nano version
-m4_define([xfce4_panel_version_build], [@REVISION@])
-m4_define([xfce4_panel_version_tag], [git])
-m4_define([xfce4_panel_version], [xfce4_panel_version_major().xfce4_panel_version_minor().xfce4_panel_version_micro()ifelse(xfce4_panel_version_nano(), [], [], [.xfce4_panel_version_nano()])ifelse(xfce4_panel_version_tag(), [git], [xfce4_panel_version_tag()-xfce4_panel_version_build()], [xfce4_panel_version_tag()])])
+m4_define([libexpidus1panel_verinfo], [1:0:0]) dnl current:revision:age
+m4_define([libexpidus1panel_version_api], [2.0])
+m4_define([expidus1_panel_config_version], [2])
+m4_define([expidus1_panel_version_major], [1])
+m4_define([expidus1_panel_version_minor], [0])
+m4_define([expidus1_panel_version_micro], [0])
+m4_define([expidus1_panel_version_nano],  []) dnl leave this empty to have no nano version
+m4_define([expidus1_panel_version_build], [@REVISION@])
+m4_define([expidus1_panel_version_tag], [git])
+m4_define([expidus1_panel_version], [expidus1_panel_version_major().expidus1_panel_version_minor().expidus1_panel_version_micro()ifelse(expidus1_panel_version_nano(), [], [], [.expidus1_panel_version_nano()])ifelse(expidus1_panel_version_tag(), [git], [expidus1_panel_version_tag()-expidus1_panel_version_build()], [expidus1_panel_version_tag()])])
 
 dnl *******************************************
 dnl *** Debugging support for GIT snapshots ***
 dnl *******************************************
-m4_define([panel_debug_default], [ifelse(xfce4_panel_version_tag(), [git], [yes], [minimum])])
+m4_define([panel_debug_default], [ifelse(expidus1_panel_version_tag(), [git], [yes], [minimum])])
 
 dnl ***************************
 dnl *** Initialize autoconf ***
 dnl ***************************
 AC_COPYRIGHT([Copyright (c) 2002 - 2020
-        The Xfce development team. All rights reserved.
+        The XFCE and ExpidusOS development team. All rights reserved.
 
-Written for Xfce by Jasper Huijsmans <jasper@xfce.org>
+Written for Expidus by Jasper Huijsmans <jasper@xfce.org>
 and Nick Schermer <nick@xfce.org>.])
-AC_INIT([xfce4-panel],[xfce4_panel_version],[http://bugzilla.xfce.org/],[xfce4-panel])
+AC_INIT([expidus1-panel],[expidus1_panel_version],[http://bugzilla.expidus.org/],[expidus1-panel])
 AC_PREREQ([2.69])
-AC_REVISION([xfce4_panel_version_build])
+AC_REVISION([expidus1_panel_version_build])
 
 dnl ***************************
 dnl *** Initialize automake ***
@@ -80,30 +80,30 @@ LT_INIT([disable-static])
 dnl **************************************
 dnl *** Substitute version information ***
 dnl **************************************
-LIBXFCE4PANEL_VERINFO=libxfce4panel_verinfo()
-AC_SUBST([LIBXFCE4PANEL_VERINFO])
+LIBEXPIDUS1PANEL_VERINFO=libexpidus1panel_verinfo()
+AC_SUBST([LIBEXPIDUS1PANEL_VERINFO])
 
 dnl **************************
 dnl *** Substitute version ***
 dnl **************************
-LIBXFCE4PANEL_VERSION=xfce4_panel_version()
-LIBXFCE4PANEL_VERSION_API=libxfce4panel_version_api()
-LIBXFCE4PANEL_VERSION_MAJOR=xfce4_panel_version_major()
-LIBXFCE4PANEL_VERSION_MINOR=xfce4_panel_version_minor()
-LIBXFCE4PANEL_VERSION_MICRO=xfce4_panel_version_micro()
-AC_DEFINE([LIBXFCE4PANEL_VERSION_API], "libxfce4panel_version_api()", [libxfce4panel api version])
-AC_SUBST([LIBXFCE4PANEL_VERSION])
-AC_SUBST([LIBXFCE4PANEL_VERSION_API])
-AC_SUBST([LIBXFCE4PANEL_VERSION_MAJOR])
-AC_SUBST([LIBXFCE4PANEL_VERSION_MINOR])
-AC_SUBST([LIBXFCE4PANEL_VERSION_MICRO])
+LIBEXPIDUS1PANEL_VERSION=expidus1_panel_version()
+LIBEXPIDUS1PANEL_VERSION_API=libexpidus1panel_version_api()
+LIBEXPIDUS1PANEL_VERSION_MAJOR=expidus1_panel_version_major()
+LIBEXPIDUS1PANEL_VERSION_MINOR=expidus1_panel_version_minor()
+LIBEXPIDUS1PANEL_VERSION_MICRO=expidus1_panel_version_micro()
+AC_DEFINE([LIBEXPIDUS1PANEL_VERSION_API], "libexpidus1panel_version_api()", [libexpidus1panel api version])
+AC_SUBST([LIBEXPIDUS1PANEL_VERSION])
+AC_SUBST([LIBEXPIDUS1PANEL_VERSION_API])
+AC_SUBST([LIBEXPIDUS1PANEL_VERSION_MAJOR])
+AC_SUBST([LIBEXPIDUS1PANEL_VERSION_MINOR])
+AC_SUBST([LIBEXPIDUS1PANEL_VERSION_MICRO])
 
 dnl *********************************
 dnl *** Substitute config version ***
 dnl *********************************
-XFCE4_PANEL_CONFIG_VERSION=xfce4_panel_config_version()
-AC_DEFINE([XFCE4_PANEL_CONFIG_VERSION], xfce4_panel_config_version(), [config migration version])
-AC_SUBST([XFCE4_PANEL_CONFIG_VERSION])
+EXPIDUS1_PANEL_CONFIG_VERSION=expidus1_panel_config_version()
+AC_DEFINE([EXPIDUS1_PANEL_CONFIG_VERSION], expidus1_panel_config_version(), [config migration version])
+AC_SUBST([EXPIDUS1_PANEL_CONFIG_VERSION])
 
 dnl **********************************
 dnl *** Check for standard headers ***
@@ -139,13 +139,13 @@ fi
 dnl ***********************************
 dnl *** Check for required packages ***
 dnl ***********************************
-XDT_CHECK_PACKAGE([LIBXFCE4UTIL], [libxfce4util-1.0], [4.15.6])
-XDT_CHECK_PACKAGE([GARCON], [garcon-1], [0.5.0])
-XDT_CHECK_PACKAGE([GARCON_GTK3], [garcon-gtk3-1], [0.5.0])
-XDT_CHECK_PACKAGE([LIBXFCE4UI], [libxfce4ui-2], [4.15.8])
-XDT_CHECK_PACKAGE([XFCONF], [libxfconf-0], [4.13.2])
+XDT_CHECK_PACKAGE([LIBEXPIDUS1UTIL], [libexpidus1util-1.0], [1.0.0])
+XDT_CHECK_PACKAGE([MARKON], [markon-1], [0.5.0])
+XDT_CHECK_PACKAGE([MARKON_GTK3], [markon-gtk3-1], [1.0.0])
+XDT_CHECK_PACKAGE([LIBEXPIDUS1UI], [libexpidus1ui-2], [1.0.0])
+XDT_CHECK_PACKAGE([ESCONF], [libesconf-0], [1.0.0])
 XDT_CHECK_PACKAGE([GTK], [gtk+-3.0], [3.22.0])
-XDT_CHECK_PACKAGE([EXO], [exo-2], [0.11.2])
+XDT_CHECK_PACKAGE([ENDO], [endo-2], [1.0.0])
 XDT_CHECK_PACKAGE([GLIB], [glib-2.0], [2.50.0])
 XDT_CHECK_PACKAGE([GIO], [gio-2.0], [2.50.0])
 PKG_CHECK_MODULES([GIO_UNIX], [gio-unix-2.0 >= 2.50.0])
@@ -256,9 +256,9 @@ icons/32x32/Makefile
 icons/48x48/Makefile
 icons/128x128/Makefile
 icons/scalable/Makefile
-libxfce4panel/Makefile
-libxfce4panel/libxfce4panel-2.0.pc
-libxfce4panel/libxfce4panel-config.h
+libexpidus1panel/Makefile
+libexpidus1panel/libexpidus1panel-2.0.pc
+libexpidus1panel/libexpidus1panel-config.h
 migrate/Makefile
 migrate/default.xml
 panel/Makefile

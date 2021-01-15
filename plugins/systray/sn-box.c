@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@xfce.org>
- *  Copyright (c) 2017      Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@expidus.org>
+ *  Copyright (c) 2017      Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 #include <string.h>
 #endif
 
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "sn-box.h"
 #include "sn-button.h"
@@ -152,7 +152,7 @@ sn_box_get_property(GObject *object,
                     GValue *value,
                     GParamSpec *pspec)
 {
-  SnBox *box = XFCE_SN_BOX(object);
+  SnBox *box = EXPIDUS_SN_BOX(object);
 
   switch (prop_id)
   {
@@ -171,7 +171,7 @@ sn_box_get_property(GObject *object,
 static void
 sn_box_finalize (GObject *object)
 {
-  SnBox *box = XFCE_SN_BOX (object);
+  SnBox *box = EXPIDUS_SN_BOX (object);
 
   g_hash_table_destroy (box->children);
 
@@ -183,7 +183,7 @@ sn_box_finalize (GObject *object)
 GtkWidget *
 sn_box_new (SnConfig *config)
 {
-  SnBox *box = g_object_new (XFCE_TYPE_SN_BOX, NULL);
+  SnBox *box = g_object_new (EXPIDUS_TYPE_SN_BOX, NULL);
 
   box->config = config;
 
@@ -201,7 +201,7 @@ static void
 sn_box_collect_known_items_callback (GtkWidget *widget,
                                      gpointer   user_data)
 {
-  SnButton   *button = XFCE_SN_BUTTON (widget);
+  SnButton   *button = EXPIDUS_SN_BUTTON (widget);
   GHashTable *table = user_data;
   gchar      *name;
 
@@ -229,8 +229,8 @@ sn_box_list_changed (SnBox    *box,
   GList    *known_items, *li, *li_int, *li_tmp;
   gint      n_hidden_children = 0, n_visible_children = 0;
 
-  g_return_if_fail (XFCE_IS_SN_BOX (box));
-  g_return_if_fail (XFCE_IS_SN_CONFIG (config));
+  g_return_if_fail (EXPIDUS_IS_SN_BOX (box));
+  g_return_if_fail (EXPIDUS_IS_SN_CONFIG (config));
 
   known_items = sn_config_get_known_items (box->config);
   for (li = known_items; li != NULL; li = li->next)
@@ -269,13 +269,13 @@ static void
 sn_box_add (GtkContainer *container,
             GtkWidget    *child)
 {
-  SnBox       *box = XFCE_SN_BOX (container);
-  SnButton    *button = XFCE_SN_BUTTON (child);
+  SnBox       *box = EXPIDUS_SN_BOX (container);
+  SnButton    *button = EXPIDUS_SN_BUTTON (child);
   GList       *li;
   const gchar *name;
 
-  g_return_if_fail (XFCE_IS_SN_BOX (box));
-  g_return_if_fail (XFCE_IS_SN_BUTTON (button));
+  g_return_if_fail (EXPIDUS_IS_SN_BOX (box));
+  g_return_if_fail (EXPIDUS_IS_SN_BUTTON (button));
   g_return_if_fail (gtk_widget_get_parent (GTK_WIDGET (child)) == NULL);
 
   name = sn_button_get_name (button);
@@ -294,8 +294,8 @@ static void
 sn_box_remove (GtkContainer *container,
                GtkWidget    *child)
 {
-  SnBox       *box = XFCE_SN_BOX (container);
-  SnButton    *button = XFCE_SN_BUTTON (child);
+  SnBox       *box = EXPIDUS_SN_BOX (container);
+  SnButton    *button = EXPIDUS_SN_BUTTON (child);
   GList       *li, *li_tmp;
   const gchar *name;
 
@@ -323,7 +323,7 @@ sn_box_forall (GtkContainer *container,
                GtkCallback   callback,
                gpointer      callback_data)
 {
-  SnBox    *box = XFCE_SN_BOX (container);
+  SnBox    *box = EXPIDUS_SN_BOX (container);
   SnButton *button;
   GList    *known_items, *li, *li_int, *li_tmp;
 
@@ -345,7 +345,7 @@ sn_box_forall (GtkContainer *container,
 static GType
 sn_box_child_type (GtkContainer *container)
 {
-  return XFCE_TYPE_SN_BUTTON;
+  return EXPIDUS_TYPE_SN_BUTTON;
 }
 
 
@@ -359,7 +359,7 @@ sn_box_measure_and_allocate (GtkWidget *widget,
                              gint       y0,
                              gboolean   horizontal)
 {
-  SnBox          *box = XFCE_SN_BOX (widget);
+  SnBox          *box = EXPIDUS_SN_BOX (widget);
   SnButton       *button;
   GList          *known_items, *li, *li_int, *li_tmp;
   gint            panel_size, config_nrows, icon_size, hx_size, hy_size, nrows;
@@ -497,7 +497,7 @@ sn_box_get_preferred_width (GtkWidget *widget,
                             gint      *minimum_width,
                             gint      *natural_width)
 {
-  SnBox *box = XFCE_SN_BOX (widget);
+  SnBox *box = EXPIDUS_SN_BOX (widget);
   gint   panel_size;
 
   if (sn_config_get_panel_orientation (box->config) == GTK_ORIENTATION_HORIZONTAL)
@@ -522,7 +522,7 @@ sn_box_get_preferred_height (GtkWidget *widget,
                              gint      *minimum_height,
                              gint      *natural_height)
 {
-  SnBox *box = XFCE_SN_BOX (widget);
+  SnBox *box = EXPIDUS_SN_BOX (widget);
   gint   panel_size;
 
   if (sn_config_get_panel_orientation (box->config) == GTK_ORIENTATION_VERTICAL)
@@ -546,7 +546,7 @@ static void
 sn_box_size_allocate (GtkWidget     *widget,
                       GtkAllocation *allocation)
 {
-  SnBox *box = XFCE_SN_BOX (widget);
+  SnBox *box = EXPIDUS_SN_BOX (widget);
 
   gtk_widget_set_allocation (widget, allocation);
 
@@ -565,7 +565,7 @@ sn_box_remove_item (SnBox  *box,
   SnButton *button;
   GList    *known_items, *li, *li_int, *li_tmp;
 
-  g_return_if_fail (XFCE_IS_SN_BOX (box));
+  g_return_if_fail (EXPIDUS_IS_SN_BOX (box));
 
   known_items = sn_config_get_known_items (box->config);
   for (li = known_items; li != NULL; li = li->next)
@@ -586,7 +586,7 @@ sn_box_remove_item (SnBox  *box,
 gboolean
 sn_box_has_hidden_items (SnBox *box)
 {
-  g_return_val_if_fail (XFCE_IS_SN_BOX (box), FALSE);
+  g_return_val_if_fail (EXPIDUS_IS_SN_BOX (box), FALSE);
   return box->n_hidden_children > 0;
 }
 
@@ -594,7 +594,7 @@ void
 sn_box_set_show_hidden (SnBox      *box,
                         gboolean    show_hidden)
 {
-  g_return_if_fail (XFCE_IS_SN_BOX (box));
+  g_return_if_fail (EXPIDUS_IS_SN_BOX (box));
 
   if (box->show_hidden != show_hidden)
     {

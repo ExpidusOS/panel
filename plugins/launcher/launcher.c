@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -25,15 +25,15 @@
 #endif
 
 #include <gio/gio.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <garcon/garcon.h>
-#include <garcon-gtk/garcon-gtk.h>
-#include <xfconf/xfconf.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <markon/markon.h>
+#include <markon-gtk/markon-gtk.h>
+#include <esconf/esconf.h>
 
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 
 #include "launcher.h"
@@ -56,21 +56,21 @@ static void               launcher_plugin_set_property                  (GObject
                                                                          guint                 prop_id,
                                                                          const GValue         *value,
                                                                          GParamSpec           *pspec);
-static void               launcher_plugin_construct                     (XfcePanelPlugin      *panel_plugin);
-static void               launcher_plugin_free_data                     (XfcePanelPlugin      *panel_plugin);
-static void               launcher_plugin_removed                       (XfcePanelPlugin      *panel_plugin);
-static gboolean           launcher_plugin_remote_event                  (XfcePanelPlugin      *panel_plugin,
+static void               launcher_plugin_construct                     (ExpidusPanelPlugin      *panel_plugin);
+static void               launcher_plugin_free_data                     (ExpidusPanelPlugin      *panel_plugin);
+static void               launcher_plugin_removed                       (ExpidusPanelPlugin      *panel_plugin);
+static gboolean           launcher_plugin_remote_event                  (ExpidusPanelPlugin      *panel_plugin,
                                                                          const gchar          *name,
                                                                          const GValue         *value);
 static gboolean           launcher_plugin_save_delayed_timeout          (gpointer              user_data);
 static void               launcher_plugin_save_delayed                  (LauncherPlugin       *plugin);
-static void               launcher_plugin_mode_changed                  (XfcePanelPlugin      *panel_plugin,
-                                                                         XfcePanelPluginMode   mode);
-static gboolean           launcher_plugin_size_changed                  (XfcePanelPlugin      *panel_plugin,
+static void               launcher_plugin_mode_changed                  (ExpidusPanelPlugin      *panel_plugin,
+                                                                         ExpidusPanelPluginMode   mode);
+static gboolean           launcher_plugin_size_changed                  (ExpidusPanelPlugin      *panel_plugin,
                                                                          gint                  size);
-static void               launcher_plugin_configure_plugin              (XfcePanelPlugin      *panel_plugin);
-static void               launcher_plugin_screen_position_changed       (XfcePanelPlugin      *panel_plugin,
-                                                                         XfceScreenPosition    position);
+static void               launcher_plugin_configure_plugin              (ExpidusPanelPlugin      *panel_plugin);
+static void               launcher_plugin_screen_position_changed       (ExpidusPanelPlugin      *panel_plugin,
+                                                                         ExpidusScreenPosition    position);
 static void               launcher_plugin_icon_theme_changed            (GtkIconTheme         *icon_theme,
                                                                          LauncherPlugin       *plugin);
 static LauncherArrowType  launcher_plugin_default_arrow_type            (LauncherPlugin       *plugin);
@@ -80,7 +80,7 @@ static GdkPixbuf         *launcher_plugin_tooltip_pixbuf                (GdkScre
 static void               launcher_plugin_menu_deactivate               (GtkWidget            *menu,
                                                                          LauncherPlugin       *plugin);
 static void               launcher_plugin_menu_item_activate            (GtkMenuItem          *widget,
-                                                                         GarconMenuItem       *item);
+                                                                         MarkonMenuItem       *item);
 static void               launcher_plugin_menu_item_drag_data_received  (GtkWidget            *widget,
                                                                          GdkDragContext       *context,
                                                                          gint                  x,
@@ -88,13 +88,13 @@ static void               launcher_plugin_menu_item_drag_data_received  (GtkWidg
                                                                          GtkSelectionData     *data,
                                                                          guint                 info,
                                                                          guint                 drag_time,
-                                                                         GarconMenuItem       *item);
+                                                                         MarkonMenuItem       *item);
 static void               launcher_plugin_menu_construct                (LauncherPlugin       *plugin);
 static void               launcher_plugin_menu_popup_destroyed          (gpointer              user_data);
 static gboolean           launcher_plugin_menu_popup                    (gpointer              user_data);
 static void               launcher_plugin_menu_destroy                  (LauncherPlugin       *plugin);
 static void               launcher_plugin_button_update                 (LauncherPlugin       *plugin);
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
 static void               launcher_plugin_button_update_action_menu     (LauncherPlugin       *plugin);
 #endif
 static void               launcher_plugin_button_state_changed          (GtkWidget            *button_a,
@@ -158,16 +158,16 @@ static gboolean           launcher_plugin_item_query_tooltip            (GtkWidg
                                                                          gint                  y,
                                                                          gboolean              keyboard_mode,
                                                                          GtkTooltip           *tooltip,
-                                                                         GarconMenuItem       *item);
-static gboolean           launcher_plugin_item_exec_on_screen           (GarconMenuItem       *item,
+                                                                         MarkonMenuItem       *item);
+static gboolean           launcher_plugin_item_exec_on_screen           (MarkonMenuItem       *item,
                                                                          guint32               event_time,
                                                                          GdkScreen            *screen,
                                                                          GSList               *uri_list);
-static void               launcher_plugin_item_exec                     (GarconMenuItem       *item,
+static void               launcher_plugin_item_exec                     (MarkonMenuItem       *item,
                                                                          guint32               event_time,
                                                                          GdkScreen            *screen,
                                                                          GSList               *uri_list);
-static void               launcher_plugin_item_exec_from_clipboard      (GarconMenuItem       *item,
+static void               launcher_plugin_item_exec_from_clipboard      (MarkonMenuItem       *item,
                                                                          guint32               event_time,
                                                                          GdkScreen            *screen);
 static GSList            *launcher_plugin_uri_list_extract              (GtkSelectionData     *data);
@@ -177,19 +177,19 @@ static void               launcher_plugin_uri_list_free                 (GSList 
 
 struct _LauncherPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _LauncherPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   GtkWidget         *box;
   GtkWidget         *button;
   GtkWidget         *arrow;
   GtkWidget         *child;
   GtkWidget         *menu;
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
   GtkWidget         *action_menu;
 #endif
 
@@ -232,7 +232,7 @@ enum
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN_RESIDENT (LauncherPlugin, launcher_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN_RESIDENT (LauncherPlugin, launcher_plugin)
 
 
 
@@ -257,13 +257,13 @@ static void
 launcher_plugin_class_init (LauncherPluginClass *klass)
 {
   GObjectClass         *gobject_class;
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
   gobject_class->get_property = launcher_plugin_get_property;
   gobject_class->set_property = launcher_plugin_set_property;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = launcher_plugin_construct;
   plugin_class->free_data = launcher_plugin_free_data;
   plugin_class->mode_changed = launcher_plugin_mode_changed;
@@ -319,7 +319,7 @@ launcher_plugin_class_init (LauncherPluginClass *klass)
                   G_TYPE_NONE, 0);
 
   /* initialize the quark */
-  launcher_plugin_quark = g_quark_from_static_string ("xfce-launcher-plugin");
+  launcher_plugin_quark = g_quark_from_static_string ("expidus-launcher-plugin");
 }
 
 
@@ -337,7 +337,7 @@ launcher_plugin_init (LauncherPlugin *plugin)
   plugin->show_label = FALSE;
   plugin->arrow_position = LAUNCHER_ARROW_DEFAULT;
   plugin->menu = NULL;
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
   plugin->action_menu = NULL;
 #endif
   plugin->items = NULL;
@@ -357,9 +357,9 @@ launcher_plugin_init (LauncherPlugin *plugin)
   plugin->box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_container_add (GTK_CONTAINER (plugin), plugin->box);
 
-  plugin->button = xfce_panel_create_button ();
+  plugin->button = expidus_panel_create_button ();
   gtk_box_pack_start (GTK_BOX (plugin->box), plugin->button, TRUE, TRUE, 0);
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->button);
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->button);
   gtk_widget_set_has_tooltip (plugin->button, TRUE);
   gtk_widget_set_name (plugin->button, "launcher-button");
   g_signal_connect (G_OBJECT (plugin->button), "button-press-event",
@@ -392,9 +392,9 @@ launcher_plugin_init (LauncherPlugin *plugin)
   plugin->child = gtk_image_new ();
   gtk_container_add (GTK_CONTAINER (plugin->button), plugin->child);
 
-  plugin->arrow = xfce_arrow_button_new (GTK_ARROW_UP);
+  plugin->arrow = expidus_arrow_button_new (GTK_ARROW_UP);
   gtk_box_pack_start (GTK_BOX (plugin->box), plugin->arrow, FALSE, FALSE, 0);
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->arrow);
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->arrow);
   gtk_button_set_relief (GTK_BUTTON (plugin->arrow), GTK_RELIEF_NONE);
   gtk_widget_set_name (plugin->button, "launcher-arrow");
   g_signal_connect (G_OBJECT (plugin->arrow), "button-press-event",
@@ -439,7 +439,7 @@ launcher_plugin_get_property (GObject    *object,
                               GValue     *value,
                               GParamSpec *pspec)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (object);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (object);
   GPtrArray      *array;
   GValue         *tmp;
   GSList         *li;
@@ -453,8 +453,8 @@ launcher_plugin_get_property (GObject    *object,
         {
           tmp = g_new0 (GValue, 1);
           g_value_init (tmp, G_TYPE_STRING);
-          panel_return_if_fail (GARCON_IS_MENU_ITEM (li->data));
-          item_file = garcon_menu_item_get_file (li->data);
+          panel_return_if_fail (MARKON_IS_MENU_ITEM (li->data));
+          item_file = markon_menu_item_get_file (li->data);
           if (g_file_has_prefix (item_file, plugin->config_directory))
             g_value_take_string (tmp, g_file_get_basename (item_file));
           else
@@ -491,13 +491,13 @@ launcher_plugin_get_property (GObject    *object,
 
 
 static void
-launcher_plugin_item_changed (GarconMenuItem *item,
+launcher_plugin_item_changed (MarkonMenuItem *item,
                               LauncherPlugin *plugin)
 {
   GSList *li;
 
-  panel_return_if_fail (GARCON_IS_MENU_ITEM (item));
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (MARKON_IS_MENU_ITEM (item));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* find the item */
   li = g_slist_find (plugin->items, item);
@@ -507,7 +507,7 @@ launcher_plugin_item_changed (GarconMenuItem *item,
       if (plugin->items == li)
         {
           launcher_plugin_button_update (plugin);
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
           launcher_plugin_button_update_action_menu (plugin);
 #endif
         }
@@ -548,7 +548,7 @@ launcher_plugin_item_duplicate (GFile   *src_file,
 
   /* store the source uri in the desktop file for restore purposes */
   uri = g_file_get_uri (src_file);
-  g_key_file_set_string (key_file, G_KEY_FILE_DESKTOP_GROUP, "X-XFCE-Source", uri);
+  g_key_file_set_string (key_file, G_KEY_FILE_DESKTOP_GROUP, "X-EXPIDUS-Source", uri);
   g_free (uri);
 
   contents = g_key_file_to_data (key_file, &length, error);
@@ -568,7 +568,7 @@ err1:
 
 
 static gboolean
-_exo_str_looks_like_an_uri (const gchar *str)
+_endo_str_looks_like_an_uri (const gchar *str)
 {
   const gchar *s = str;
 
@@ -589,7 +589,7 @@ _exo_str_looks_like_an_uri (const gchar *str)
 }
 
 
-static GarconMenuItem *
+static MarkonMenuItem *
 launcher_plugin_item_load (LauncherPlugin *plugin,
                            const gchar    *str,
                            gboolean       *desktop_id_return,
@@ -598,14 +598,14 @@ launcher_plugin_item_load (LauncherPlugin *plugin,
   GFile          *src_file, *dst_file;
   gchar          *src_path, *dst_path;
   GSList         *li, *lnext;
-  GarconMenuItem *item = NULL;
+  MarkonMenuItem *item = NULL;
   GError         *error = NULL;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), NULL);
   panel_return_val_if_fail (str != NULL, NULL);
   panel_return_val_if_fail (G_IS_FILE (plugin->config_directory), NULL);
 
-  if (G_UNLIKELY (g_path_is_absolute (str) || _exo_str_looks_like_an_uri (str)))
+  if (G_UNLIKELY (g_path_is_absolute (str) || _endo_str_looks_like_an_uri (str)))
     {
       src_file = g_file_new_for_commandline_arg (str);
       if (g_file_has_prefix (src_file, plugin->config_directory))
@@ -673,10 +673,10 @@ launcher_plugin_item_load (LauncherPlugin *plugin,
   for (li = plugin->items; item == NULL && li != NULL; li = lnext)
     {
       lnext = li->next;
-      dst_file = garcon_menu_item_get_file (GARCON_MENU_ITEM (li->data));
+      dst_file = markon_menu_item_get_file (MARKON_MENU_ITEM (li->data));
       if (g_file_equal (src_file, dst_file))
         {
-          item = GARCON_MENU_ITEM (li->data);
+          item = MARKON_MENU_ITEM (li->data);
           plugin->items = g_slist_delete_link (plugin->items, li);
         }
       g_object_unref (G_OBJECT (dst_file));
@@ -684,7 +684,7 @@ launcher_plugin_item_load (LauncherPlugin *plugin,
 
   /* load the file from the disk */
   if (item == NULL)
-    item = garcon_menu_item_new (src_file);
+    item = markon_menu_item_new (src_file);
 
   g_object_unref (G_OBJECT (src_file));
 
@@ -706,7 +706,7 @@ launcher_plugin_items_delete_configs (LauncherPlugin *plugin)
   /* cleanup desktop files in the config dir */
   for (li = plugin->items; succeed && li != NULL; li = li->next)
     {
-      file = garcon_menu_item_get_file (li->data);
+      file = markon_menu_item_get_file (li->data);
       if (g_file_has_prefix (file, plugin->config_directory))
         succeed = g_file_delete (file, NULL, &error);
       g_object_unref (G_OBJECT (file));
@@ -715,7 +715,7 @@ launcher_plugin_items_delete_configs (LauncherPlugin *plugin)
   if (!succeed)
     {
       g_message ("launcher-%d: Failed to cleanup the configuration: %s",
-                 xfce_panel_plugin_get_unique_id (XFCE_PANEL_PLUGIN (plugin)),
+                 expidus_panel_plugin_get_unique_id (EXPIDUS_PANEL_PLUGIN (plugin)),
                  error->message);
       g_error_free (error);
     }
@@ -743,8 +743,8 @@ launcher_plugin_items_load (LauncherPlugin *plugin,
   guint           i;
   const GValue   *value;
   const gchar    *str;
-  GarconMenuItem *item;
-  GarconMenuItem *pool_item;
+  MarkonMenuItem *item;
+  MarkonMenuItem *pool_item;
   GSList         *items = NULL;
   GHashTable     *pool = NULL;
   gboolean        desktop_id;
@@ -752,7 +752,7 @@ launcher_plugin_items_load (LauncherPlugin *plugin,
   gboolean        items_modified = FALSE;
   gboolean        location_changed;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (array != NULL);
 
   for (i = 0; i < array->len; i++)
@@ -783,21 +783,21 @@ launcher_plugin_items_load (LauncherPlugin *plugin,
 
           /* load the pool with desktop items */
           if (pool == NULL)
-            pool = launcher_plugin_garcon_menu_pool ();
+            pool = launcher_plugin_markon_menu_pool ();
 
           /* lookup the item in the item pool */
           pool_item = g_hash_table_lookup (pool, str);
           if (pool_item != NULL)
             {
               /* we want an editable file, so try to make a copy */
-              uri = garcon_menu_item_get_uri (pool_item);
+              uri = markon_menu_item_get_uri (pool_item);
               item = launcher_plugin_item_load (plugin, uri, NULL, NULL);
               g_free (uri);
 
               /* if something failed, use the pool item, but this one
                * won't be editable in the dialog */
               if (G_UNLIKELY (item == NULL))
-                item = GARCON_MENU_ITEM (g_object_ref (G_OBJECT (pool_item)));
+                item = MARKON_MENU_ITEM (g_object_ref (G_OBJECT (pool_item)));
             }
 
           /* skip this item if still not found */
@@ -810,7 +810,7 @@ launcher_plugin_items_load (LauncherPlugin *plugin,
         }
 
       /* add the item to the list */
-      panel_assert (GARCON_IS_MENU_ITEM (item));
+      panel_assert (MARKON_IS_MENU_ITEM (item));
       items = g_slist_append (items, item);
       g_signal_connect (G_OBJECT (item), "changed",
           G_CALLBACK (launcher_plugin_item_changed), plugin);
@@ -839,7 +839,7 @@ launcher_plugin_set_property (GObject      *object,
                               const GValue *value,
                               GParamSpec   *pspec)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (object);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (object);
   GPtrArray      *array;
 
   panel_return_if_fail (G_IS_FILE (plugin->config_directory));
@@ -867,7 +867,7 @@ launcher_plugin_set_property (GObject      *object,
 
       /* update the button */
       launcher_plugin_button_update (plugin);
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
       launcher_plugin_button_update_action_menu (plugin);
 #endif
 
@@ -900,8 +900,8 @@ launcher_plugin_set_property (GObject      *object,
       gtk_widget_show (plugin->child);
 
       /* update size */
-      launcher_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-          xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+      launcher_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+          expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
 
       /* update the button */
       launcher_plugin_button_update (plugin);
@@ -918,8 +918,8 @@ update_arrow:
       launcher_plugin_pack_widgets (plugin);
 
       /* update the plugin size */
-      launcher_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-          xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+      launcher_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+          expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
       break;
 
     default:
@@ -938,7 +938,7 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
                               LauncherPlugin    *plugin)
 {
   GSList         *li, *lnext;
-  GarconMenuItem *item;
+  MarkonMenuItem *item;
   GFile          *item_file;
   gboolean        found;
   GError         *error = NULL;
@@ -947,7 +947,7 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
   gboolean        exists;
   gboolean        update_plugin = FALSE;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (plugin->config_monitor == monitor);
 
   /* waited until all events are proccessed */
@@ -969,15 +969,15 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
   for (li = plugin->items, found = FALSE; !found && li != NULL; li = lnext)
     {
       lnext = li->next;
-      item = GARCON_MENU_ITEM (li->data);
-      item_file = garcon_menu_item_get_file (item);
+      item = MARKON_MENU_ITEM (li->data);
+      item_file = markon_menu_item_get_file (item);
       found = g_file_equal (changed_file, item_file);
       if (found)
         {
           if (exists)
             {
               /* reload the file */
-              if (!garcon_menu_item_reload (item, NULL, &error))
+              if (!markon_menu_item_reload (item, NULL, &error))
                 {
                   g_critical ("Failed to reload menu item: %s", error->message);
                   g_error_free (error);
@@ -997,7 +997,7 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
   if (!found && exists)
     {
       /* add the new file to the config */
-      item = garcon_menu_item_new (changed_file);
+      item = markon_menu_item_new (changed_file);
       if (G_LIKELY (item != NULL))
         {
           plugin->items = g_slist_append (plugin->items, item);
@@ -1011,7 +1011,7 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
     {
       launcher_plugin_button_update (plugin);
       launcher_plugin_menu_destroy (plugin);
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
       launcher_plugin_button_update_action_menu (plugin);
 #endif
 
@@ -1026,9 +1026,9 @@ launcher_plugin_file_changed (GFileMonitor      *monitor,
 
 
 static void
-launcher_plugin_construct (XfcePanelPlugin *panel_plugin)
+launcher_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  LauncherPlugin      *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin      *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
   const gchar * const *uris;
   guint                i;
   GPtrArray           *array;
@@ -1046,29 +1046,29 @@ launcher_plugin_construct (XfcePanelPlugin *panel_plugin)
   };
 
   /* show the configure menu item */
-  xfce_panel_plugin_menu_show_configure (panel_plugin);
+  expidus_panel_plugin_menu_show_configure (panel_plugin);
 
-  xfce_panel_plugin_set_small (panel_plugin, TRUE);
+  expidus_panel_plugin_set_small (panel_plugin, TRUE);
 
   /* lookup the config directory where this launcher stores it's desktop files */
   file = g_strdup_printf (RELATIVE_CONFIG_PATH,
-                          xfce_panel_plugin_get_name (XFCE_PANEL_PLUGIN (plugin)),
-                          xfce_panel_plugin_get_unique_id (XFCE_PANEL_PLUGIN (plugin)));
-  path = xfce_resource_save_location (XFCE_RESOURCE_CONFIG, file, FALSE);
+                          expidus_panel_plugin_get_name (EXPIDUS_PANEL_PLUGIN (plugin)),
+                          expidus_panel_plugin_get_unique_id (EXPIDUS_PANEL_PLUGIN (plugin)));
+  path = expidus_resource_save_location (EXPIDUS_RESOURCE_CONFIG, file, FALSE);
   plugin->config_directory = g_file_new_for_path (path);
   g_free (file);
   g_free (path);
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   /* handle and empty plugin */
   if (G_UNLIKELY (plugin->items == NULL))
     {
       /* get the plugin arguments list */
-      uris = xfce_panel_plugin_get_arguments (panel_plugin);
+      uris = expidus_panel_plugin_get_arguments (panel_plugin);
       if (G_LIKELY (uris != NULL))
         {
           /* create array with all the uris */
@@ -1084,7 +1084,7 @@ launcher_plugin_construct (XfcePanelPlugin *panel_plugin)
           /* set new file list */
           if (G_LIKELY (array->len > 0))
             g_object_set (G_OBJECT (plugin), "items", array, NULL);
-          xfconf_array_free (array);
+          esconf_array_free (array);
         }
       else
         {
@@ -1116,9 +1116,9 @@ launcher_plugin_construct (XfcePanelPlugin *panel_plugin)
 
 
 static void
-launcher_plugin_free_data (XfcePanelPlugin *panel_plugin)
+launcher_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
   GtkIconTheme   *icon_theme;
 
   /* stop monitoring */
@@ -1162,9 +1162,9 @@ launcher_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static void
-launcher_plugin_removed (XfcePanelPlugin *panel_plugin)
+launcher_plugin_removed (ExpidusPanelPlugin *panel_plugin)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
   GError         *error = NULL;
 
   panel_return_if_fail (G_IS_FILE (plugin->config_directory));
@@ -1187,7 +1187,7 @@ launcher_plugin_removed (XfcePanelPlugin *panel_plugin)
   if (!g_file_delete (plugin->config_directory, NULL, &error))
     {
       g_message ("launcher-%d: Failed to cleanup the configuration: %s",
-                 xfce_panel_plugin_get_unique_id (panel_plugin),
+                 expidus_panel_plugin_get_unique_id (panel_plugin),
                  error->message);
       g_error_free (error);
     }
@@ -1196,11 +1196,11 @@ launcher_plugin_removed (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-launcher_plugin_remote_event (XfcePanelPlugin *panel_plugin,
+launcher_plugin_remote_event (ExpidusPanelPlugin *panel_plugin,
                               const gchar     *name,
                               const GValue    *value)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
 
   panel_return_val_if_fail (value == NULL || G_IS_VALUE (value), FALSE);
 
@@ -1230,7 +1230,7 @@ launcher_plugin_remote_event (XfcePanelPlugin *panel_plugin,
 static void
 launcher_plugin_save_delayed_timeout_destroyed (gpointer user_data)
 {
-  XFCE_LAUNCHER_PLUGIN (user_data)->save_timeout_id = 0;
+  EXPIDUS_LAUNCHER_PLUGIN (user_data)->save_timeout_id = 0;
 }
 
 
@@ -1260,38 +1260,38 @@ launcher_plugin_save_delayed (LauncherPlugin *plugin)
 
 
 static void
-launcher_plugin_mode_changed (XfcePanelPlugin    *panel_plugin,
-                              XfcePanelPluginMode mode)
+launcher_plugin_mode_changed (ExpidusPanelPlugin    *panel_plugin,
+                              ExpidusPanelPluginMode mode)
 {
   /* update label orientation */
-  launcher_plugin_button_update (XFCE_LAUNCHER_PLUGIN (panel_plugin));
+  launcher_plugin_button_update (EXPIDUS_LAUNCHER_PLUGIN (panel_plugin));
 
   /* update the widget order */
-  launcher_plugin_pack_widgets (XFCE_LAUNCHER_PLUGIN (panel_plugin));
+  launcher_plugin_pack_widgets (EXPIDUS_LAUNCHER_PLUGIN (panel_plugin));
 
   /* update the arrow button */
   launcher_plugin_screen_position_changed (panel_plugin,
-      xfce_panel_plugin_get_screen_position (panel_plugin));
+      expidus_panel_plugin_get_screen_position (panel_plugin));
 
   /* update the plugin size */
   launcher_plugin_size_changed (panel_plugin,
-      xfce_panel_plugin_get_size (panel_plugin));
+      expidus_panel_plugin_get_size (panel_plugin));
 }
 
 
 
 static gboolean
-launcher_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+launcher_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                               gint             size)
 {
-  LauncherPlugin    *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin    *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
   gint               p_width, p_height;
   gint               a_width, a_height;
   gboolean           horizontal;
   LauncherArrowType  arrow_position;
 
   /* initialize the plugin size */
-  size /= xfce_panel_plugin_get_nrows (panel_plugin);
+  size /= expidus_panel_plugin_get_nrows (panel_plugin);
   p_width = p_height = size;
   a_width = a_height = -1;
 
@@ -1299,7 +1299,7 @@ launcher_plugin_size_changed (XfcePanelPlugin *panel_plugin,
   if (gtk_widget_get_visible (plugin->arrow))
     {
       /* if the panel is horizontal */
-      horizontal = !!(xfce_panel_plugin_get_orientation (panel_plugin) ==
+      horizontal = !!(expidus_panel_plugin_get_orientation (panel_plugin) ==
           GTK_ORIENTATION_HORIZONTAL);
 
       /* translate default direction */
@@ -1341,7 +1341,7 @@ launcher_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
     gtk_widget_set_size_request (GTK_WIDGET (panel_plugin), p_width, p_height);
 
-    icon_size = xfce_panel_plugin_get_icon_size (panel_plugin);
+    icon_size = expidus_panel_plugin_get_icon_size (panel_plugin);
     /* if the icon is a pixbuf we have to recreate and scale it */
     if (plugin->pixbuf != NULL &&
         plugin->icon_name != NULL) {
@@ -1363,23 +1363,23 @@ launcher_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-launcher_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+launcher_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
   /* run the configure dialog */
-  launcher_dialog_show (XFCE_LAUNCHER_PLUGIN (panel_plugin));
+  launcher_dialog_show (EXPIDUS_LAUNCHER_PLUGIN (panel_plugin));
 }
 
 
 
 static void
-launcher_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                         XfceScreenPosition  position)
+launcher_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                         ExpidusScreenPosition  position)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (panel_plugin);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (panel_plugin);
 
   /* set the new arrow direction */
-  xfce_arrow_button_set_arrow_type (XFCE_ARROW_BUTTON (plugin->arrow),
-      xfce_panel_plugin_arrow_type (panel_plugin));
+  expidus_arrow_button_set_arrow_type (EXPIDUS_ARROW_BUTTON (plugin->arrow),
+      expidus_panel_plugin_arrow_type (panel_plugin));
 
   /* destroy the menu to update sort order */
   launcher_plugin_menu_destroy (plugin);
@@ -1391,7 +1391,7 @@ static void
 launcher_plugin_icon_theme_changed (GtkIconTheme   *icon_theme,
                                     LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_ICON_THEME (icon_theme));
 
   /* invalid the icon cache */
@@ -1410,14 +1410,14 @@ launcher_plugin_default_arrow_type (LauncherPlugin *plugin)
   LauncherArrowType pos = plugin->arrow_position;
   gboolean          rtl;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), LAUNCHER_ARROW_NORTH);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), LAUNCHER_ARROW_NORTH);
 
   if (pos == LAUNCHER_ARROW_DEFAULT)
     {
       /* get the plugin direction */
       rtl = !!(gtk_widget_get_direction (GTK_WIDGET (plugin)) == GTK_TEXT_DIR_RTL);
 
-      if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+      if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
               GTK_ORIENTATION_HORIZONTAL)
         pos = rtl ? LAUNCHER_ARROW_WEST : LAUNCHER_ARROW_EAST;
       else
@@ -1434,7 +1434,7 @@ launcher_plugin_pack_widgets (LauncherPlugin *plugin)
 {
   LauncherArrowType pos;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* leave when the arrow button is not visible */
   if (!gtk_widget_get_visible (plugin->arrow)
@@ -1489,7 +1489,7 @@ static void
 launcher_plugin_menu_deactivate (GtkWidget      *menu,
                                  LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (plugin->menu == menu);
 
   /* deactivate the arrow button */
@@ -1508,7 +1508,7 @@ launcher_plugin_menu_deactivate (GtkWidget      *menu,
 
 static void
 launcher_plugin_menu_item_activate (GtkMenuItem      *widget,
-                                    GarconMenuItem   *item)
+                                    MarkonMenuItem   *item)
 {
   LauncherPlugin *plugin;
   GdkScreen      *screen;
@@ -1516,7 +1516,7 @@ launcher_plugin_menu_item_activate (GtkMenuItem      *widget,
   guint32         event_time;
 
   panel_return_if_fail (GTK_IS_MENU_ITEM (widget));
-  panel_return_if_fail (GARCON_IS_MENU_ITEM (item));
+  panel_return_if_fail (MARKON_IS_MENU_ITEM (item));
 
   /* get a copy of the event causing the menu item to activate */
   event = gtk_get_current_event ();
@@ -1538,7 +1538,7 @@ launcher_plugin_menu_item_activate (GtkMenuItem      *widget,
 
   /* get the plugin */
   plugin = g_object_get_qdata (G_OBJECT (widget), launcher_plugin_quark);
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* move the item to the first position if enabled */
   if (G_UNLIKELY (plugin->move_first))
@@ -1563,17 +1563,17 @@ launcher_plugin_menu_item_drag_data_received (GtkWidget          *widget,
                                               GtkSelectionData   *data,
                                               guint               info,
                                               guint               drag_time,
-                                              GarconMenuItem     *item)
+                                              MarkonMenuItem     *item)
 {
   LauncherPlugin *plugin;
   GSList         *uri_list;
 
   panel_return_if_fail (GTK_IS_MENU_ITEM (widget));
-  panel_return_if_fail (GARCON_IS_MENU_ITEM (item));
+  panel_return_if_fail (MARKON_IS_MENU_ITEM (item));
 
   /* get the plugin */
   plugin = g_object_get_qdata (G_OBJECT (widget), launcher_plugin_quark);
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* extract the uris from the selection data */
   uri_list = launcher_plugin_uri_list_extract (data);
@@ -1613,12 +1613,12 @@ launcher_plugin_menu_construct (LauncherPlugin *plugin)
 {
   GtkArrowType    arrow_type;
   guint           n;
-  GarconMenuItem *item;
+  MarkonMenuItem *item;
   GtkWidget      *mi, *box, *label, *image;
   const gchar    *name, *icon_name;
   GSList         *li;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (plugin->menu == NULL);
 
   /* create a new menu */
@@ -1629,7 +1629,7 @@ launcher_plugin_menu_construct (LauncherPlugin *plugin)
                     G_CALLBACK (launcher_plugin_menu_deactivate), plugin);
 
   /* get the arrow type of the plugin */
-  arrow_type = xfce_arrow_button_get_arrow_type (XFCE_ARROW_BUTTON (plugin->arrow));
+  arrow_type = expidus_arrow_button_get_arrow_type (EXPIDUS_ARROW_BUTTON (plugin->arrow));
 
   /* walk through the menu entries */
   for (li = plugin->items, n = 0; li != NULL; li = li->next, n++)
@@ -1639,10 +1639,10 @@ launcher_plugin_menu_construct (LauncherPlugin *plugin)
         continue;
 
       /* get the item data */
-      item = GARCON_MENU_ITEM (li->data);
+      item = MARKON_MENU_ITEM (li->data);
 
       /* create the menu item */
-      name = garcon_menu_item_get_name (item);
+      name = markon_menu_item_get_name (item);
       mi = gtk_menu_item_new ();
       label = gtk_label_new (panel_str_is_empty (name) ? _("Unnamed Item") : name);
       gtk_label_set_xalign (GTK_LABEL (label), 0.0);
@@ -1675,7 +1675,7 @@ launcher_plugin_menu_construct (LauncherPlugin *plugin)
         gtk_menu_shell_append (GTK_MENU_SHELL (plugin->menu), mi);
 
       /* set the icon if one is set */
-      icon_name = garcon_menu_item_get_icon_name (item);
+      icon_name = markon_menu_item_get_icon_name (item);
 
       if (panel_str_is_empty (icon_name))
         {
@@ -1707,7 +1707,7 @@ launcher_plugin_menu_construct (LauncherPlugin *plugin)
 static void
 launcher_plugin_menu_popup_destroyed (gpointer user_data)
 {
-   XFCE_LAUNCHER_PLUGIN (user_data)->menu_timeout_id = 0;
+   EXPIDUS_LAUNCHER_PLUGIN (user_data)->menu_timeout_id = 0;
 }
 
 
@@ -1715,10 +1715,10 @@ launcher_plugin_menu_popup_destroyed (gpointer user_data)
 static gboolean
 launcher_plugin_menu_popup (gpointer user_data)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (user_data);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (user_data);
   gint            x, y;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   /* construct the menu if needed */
   if (plugin->menu == NULL)
@@ -1733,7 +1733,7 @@ launcher_plugin_menu_popup (gpointer user_data)
   /* popup the menu */
   gtk_menu_popup_at_widget (GTK_MENU (plugin->menu),
                             plugin->button,
-                            xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             NULL);
@@ -1747,7 +1747,7 @@ launcher_plugin_menu_popup (gpointer user_data)
         gtk_widget_realize (plugin->menu);
 
       /* use the widget position function to get the coordinates */
-      xfce_panel_plugin_position_widget (XFCE_PANEL_PLUGIN (plugin),
+      expidus_panel_plugin_position_widget (EXPIDUS_PANEL_PLUGIN (plugin),
                                          plugin->menu, NULL, &x, &y);
 
       /* bit ugly... but show the menu */
@@ -1764,7 +1764,7 @@ launcher_plugin_menu_popup (gpointer user_data)
 static void
 launcher_plugin_menu_destroy (LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* stop pending timeout */
   if (plugin->menu_timeout_id != 0)
@@ -1794,12 +1794,12 @@ launcher_plugin_menu_destroy (LauncherPlugin *plugin)
 static void
 launcher_plugin_button_update (LauncherPlugin *plugin)
 {
-  GarconMenuItem      *item = NULL;
+  MarkonMenuItem      *item = NULL;
   const gchar         *icon_name;
-  XfcePanelPluginMode  mode;
+  ExpidusPanelPluginMode  mode;
   gint                 icon_size;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* invalate the tooltip icon cache */
   if (plugin->tooltip_cache != NULL)
@@ -1814,31 +1814,31 @@ launcher_plugin_button_update (LauncherPlugin *plugin)
     }
   /* get first item */
   if (G_LIKELY (plugin->items != NULL))
-    item = GARCON_MENU_ITEM (plugin->items->data);
+    item = MARKON_MENU_ITEM (plugin->items->data);
 
-  mode = xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin));
-  icon_size = xfce_panel_plugin_get_icon_size (XFCE_PANEL_PLUGIN (plugin));
+  mode = expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin));
+  icon_size = expidus_panel_plugin_get_icon_size (EXPIDUS_PANEL_PLUGIN (plugin));
 
   /* disable the "small" property in the deskbar mode and the label visible */
-  if (G_UNLIKELY (plugin->show_label && mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR))
-    xfce_panel_plugin_set_small (XFCE_PANEL_PLUGIN (plugin), FALSE);
+  if (G_UNLIKELY (plugin->show_label && mode == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR))
+    expidus_panel_plugin_set_small (EXPIDUS_PANEL_PLUGIN (plugin), FALSE);
   else
-    xfce_panel_plugin_set_small (XFCE_PANEL_PLUGIN (plugin), TRUE);
+    expidus_panel_plugin_set_small (EXPIDUS_PANEL_PLUGIN (plugin), TRUE);
 
   if (G_UNLIKELY (plugin->show_label))
     {
       panel_return_if_fail (GTK_IS_LABEL (plugin->child));
 
       gtk_label_set_angle (GTK_LABEL (plugin->child),
-                           (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0);
+                           (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0);
       gtk_label_set_text (GTK_LABEL (plugin->child),
-          item != NULL ? garcon_menu_item_get_name (item) : _("No items"));
+          item != NULL ? markon_menu_item_get_name (item) : _("No items"));
     }
   else if (G_LIKELY (item != NULL))
     {
       panel_return_if_fail (GTK_IS_WIDGET (plugin->child));
 
-      icon_name = garcon_menu_item_get_icon_name (item);
+      icon_name = markon_menu_item_get_icon_name (item);
       if (!panel_str_is_empty (icon_name))
         {
           if (g_path_is_absolute (icon_name)) {
@@ -1856,34 +1856,34 @@ launcher_plugin_button_update (LauncherPlugin *plugin)
         }
 
       panel_utils_set_atk_info (plugin->button,
-          garcon_menu_item_get_name (item),
-          garcon_menu_item_get_comment (item));
+          markon_menu_item_get_name (item),
+          markon_menu_item_get_comment (item));
     }
   else
     {
       /* set fallback icon if there is no application icon (yet) */
       panel_return_if_fail (GTK_IS_WIDGET (plugin->child));
       gtk_image_set_from_icon_name (GTK_IMAGE (plugin->child),
-                                    "org.xfce.panel.launcher", icon_size);
+                                    "com.expidus.panel.launcher", icon_size);
     }
 }
 
 
 
-#if GARCON_CHECK_VERSION(0,7,0)
+#if MARKON_CHECK_VERSION(0,7,0)
 static void
 launcher_plugin_add_desktop_actions (GtkWidget *widget, gpointer user_data)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (user_data);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (user_data);
 
   panel_return_if_fail (GTK_IS_WIDGET (widget));
   panel_return_if_fail (GTK_IS_MENU (plugin->action_menu));
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* Pack the action menu item into the plugin's context menu */
   g_object_ref (widget);
   gtk_container_remove (GTK_CONTAINER (plugin->action_menu), widget);
-  xfce_panel_plugin_menu_insert_item (XFCE_PANEL_PLUGIN (plugin), GTK_MENU_ITEM (widget));
+  expidus_panel_plugin_menu_insert_item (EXPIDUS_PANEL_PLUGIN (plugin), GTK_MENU_ITEM (widget));
   g_object_unref (widget);
 }
 
@@ -1892,30 +1892,30 @@ launcher_plugin_add_desktop_actions (GtkWidget *widget, gpointer user_data)
 static void
 launcher_plugin_button_update_action_menu (LauncherPlugin *plugin)
 {
-  GarconMenuItem      *item = NULL;
+  MarkonMenuItem      *item = NULL;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
   panel_return_if_fail (plugin->menu == NULL);
 
   /* If there are >1 items in the launcher don't show the action menu */
   if (LIST_HAS_TWO_OR_MORE_ENTRIES (plugin->items))
     {
-      xfce_panel_plugin_menu_destroy (XFCE_PANEL_PLUGIN (plugin));
+      expidus_panel_plugin_menu_destroy (EXPIDUS_PANEL_PLUGIN (plugin));
       plugin->action_menu = NULL;
       return;
     }
 
   if (G_LIKELY (plugin->items != NULL))
-    item = GARCON_MENU_ITEM (plugin->items->data);
+    item = MARKON_MENU_ITEM (plugin->items->data);
 
-  xfce_panel_plugin_menu_destroy (XFCE_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_menu_destroy (EXPIDUS_PANEL_PLUGIN (plugin));
   if (plugin->action_menu)
     {
       gtk_widget_destroy (GTK_WIDGET (plugin->action_menu));
     }
   else
     {
-      plugin->action_menu = GTK_WIDGET (garcon_gtk_menu_get_desktop_actions_menu (item));
+      plugin->action_menu = GTK_WIDGET (markon_gtk_menu_get_desktop_actions_menu (item));
       if (plugin->action_menu)
         {
           gtk_menu_set_reserve_toggle_size (GTK_MENU (plugin->action_menu), FALSE);
@@ -1948,7 +1948,7 @@ launcher_plugin_button_press_event (GtkWidget      *button,
 {
   guint modifiers;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   /* do nothing on anything else then a single click */
   if (event->type != GDK_BUTTON_PRESS)
@@ -1987,10 +1987,10 @@ launcher_plugin_button_release_event (GtkWidget      *button,
                                       GdkEventButton *event,
                                       LauncherPlugin *plugin)
 {
-  GarconMenuItem *item;
+  MarkonMenuItem *item;
   GdkScreen      *screen;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   /* remove a delayed popup timeout */
   if (plugin->menu_timeout_id != 0)
@@ -2002,7 +2002,7 @@ launcher_plugin_button_release_event (GtkWidget      *button,
     return FALSE;
 
   /* get the menu item and the screen */
-  item = GARCON_MENU_ITEM (plugin->items->data);
+  item = MARKON_MENU_ITEM (plugin->items->data);
   screen = gtk_widget_get_screen (button);
 
   /* launcher the entry */
@@ -2027,9 +2027,9 @@ launcher_plugin_button_query_tooltip (GtkWidget      *widget,
                                       LauncherPlugin *plugin)
 {
   gboolean        result;
-  GarconMenuItem *item;
+  MarkonMenuItem *item;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
   panel_return_val_if_fail (!plugin->disable_tooltips, FALSE);
 
   /* check if we show tooltips */
@@ -2039,7 +2039,7 @@ launcher_plugin_button_query_tooltip (GtkWidget      *widget,
     return FALSE;
 
   /* get the first item */
-  item = GARCON_MENU_ITEM (plugin->items->data);
+  item = MARKON_MENU_ITEM (plugin->items->data);
 
   /* handle the basic tooltip data */
   result = launcher_plugin_item_query_tooltip (widget, x, y, keyboard_mode, tooltip, item);
@@ -2049,7 +2049,7 @@ launcher_plugin_button_query_tooltip (GtkWidget      *widget,
       if (G_UNLIKELY (plugin->tooltip_cache == NULL))
         plugin->tooltip_cache =
             launcher_plugin_tooltip_pixbuf (gtk_widget_get_screen (widget),
-                                            garcon_menu_item_get_icon_name (item));
+                                            markon_menu_item_get_icon_name (item));
 
       if (G_LIKELY (plugin->tooltip_cache != NULL))
         gtk_tooltip_set_icon (tooltip, plugin->tooltip_cache);
@@ -2072,7 +2072,7 @@ launcher_plugin_button_drag_data_received (GtkWidget        *widget,
 {
   GSList *uri_list;
 
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* leave when there are not items or the arrow is internal */
   if (ARROW_INSIDE_BUTTON (plugin) || plugin->items == NULL)
@@ -2083,7 +2083,7 @@ launcher_plugin_button_drag_data_received (GtkWidget        *widget,
   if (G_LIKELY (uri_list != NULL))
     {
       /* execute */
-      launcher_plugin_item_exec (GARCON_MENU_ITEM (plugin->items->data),
+      launcher_plugin_item_exec (MARKON_MENU_ITEM (plugin->items->data),
                                  gtk_get_current_event_time (),
                                  gtk_widget_get_screen (widget),
                                  uri_list);
@@ -2135,7 +2135,7 @@ launcher_plugin_button_drag_motion (GtkWidget      *widget,
                                     guint           drag_time,
                                     LauncherPlugin *plugin)
 {
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   if (launcher_plugin_supported_drop (context, widget) == GDK_NONE)
     return FALSE;
@@ -2190,7 +2190,7 @@ launcher_plugin_button_drag_leave (GtkWidget      *widget,
                                    guint           drag_time,
                                    LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   /* unhighlight the widget or make sure the menu is deactivated */
   if (NO_ARROW_INSIDE_BUTTON (plugin))
@@ -2213,14 +2213,14 @@ launcher_plugin_button_draw (GtkWidget      *widget,
   GtkStyleContext  *ctx;
   GtkBorder         padding;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   /* leave when the arrow is not shown inside the button */
   if (NO_ARROW_INSIDE_BUTTON (plugin))
     return FALSE;
 
   /* get the arrow type */
-  arrow_type = xfce_arrow_button_get_arrow_type (XFCE_ARROW_BUTTON (plugin->arrow));
+  arrow_type = expidus_arrow_button_get_arrow_type (EXPIDUS_ARROW_BUTTON (plugin->arrow));
 
   /* style thickness */
   ctx = gtk_widget_get_style_context (widget);
@@ -2273,7 +2273,7 @@ launcher_plugin_button_draw (GtkWidget      *widget,
 static void
 launcher_plugin_arrow_visibility (LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   if (plugin->arrow_position != LAUNCHER_ARROW_INTERNAL
        && LIST_HAS_TWO_OR_MORE_ENTRIES (plugin->items))
@@ -2289,7 +2289,7 @@ launcher_plugin_arrow_press_event (GtkWidget      *button,
                                    GdkEventButton *event,
                                    LauncherPlugin *plugin)
 {
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   /* only popup when button 1 is pressed */
   if (event->button == 1 && event->type == GDK_BUTTON_PRESS)
@@ -2312,7 +2312,7 @@ launcher_plugin_arrow_drag_motion (GtkWidget      *widget,
                                    guint           drag_time,
                                    LauncherPlugin *plugin)
 {
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
 
   if (launcher_plugin_supported_drop (context, widget) == GDK_NONE)
     return FALSE;
@@ -2340,12 +2340,12 @@ launcher_plugin_arrow_drag_motion (GtkWidget      *widget,
 static gboolean
 launcher_plugin_arrow_drag_leave_timeout (gpointer user_data)
 {
-  LauncherPlugin *plugin = XFCE_LAUNCHER_PLUGIN (user_data);
+  LauncherPlugin *plugin = EXPIDUS_LAUNCHER_PLUGIN (user_data);
   gint            pointer_x, pointer_y;
   GtkWidget      *menu = plugin->menu;
   gint            menu_x, menu_y, menu_w, menu_h;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
   panel_return_val_if_fail (menu == NULL || gtk_widget_get_has_window (menu), FALSE);
 
   /* leave when the menu is destroyed */
@@ -2384,7 +2384,7 @@ launcher_plugin_arrow_drag_leave (GtkWidget      *widget,
                                   guint           drag_time,
                                   LauncherPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin));
 
   if (plugin->menu_timeout_id != 0)
     {
@@ -2409,20 +2409,20 @@ launcher_plugin_item_query_tooltip (GtkWidget      *widget,
                                     gint            y,
                                     gboolean        keyboard_mode,
                                     GtkTooltip     *tooltip,
-                                    GarconMenuItem *item)
+                                    MarkonMenuItem *item)
 {
   gchar       *markup;
   const gchar *name, *comment;
   GdkPixbuf   *pixbuf;
 
-  panel_return_val_if_fail (GARCON_IS_MENU_ITEM (item), FALSE);
+  panel_return_val_if_fail (MARKON_IS_MENU_ITEM (item), FALSE);
 
   /* require atleast an item name */
-  name = garcon_menu_item_get_name (item);
+  name = markon_menu_item_get_name (item);
   if (panel_str_is_empty (name))
     return FALSE;
 
-  comment = garcon_menu_item_get_comment (item);
+  comment = markon_menu_item_get_comment (item);
   if (!panel_str_is_empty (comment))
     {
       markup = g_markup_printf_escaped ("<b>%s</b>\n%s", name, comment);
@@ -2447,7 +2447,7 @@ launcher_plugin_item_query_tooltip (GtkWidget      *widget,
       else
         {
           pixbuf = launcher_plugin_tooltip_pixbuf (gtk_widget_get_screen (widget),
-                                                   garcon_menu_item_get_icon_name (item));
+                                                   markon_menu_item_get_icon_name (item));
           if (G_LIKELY (pixbuf != NULL))
             {
               gtk_tooltip_set_icon (tooltip, pixbuf);
@@ -2463,7 +2463,7 @@ launcher_plugin_item_query_tooltip (GtkWidget      *widget,
 
 
 static gboolean
-launcher_plugin_item_exec_on_screen (GarconMenuItem *item,
+launcher_plugin_item_exec_on_screen (MarkonMenuItem *item,
                                      guint32         event_time,
                                      GdkScreen      *screen,
                                      GSList         *uri_list)
@@ -2474,30 +2474,30 @@ launcher_plugin_item_exec_on_screen (GarconMenuItem *item,
   gchar       *command, *uri;
   const gchar *icon;
 
-  panel_return_val_if_fail (GARCON_IS_MENU_ITEM (item), FALSE);
+  panel_return_val_if_fail (MARKON_IS_MENU_ITEM (item), FALSE);
   panel_return_val_if_fail (GDK_IS_SCREEN (screen), FALSE);
 
   /* get the command */
-  command = (gchar*) garcon_menu_item_get_command (item);
+  command = (gchar*) markon_menu_item_get_command (item);
   panel_return_val_if_fail (!panel_str_is_empty (command), FALSE);
 
   /* expand the field codes */
-  icon = garcon_menu_item_get_icon_name (item);
-  uri = garcon_menu_item_get_uri (item);
-  command = xfce_expand_desktop_entry_field_codes (command, uri_list, icon,
-                                                   garcon_menu_item_get_name (item),
+  icon = markon_menu_item_get_icon_name (item);
+  uri = markon_menu_item_get_uri (item);
+  command = expidus_expand_desktop_entry_field_codes (command, uri_list, icon,
+                                                   markon_menu_item_get_name (item),
                                                    uri,
-                                                   garcon_menu_item_requires_terminal (item));
+                                                   markon_menu_item_requires_terminal (item));
   g_free (uri);
 
   /* parse the execute command */
   if (g_shell_parse_argv (command, NULL, &argv, &error))
     {
       /* launch the command on the screen */
-      succeed = xfce_spawn (screen,
-                            garcon_menu_item_get_path (item),
+      succeed = expidus_spawn (screen,
+                            markon_menu_item_get_path (item),
                             argv, NULL, G_SPAWN_SEARCH_PATH,
-                            garcon_menu_item_supports_startup_notification (item),
+                            markon_menu_item_supports_startup_notification (item),
                             event_time, icon, FALSE, &error);
 
       g_strfreev (argv);
@@ -2506,7 +2506,7 @@ launcher_plugin_item_exec_on_screen (GarconMenuItem *item,
   if (G_UNLIKELY (!succeed))
     {
       /* show an error dialog */
-      xfce_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), command);
+      expidus_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), command);
       g_error_free (error);
     }
 
@@ -2518,7 +2518,7 @@ launcher_plugin_item_exec_on_screen (GarconMenuItem *item,
 
 
 static void
-launcher_plugin_item_exec (GarconMenuItem *item,
+launcher_plugin_item_exec (MarkonMenuItem *item,
                            guint32         event_time,
                            GdkScreen      *screen,
                            GSList         *uri_list)
@@ -2527,11 +2527,11 @@ launcher_plugin_item_exec (GarconMenuItem *item,
   gboolean     proceed = TRUE;
   const gchar *command;
 
-  panel_return_if_fail (GARCON_IS_MENU_ITEM (item));
+  panel_return_if_fail (MARKON_IS_MENU_ITEM (item));
   panel_return_if_fail (GDK_IS_SCREEN (screen));
 
   /* leave when there is nothing to execute */
-  command = garcon_menu_item_get_command (item);
+  command = markon_menu_item_get_command (item);
   if (panel_str_is_empty (command))
     return;
 
@@ -2557,7 +2557,7 @@ launcher_plugin_item_exec (GarconMenuItem *item,
 
 
 static void
-launcher_plugin_item_exec_from_clipboard (GarconMenuItem *item,
+launcher_plugin_item_exec_from_clipboard (MarkonMenuItem *item,
                                           guint32         event_time,
                                           GdkScreen      *screen)
 {
@@ -2566,7 +2566,7 @@ launcher_plugin_item_exec_from_clipboard (GarconMenuItem *item,
   //GSList           *uri_list;
   //GtkSelectionData  data;
 
-  panel_return_if_fail (GARCON_IS_MENU_ITEM (item));
+  panel_return_if_fail (MARKON_IS_MENU_ITEM (item));
   panel_return_if_fail (GDK_IS_SCREEN (screen));
 
   /* get the primary clipboard text */
@@ -2654,7 +2654,7 @@ launcher_plugin_uri_list_extract (GtkSelectionData *data)
 
           if (g_path_is_absolute (array[i]))
             uri = g_filename_to_uri (array[i], NULL, NULL);
-          else if (_exo_str_looks_like_an_uri (array[i]))
+          else if (_endo_str_looks_like_an_uri (array[i]))
             uri = g_strdup (array[i]);
 
           /* append the uri if we extracted one */
@@ -2685,7 +2685,7 @@ launcher_plugin_uri_list_free (GSList *uri_list)
 GSList *
 launcher_plugin_get_items (LauncherPlugin *plugin)
 {
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), NULL);
 
   /* set extra reference and return a copy of the list */
   g_slist_foreach (plugin->items, (GFunc) (void (*)(void)) g_object_ref, NULL);
@@ -2700,14 +2700,14 @@ launcher_plugin_unique_filename (LauncherPlugin *plugin)
   gchar        *filename, *path;
   static guint  counter = 0;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), NULL);
 
   filename = g_strdup_printf (RELATIVE_CONFIG_PATH G_DIR_SEPARATOR_S "%ld%d.desktop",
-                              xfce_panel_plugin_get_name (XFCE_PANEL_PLUGIN (plugin)),
-                              xfce_panel_plugin_get_unique_id (XFCE_PANEL_PLUGIN (plugin)),
+                              expidus_panel_plugin_get_name (EXPIDUS_PANEL_PLUGIN (plugin)),
+                              expidus_panel_plugin_get_unique_id (EXPIDUS_PANEL_PLUGIN (plugin)),
                               g_get_real_time () / G_USEC_PER_SEC,
                               ++counter);
-  path = xfce_resource_save_location (XFCE_RESOURCE_CONFIG, filename, TRUE);
+  path = expidus_resource_save_location (EXPIDUS_RESOURCE_CONFIG, filename, TRUE);
   g_free (filename);
 
   return path;
@@ -2717,28 +2717,28 @@ launcher_plugin_unique_filename (LauncherPlugin *plugin)
 
 
 static void
-launcher_plugin_garcon_menu_pool_add (GarconMenu *menu,
+launcher_plugin_markon_menu_pool_add (MarkonMenu *menu,
                                       GHashTable *pool)
 {
   GList          *li, *items;
   GList          *menus;
-  GarconMenuItem *item;
+  MarkonMenuItem *item;
   const gchar    *desktop_id;
 
-  panel_return_if_fail (GARCON_IS_MENU (menu));
+  panel_return_if_fail (MARKON_IS_MENU (menu));
 
-  items = garcon_menu_get_items (menu);
+  items = markon_menu_get_items (menu);
   for (li = items; li != NULL; li = li->next)
     {
-      item = GARCON_MENU_ITEM (li->data);
-      panel_assert (GARCON_IS_MENU_ITEM (item));
+      item = MARKON_MENU_ITEM (li->data);
+      panel_assert (MARKON_IS_MENU_ITEM (item));
 
       /* skip invisible items */
-      if (!garcon_menu_element_get_visible (GARCON_MENU_ELEMENT (item)))
+      if (!markon_menu_element_get_visible (MARKON_MENU_ELEMENT (item)))
         continue;
 
       /* skip duplicates */
-      desktop_id = garcon_menu_item_get_desktop_id (item);
+      desktop_id = markon_menu_item_get_desktop_id (item);
       if (g_hash_table_lookup (pool, desktop_id) != NULL)
         continue;
 
@@ -2748,19 +2748,19 @@ launcher_plugin_garcon_menu_pool_add (GarconMenu *menu,
     }
   g_list_free (items);
 
-  menus = garcon_menu_get_menus (menu);
+  menus = markon_menu_get_menus (menu);
   for (li = menus; li != NULL; li = li->next)
-    launcher_plugin_garcon_menu_pool_add (li->data, pool);
+    launcher_plugin_markon_menu_pool_add (li->data, pool);
   g_list_free (menus);
 }
 
 
 
 GHashTable *
-launcher_plugin_garcon_menu_pool (void)
+launcher_plugin_markon_menu_pool (void)
 {
   GHashTable *pool;
-  GarconMenu *menu;
+  MarkonMenu *menu;
   GError     *error = NULL;
 
   /* always return a hash table, even if it's empty */
@@ -2768,12 +2768,12 @@ launcher_plugin_garcon_menu_pool (void)
                                 (GDestroyNotify) g_free,
                                 (GDestroyNotify) g_object_unref);
 
-  menu = garcon_menu_new_applications ();
+  menu = markon_menu_new_applications ();
   if (G_LIKELY (menu != NULL))
     {
-      if (garcon_menu_load (menu, NULL, &error))
+      if (markon_menu_load (menu, NULL, &error))
         {
-          launcher_plugin_garcon_menu_pool_add (menu, pool);
+          launcher_plugin_markon_menu_pool_add (menu, pool);
         }
       else
         {
@@ -2795,17 +2795,17 @@ launcher_plugin_garcon_menu_pool (void)
 
 gboolean
 launcher_plugin_item_is_editable (LauncherPlugin *plugin,
-                                  GarconMenuItem *item,
+                                  MarkonMenuItem *item,
                                   gboolean       *can_delete)
 {
   GFile     *item_file;
   gboolean   editable = FALSE;
   GFileInfo *file_info;
 
-  panel_return_val_if_fail (XFCE_IS_LAUNCHER_PLUGIN (plugin), FALSE);
-  panel_return_val_if_fail (GARCON_IS_MENU_ITEM (item), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_LAUNCHER_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (MARKON_IS_MENU_ITEM (item), FALSE);
 
-  item_file = garcon_menu_item_get_file (item);
+  item_file = markon_menu_item_get_file (item);
   if (!g_file_has_prefix (item_file, plugin->config_directory))
     goto out;
 

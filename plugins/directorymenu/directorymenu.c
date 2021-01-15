@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,12 +20,12 @@
 #include <config.h>
 #endif
 
-#include <exo/exo.h>
+#include <endo/endo.h>
 #include <gio/gio.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <common/panel-xfconf.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-private.h>
 
@@ -43,12 +43,12 @@
 
 struct _DirectoryMenuPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _DirectoryMenuPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   GtkWidget       *button;
   GtkWidget       *icon;
@@ -92,13 +92,13 @@ static void      directory_menu_plugin_set_property         (GObject            
                                                              guint                prop_id,
                                                              const GValue        *value,
                                                              GParamSpec          *pspec);
-static void      directory_menu_plugin_construct            (XfcePanelPlugin     *panel_plugin);
+static void      directory_menu_plugin_construct            (ExpidusPanelPlugin     *panel_plugin);
 static void      directory_menu_plugin_free_file_patterns   (DirectoryMenuPlugin *plugin);
-static void      directory_menu_plugin_free_data            (XfcePanelPlugin     *panel_plugin);
-static gboolean  directory_menu_plugin_size_changed         (XfcePanelPlugin     *panel_plugin,
+static void      directory_menu_plugin_free_data            (ExpidusPanelPlugin     *panel_plugin);
+static gboolean  directory_menu_plugin_size_changed         (ExpidusPanelPlugin     *panel_plugin,
                                                              gint                 size);
-static void      directory_menu_plugin_configure_plugin     (XfcePanelPlugin     *panel_plugin);
-static gboolean  directory_menu_plugin_remote_event         (XfcePanelPlugin     *panel_plugin,
+static void      directory_menu_plugin_configure_plugin     (ExpidusPanelPlugin     *panel_plugin);
+static gboolean  directory_menu_plugin_remote_event         (ExpidusPanelPlugin     *panel_plugin,
                                                              const gchar         *name,
                                                              const GValue        *value);
 static void      directory_menu_plugin_menu                 (GtkWidget           *button,
@@ -107,7 +107,7 @@ static void      directory_menu_plugin_menu                 (GtkWidget          
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (DirectoryMenuPlugin, directory_menu_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN (DirectoryMenuPlugin, directory_menu_plugin)
 
 
 
@@ -117,14 +117,14 @@ static GQuark menu_file = 0;
 static void
 directory_menu_plugin_class_init (DirectoryMenuPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
   gobject_class->get_property = directory_menu_plugin_get_property;
   gobject_class->set_property = directory_menu_plugin_set_property;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = directory_menu_plugin_construct;
   plugin_class->free_data = directory_menu_plugin_free_data;
   plugin_class->size_changed = directory_menu_plugin_size_changed;
@@ -195,8 +195,8 @@ directory_menu_plugin_class_init (DirectoryMenuPluginClass *klass)
 static void
 directory_menu_plugin_init (DirectoryMenuPlugin *plugin)
 {
-  plugin->button = xfce_panel_create_toggle_button ();
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->button);
+  plugin->button = expidus_panel_create_toggle_button ();
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->button);
   gtk_container_add (GTK_CONTAINER (plugin), plugin->button);
   gtk_widget_set_name (plugin->button, "directorymenu-button");
   gtk_button_set_relief (GTK_BUTTON (plugin->button), GTK_RELIEF_NONE);
@@ -221,7 +221,7 @@ directory_menu_plugin_get_property (GObject    *object,
                                     GValue     *value,
                                     GParamSpec *pspec)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (object);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (object);
   gchar               *str;
 
   switch (prop_id)
@@ -277,7 +277,7 @@ directory_menu_plugin_set_property (GObject      *object,
                                     const GValue *value,
                                     GParamSpec   *pspec)
 {
-  DirectoryMenuPlugin  *plugin = XFCE_DIRECTORY_MENU_PLUGIN (object);
+  DirectoryMenuPlugin  *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (object);
   gchar                *display_name;
   gchar               **array;
   guint                 i;
@@ -306,7 +306,7 @@ directory_menu_plugin_set_property (GObject      *object,
     case PROP_ICON_NAME:
       g_free (plugin->icon_name);
       plugin->icon_name = g_value_dup_string (value);
-      icon_size = xfce_panel_plugin_get_icon_size (XFCE_PANEL_PLUGIN (object));
+      icon_size = expidus_panel_plugin_get_icon_size (EXPIDUS_PANEL_PLUGIN (object));
       gtk_image_set_from_icon_name (GTK_IMAGE (plugin->icon),
           panel_str_is_empty (plugin->icon_name) ? DEFAULT_ICON_NAME : plugin->icon_name,
           icon_size);
@@ -359,9 +359,9 @@ directory_menu_plugin_set_property (GObject      *object,
 
 
 static void
-directory_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
+directory_menu_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (panel_plugin);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "base-directory", G_TYPE_STRING },
@@ -375,13 +375,13 @@ directory_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
     { NULL }
   };
 
-  xfce_panel_plugin_menu_show_configure (panel_plugin);
+  expidus_panel_plugin_menu_show_configure (panel_plugin);
 
-  xfce_panel_plugin_set_small (panel_plugin, TRUE);
+  expidus_panel_plugin_set_small (panel_plugin, TRUE);
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   if (plugin->base_directory == NULL)
@@ -397,7 +397,7 @@ directory_menu_plugin_free_file_patterns (DirectoryMenuPlugin *plugin)
 {
   GSList *li;
 
-  panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_DIRECTORY_MENU_PLUGIN (plugin));
 
   for (li = plugin->patterns; li != NULL; li = li->next)
     g_pattern_spec_free (li->data);
@@ -409,9 +409,9 @@ directory_menu_plugin_free_file_patterns (DirectoryMenuPlugin *plugin)
 
 
 static void
-directory_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
+directory_menu_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (panel_plugin);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (panel_plugin);
 
   g_object_unref (G_OBJECT (plugin->base_directory));
   g_free (plugin->icon_name);
@@ -423,16 +423,16 @@ directory_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-directory_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+directory_menu_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                                     gint             size)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (panel_plugin);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (panel_plugin);
   gint icon_size;
 
   /* force a square button */
-  size /= xfce_panel_plugin_get_nrows (panel_plugin);
+  size /= expidus_panel_plugin_get_nrows (panel_plugin);
   gtk_widget_set_size_request (GTK_WIDGET (panel_plugin), size, size);
-  icon_size = xfce_panel_plugin_get_icon_size (panel_plugin);
+  icon_size = expidus_panel_plugin_get_icon_size (panel_plugin);
   gtk_image_set_pixel_size (GTK_IMAGE (plugin->icon), icon_size);
 
   return TRUE;
@@ -448,7 +448,7 @@ directory_menu_plugin_configure_plugin_file_set (GtkFileChooserButton *button,
   gchar *uri;
 
   panel_return_if_fail (GTK_IS_FILE_CHOOSER_BUTTON (button));
-  panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_DIRECTORY_MENU_PLUGIN (plugin));
 
   uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (button));
   g_object_set (G_OBJECT (plugin), "base-directory", uri, NULL);
@@ -461,14 +461,14 @@ static void
 directory_menu_plugin_configure_plugin_icon_chooser (GtkWidget           *button,
                                                      DirectoryMenuPlugin *plugin)
 {
-#ifdef EXO_CHECK_VERSION
+#ifdef ENDO_CHECK_VERSION
   GtkWidget *chooser;
   gchar     *icon;
 
-  panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_DIRECTORY_MENU_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_IMAGE (plugin->dialog_icon));
 
-  chooser = exo_icon_chooser_dialog_new (_("Select An Icon"),
+  chooser = endo_icon_chooser_dialog_new (_("Select An Icon"),
                                          GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                          _("_Cancel"), GTK_RESPONSE_CANCEL,
                                          _("_OK"), GTK_RESPONSE_ACCEPT,
@@ -476,11 +476,11 @@ directory_menu_plugin_configure_plugin_icon_chooser (GtkWidget           *button
   gtk_dialog_set_default_response (GTK_DIALOG (chooser), GTK_RESPONSE_ACCEPT);
 
   if (!panel_str_is_empty (plugin->icon_name))
-  exo_icon_chooser_dialog_set_icon (EXO_ICON_CHOOSER_DIALOG (chooser), plugin->icon_name);
+  endo_icon_chooser_dialog_set_icon (ENDO_ICON_CHOOSER_DIALOG (chooser), plugin->icon_name);
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      icon = exo_icon_chooser_dialog_get_icon (EXO_ICON_CHOOSER_DIALOG (chooser));
+      icon = endo_icon_chooser_dialog_get_icon (ENDO_ICON_CHOOSER_DIALOG (chooser));
       g_object_set (G_OBJECT (plugin), "icon-name", icon, NULL);
       gtk_image_set_from_icon_name (GTK_IMAGE (plugin->dialog_icon), icon, GTK_ICON_SIZE_DIALOG);
       g_free (icon);
@@ -493,9 +493,9 @@ directory_menu_plugin_configure_plugin_icon_chooser (GtkWidget           *button
 
 
 static void
-directory_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+directory_menu_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (panel_plugin);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (panel_plugin);
   GtkBuilder          *builder;
   GObject             *dialog, *object;
   const gchar         *icon_name = plugin->icon_name;
@@ -570,11 +570,11 @@ directory_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-directory_menu_plugin_remote_event (XfcePanelPlugin *panel_plugin,
+directory_menu_plugin_remote_event (ExpidusPanelPlugin *panel_plugin,
                                     const gchar     *name,
                                     const GValue    *value)
 {
-  DirectoryMenuPlugin *plugin = XFCE_DIRECTORY_MENU_PLUGIN (panel_plugin);
+  DirectoryMenuPlugin *plugin = EXPIDUS_DIRECTORY_MENU_PLUGIN (panel_plugin);
 
   panel_return_val_if_fail (value == NULL || G_IS_VALUE (value), FALSE);
 
@@ -612,7 +612,7 @@ directory_menu_plugin_selection_done (GtkWidget           *menu,
   panel_return_if_fail (plugin->button == NULL || GTK_IS_TOGGLE_BUTTON (plugin->button));
   panel_return_if_fail (GTK_IS_MENU (menu));
 
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), FALSE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), FALSE);
 
   if (plugin->button != NULL)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (plugin->button), FALSE);
@@ -686,7 +686,7 @@ directory_menu_plugin_menu_launch_desktop_file (GtkWidget *mi,
 
   if (!g_app_info_launch (info, NULL, G_APP_LAUNCH_CONTEXT (context), &error))
     {
-      xfce_dialog_show_error (NULL, error, _("Failed to launch application \"%s\""),
+      expidus_dialog_show_error (NULL, error, _("Failed to launch application \"%s\""),
                               g_app_info_get_executable (info));
       g_error_free (error);
     }
@@ -751,7 +751,7 @@ directory_menu_plugin_menu_launch (GtkWidget *mi,
 
 err:
   display_name = g_file_get_parse_name (file);
-  xfce_dialog_show_error (NULL, error, message, display_name);
+  expidus_dialog_show_error (NULL, error, message, display_name);
   g_free (display_name);
   g_error_free (error);
 }
@@ -766,7 +766,7 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
 {
   GError       *error = NULL;
   gchar        *working_dir;
-  XfceRc       *rc, *helperrc;
+  ExpidusRc       *rc, *helperrc;
   const gchar  *value;
   gchar        *filename;
   gchar       **binaries = NULL;
@@ -775,29 +775,29 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
   gchar        *argv[3];
   gboolean      startup_notify = FALSE;
 
-  /* try to work around the exo code and get the direct command */
-  rc = xfce_rc_config_open (XFCE_RESOURCE_CONFIG, "xfce4/helpers.rc", TRUE);
+  /* try to work around the endo code and get the direct command */
+  rc = expidus_rc_config_open (EXPIDUS_RESOURCE_CONFIG, "expidus1/helpers.rc", TRUE);
   if (G_LIKELY (rc != NULL))
     {
-      value = xfce_rc_read_entry_untranslated (rc, category, NULL);
+      value = expidus_rc_read_entry_untranslated (rc, category, NULL);
       if (G_LIKELY (value != NULL))
         {
-          filename = g_strconcat ("xfce4/helpers/", value, ".desktop", NULL);
-          helperrc = xfce_rc_config_open (XFCE_RESOURCE_DATA, filename, TRUE);
+          filename = g_strconcat ("expidus1/helpers/", value, ".desktop", NULL);
+          helperrc = expidus_rc_config_open (EXPIDUS_RESOURCE_DATA, filename, TRUE);
           g_free (filename);
 
           if (G_LIKELY (helperrc != NULL))
             {
-              startup_notify = xfce_rc_read_bool_entry (helperrc, "StartupNotify", FALSE);
-              value = xfce_rc_read_entry_untranslated (helperrc, "X-XFCE-Binaries", NULL);
+              startup_notify = expidus_rc_read_bool_entry (helperrc, "StartupNotify", FALSE);
+              value = expidus_rc_read_entry_untranslated (helperrc, "X-EXPIDUS-Binaries", NULL);
               if (value != NULL)
                 binaries = g_strsplit (value, ";", -1);
 
-              xfce_rc_close (helperrc);
+              expidus_rc_close (helperrc);
             }
         }
 
-      xfce_rc_close (rc);
+      expidus_rc_close (rc);
     }
 
   working_dir = g_file_get_path (dir);
@@ -816,9 +816,9 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
           argv[1] = path_as_arg ? working_dir : NULL;
           argv[2] = NULL;
 
-          /* try to spawn the program, if this fails we try exo for
+          /* try to spawn the program, if this fails we try endo for
            * a decent error message */
-          result = xfce_spawn (gtk_widget_get_screen (mi),
+          result = expidus_spawn (gtk_widget_get_screen (mi),
                                working_dir, argv, NULL, 0,
                                startup_notify,
                                gtk_get_current_event_time (),
@@ -831,8 +831,8 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
     }
 
   if (!result
-#ifdef EXO_CHECK_VERSION
-      && !exo_execute_preferred_application_on_screen (category,
+#ifdef ENDO_CHECK_VERSION
+      && !endo_execute_preferred_application_on_screen (category,
                                                        path_as_arg ? working_dir : NULL,
                                                        working_dir,
                                                        NULL,
@@ -840,7 +840,7 @@ directory_menu_plugin_menu_open (GtkWidget   *mi,
 #endif
      )
     {
-      xfce_dialog_show_error (NULL, error,
+      expidus_dialog_show_error (NULL, error,
           _("Failed to execute the preferred application for category \"%s\""), category);
       g_error_free (error);
     }
@@ -987,7 +987,7 @@ directory_menu_plugin_create_new (GtkWidget *mi,
           if (error != NULL)
             {
               filepath = g_file_get_parse_name (new_file);
-              xfce_dialog_show_error (NULL, error, _("Failed to create folder: %s"), filepath);
+              expidus_dialog_show_error (NULL, error, _("Failed to create folder: %s"), filepath);
               g_free (filepath);
               g_error_free (error);
             }
@@ -1062,7 +1062,7 @@ directory_menu_plugin_menu_load (GtkWidget           *menu,
   const gchar     *description;
 #endif
 
-  panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_DIRECTORY_MENU_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_MENU (menu));
 
   dir = g_object_get_qdata (G_OBJECT (menu), menu_file);
@@ -1306,7 +1306,7 @@ directory_menu_plugin_menu (GtkWidget           *button,
 {
   GtkWidget *menu;
 
-  panel_return_if_fail (XFCE_IS_DIRECTORY_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_DIRECTORY_MENU_PLUGIN (plugin));
   panel_return_if_fail (button == NULL || plugin->button == button);
 
   if (button != NULL
@@ -1322,9 +1322,9 @@ directory_menu_plugin_menu (GtkWidget           *button,
                            g_object_unref);
   directory_menu_plugin_menu_load (menu, plugin);
   gtk_menu_popup_at_widget (GTK_MENU (menu), button,
-                            xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             NULL);
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), TRUE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), TRUE);
 }

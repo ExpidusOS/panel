@@ -1,8 +1,8 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
 _Name=Show Desktop
 _Comment=Hide all windows and show the desktop
-Icon=org.xfce.panel.showdesktop
-X-XFCE-Module=showdesktop
-X-XFCE-Internal=TRUE
-X-XFCE-API=@LIBXFCE4PANEL_VERSION_API@
+Icon=com.expidus.panel.showdesktop
+X-EXPIDUS-Module=showdesktop
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -32,16 +32,16 @@
 
 
 
-static void     xfce_clock_fuzzy_set_property (GObject               *object,
+static void     expidus_clock_fuzzy_set_property (GObject               *object,
                                                guint                  prop_id,
                                                const GValue          *value,
                                                GParamSpec            *pspec);
-static void     xfce_clock_fuzzy_get_property (GObject               *object,
+static void     expidus_clock_fuzzy_get_property (GObject               *object,
                                                guint                  prop_id,
                                                GValue                *value,
                                                GParamSpec            *pspec);
-static void     xfce_clock_fuzzy_finalize     (GObject               *object);
-static gboolean xfce_clock_fuzzy_update       (XfceClockFuzzy        *fuzzy,
+static void     expidus_clock_fuzzy_finalize     (GObject               *object);
+static gboolean expidus_clock_fuzzy_update       (ExpidusClockFuzzy        *fuzzy,
                                                ClockTime             *time);
 
 
@@ -66,12 +66,12 @@ enum
   PROP_ORIENTATION
 };
 
-struct _XfceClockFuzzyClass
+struct _ExpidusClockFuzzyClass
 {
  GtkLabelClass __parent__;
 };
 
-struct _XfceClockFuzzy
+struct _ExpidusClockFuzzy
 {
   GtkLabel __parent__;
 
@@ -150,19 +150,19 @@ static const gchar *i18n_hour_names[] =
 
 
 
-XFCE_PANEL_DEFINE_TYPE (XfceClockFuzzy, xfce_clock_fuzzy, GTK_TYPE_LABEL)
+EXPIDUS_PANEL_DEFINE_TYPE (ExpidusClockFuzzy, expidus_clock_fuzzy, GTK_TYPE_LABEL)
 
 
 
 static void
-xfce_clock_fuzzy_class_init (XfceClockFuzzyClass *klass)
+expidus_clock_fuzzy_class_init (ExpidusClockFuzzyClass *klass)
 {
   GObjectClass *gobject_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
-  gobject_class->set_property = xfce_clock_fuzzy_set_property;
-  gobject_class->get_property = xfce_clock_fuzzy_get_property;
-  gobject_class->finalize = xfce_clock_fuzzy_finalize;
+  gobject_class->set_property = expidus_clock_fuzzy_set_property;
+  gobject_class->get_property = expidus_clock_fuzzy_get_property;
+  gobject_class->finalize = expidus_clock_fuzzy_finalize;
 
   g_object_class_install_property (gobject_class,
                                    PROP_SIZE_RATIO,
@@ -192,7 +192,7 @@ xfce_clock_fuzzy_class_init (XfceClockFuzzyClass *klass)
 
 
 static void
-xfce_clock_fuzzy_init (XfceClockFuzzy *fuzzy)
+expidus_clock_fuzzy_init (ExpidusClockFuzzy *fuzzy)
 {
   fuzzy->fuzziness = FUZZINESS_DEFAULT;
 
@@ -202,12 +202,12 @@ xfce_clock_fuzzy_init (XfceClockFuzzy *fuzzy)
 
 
 static void
-xfce_clock_fuzzy_set_property (GObject      *object,
+expidus_clock_fuzzy_set_property (GObject      *object,
                                guint         prop_id,
                                const GValue *value,
                                GParamSpec   *pspec)
 {
-  XfceClockFuzzy *fuzzy = XFCE_CLOCK_FUZZY (object);
+  ExpidusClockFuzzy *fuzzy = EXPIDUS_CLOCK_FUZZY (object);
   guint           fuzziness;
 
   switch (prop_id)
@@ -223,7 +223,7 @@ xfce_clock_fuzzy_set_property (GObject      *object,
       if (G_LIKELY (fuzzy->fuzziness != fuzziness))
         {
           fuzzy->fuzziness = fuzziness;
-          xfce_clock_fuzzy_update (fuzzy, fuzzy->time);
+          expidus_clock_fuzzy_update (fuzzy, fuzzy->time);
         }
       break;
 
@@ -236,12 +236,12 @@ xfce_clock_fuzzy_set_property (GObject      *object,
 
 
 static void
-xfce_clock_fuzzy_get_property (GObject    *object,
+expidus_clock_fuzzy_get_property (GObject    *object,
                                guint       prop_id,
                                GValue     *value,
                                GParamSpec *pspec)
 {
-  XfceClockFuzzy *fuzzy = XFCE_CLOCK_FUZZY (object);
+  ExpidusClockFuzzy *fuzzy = EXPIDUS_CLOCK_FUZZY (object);
 
   switch (prop_id)
     {
@@ -262,18 +262,18 @@ xfce_clock_fuzzy_get_property (GObject    *object,
 
 
 static void
-xfce_clock_fuzzy_finalize (GObject *object)
+expidus_clock_fuzzy_finalize (GObject *object)
 {
   /* stop the timeout */
-  clock_time_timeout_free (XFCE_CLOCK_FUZZY (object)->timeout);
+  clock_time_timeout_free (EXPIDUS_CLOCK_FUZZY (object)->timeout);
 
-  (*G_OBJECT_CLASS (xfce_clock_fuzzy_parent_class)->finalize) (object);
+  (*G_OBJECT_CLASS (expidus_clock_fuzzy_parent_class)->finalize) (object);
 }
 
 
 
 static gboolean
-xfce_clock_fuzzy_update (XfceClockFuzzy *fuzzy,
+expidus_clock_fuzzy_update (ExpidusClockFuzzy *fuzzy,
                          ClockTime      *time)
 {
   GDateTime      *date_time;
@@ -284,7 +284,7 @@ xfce_clock_fuzzy_update (XfceClockFuzzy *fuzzy,
   gchar          *p;
   gchar           pattern[3];
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_FUZZY (fuzzy), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_FUZZY (fuzzy), FALSE);
 
   /* get the local time */
   date_time = clock_time_get_time (fuzzy->time);
@@ -365,14 +365,14 @@ xfce_clock_fuzzy_update (XfceClockFuzzy *fuzzy,
 
 
 GtkWidget *
-xfce_clock_fuzzy_new (ClockTime *time)
+expidus_clock_fuzzy_new (ClockTime *time)
 {
-  XfceClockFuzzy *fuzzy = g_object_new (XFCE_CLOCK_TYPE_FUZZY, NULL);
+  ExpidusClockFuzzy *fuzzy = g_object_new (EXPIDUS_CLOCK_TYPE_FUZZY, NULL);
 
   fuzzy->time = time;
   fuzzy->timeout = clock_time_timeout_new (CLOCK_INTERVAL_MINUTE,
                                            fuzzy->time,
-                                           G_CALLBACK (xfce_clock_fuzzy_update), fuzzy);
+                                           G_CALLBACK (expidus_clock_fuzzy_update), fuzzy);
 
   return GTK_WIDGET (fuzzy);
 }

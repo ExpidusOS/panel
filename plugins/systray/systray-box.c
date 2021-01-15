@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -28,7 +28,7 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
 
@@ -125,7 +125,7 @@ struct _SystrayBox
 
 
 
-XFCE_PANEL_DEFINE_TYPE (SystrayBox, systray_box, GTK_TYPE_CONTAINER)
+EXPIDUS_PANEL_DEFINE_TYPE (SystrayBox, systray_box, GTK_TYPE_CONTAINER)
 
 
 
@@ -186,7 +186,7 @@ systray_box_get_property (GObject      *object,
                           GValue       *value,
                           GParamSpec   *pspec)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (object);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (object);
 
   switch (prop_id)
     {
@@ -205,7 +205,7 @@ systray_box_get_property (GObject      *object,
 static void
 systray_box_finalize (GObject *object)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (object);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (object);
 
   g_hash_table_destroy (box->names_ordered);
 
@@ -271,7 +271,7 @@ systray_box_get_preferred_width   (GtkWidget       *widget,
                                    gint            *minimum_width,
                                    gint            *natural_width)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (widget);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (widget);
 
   if (box->horizontal)
     {
@@ -293,7 +293,7 @@ systray_box_get_preferred_height  (GtkWidget       *widget,
                                    gint            *minimum_height,
                                    gint            *natural_height)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (widget);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (widget);
 
   if (box->horizontal)
     {
@@ -315,7 +315,7 @@ systray_box_get_preferred_length (GtkWidget      *widget,
                                   gint           *minimum_length,
                                   gint           *natural_length)
 {
-  SystrayBox       *box = XFCE_SYSTRAY_BOX (widget);
+  SystrayBox       *box = EXPIDUS_SYSTRAY_BOX (widget);
   GtkWidget        *child;
   GtkRequisition    child_req;
   gint              n_hidden_children = 0;
@@ -339,7 +339,7 @@ systray_box_get_preferred_length (GtkWidget      *widget,
   for (li = box->children, cells = 0.00; li != NULL; li = li->next)
     {
       child = GTK_WIDGET (li->data);
-      panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (child));
+      panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (child));
 
       gtk_widget_get_preferred_size (child, NULL, &child_req);
 
@@ -348,7 +348,7 @@ systray_box_get_preferred_length (GtkWidget      *widget,
           || !gtk_widget_get_visible (child))
         continue;
 
-      hidden = systray_socket_get_hidden (XFCE_SYSTRAY_SOCKET (child));
+      hidden = systray_socket_get_hidden (EXPIDUS_SYSTRAY_SOCKET (child));
       if (hidden)
         n_hidden_children++;
 
@@ -444,7 +444,7 @@ static void
 systray_box_size_allocate (GtkWidget     *widget,
                            GtkAllocation *allocation)
 {
-  SystrayBox       *box = XFCE_SYSTRAY_BOX (widget);
+  SystrayBox       *box = EXPIDUS_SYSTRAY_BOX (widget);
   GtkWidget        *child;
   GtkAllocation     child_alloc;
   GtkRequisition    child_req;
@@ -497,7 +497,7 @@ systray_box_size_allocate (GtkWidget     *widget,
   for (li = box->children; li != NULL; li = li->next)
     {
       child = GTK_WIDGET (li->data);
-      panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (child));
+      panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (child));
 
       if (!gtk_widget_get_visible (child))
         continue;
@@ -506,7 +506,7 @@ systray_box_size_allocate (GtkWidget     *widget,
 
       if (REQUISITION_IS_INVISIBLE (child_req)
           || (!box->show_hidden
-              && systray_socket_get_hidden (XFCE_SYSTRAY_SOCKET (child))))
+              && systray_socket_get_hidden (EXPIDUS_SYSTRAY_SOCKET (child))))
         {
           /* position hidden icons offscreen if we don't show hidden icons
            * or the requested size looks like an invisible icons (see macro) */
@@ -636,7 +636,7 @@ systray_box_size_allocate (GtkWidget     *widget,
         }
 
       panel_debug_filtered (PANEL_DEBUG_SYSTRAY, "allocated %s[%p] at (%d,%d;%d,%d)",
-          systray_socket_get_name (XFCE_SYSTRAY_SOCKET (child)), child,
+          systray_socket_get_name (EXPIDUS_SYSTRAY_SOCKET (child)), child,
           child_alloc.x, child_alloc.y, child_alloc.width, child_alloc.height);
 
       gtk_widget_size_allocate (child, &child_alloc);
@@ -656,9 +656,9 @@ static void
 systray_box_add (GtkContainer *container,
                  GtkWidget    *child)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (container);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (container);
 
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
   panel_return_if_fail (GTK_IS_WIDGET (child));
   panel_return_if_fail (gtk_widget_get_parent (child) == NULL);
 
@@ -677,7 +677,7 @@ static void
 systray_box_remove (GtkContainer *container,
                     GtkWidget    *child)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (container);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (container);
   GSList     *li;
 
   /* search the child */
@@ -703,7 +703,7 @@ systray_box_forall (GtkContainer *container,
                     GtkCallback   callback,
                     gpointer      callback_data)
 {
-  SystrayBox *box = XFCE_SYSTRAY_BOX (container);
+  SystrayBox *box = EXPIDUS_SYSTRAY_BOX (container);
   GSList     *li, *lnext;
 
   /* run callback for all children */
@@ -737,13 +737,13 @@ systray_box_compare_function (gconstpointer a,
   gpointer     value;
 
   /* sort hidden icons before visible ones */
-  hidden_a = systray_socket_get_hidden (XFCE_SYSTRAY_SOCKET (a));
-  hidden_b = systray_socket_get_hidden (XFCE_SYSTRAY_SOCKET (b));
+  hidden_a = systray_socket_get_hidden (EXPIDUS_SYSTRAY_SOCKET (a));
+  hidden_b = systray_socket_get_hidden (EXPIDUS_SYSTRAY_SOCKET (b));
   if (hidden_a != hidden_b)
     return hidden_a ? 1 : -1;
 
-  name_a = systray_socket_get_name (XFCE_SYSTRAY_SOCKET (a));
-  name_b = systray_socket_get_name (XFCE_SYSTRAY_SOCKET (b));
+  name_a = systray_socket_get_name (EXPIDUS_SYSTRAY_SOCKET (a));
+  name_b = systray_socket_get_name (EXPIDUS_SYSTRAY_SOCKET (b));
 
   if (name_a != NULL && g_hash_table_lookup_extended (box->names_ordered, name_a, NULL, &value))
     index_a = GPOINTER_TO_INT (value);
@@ -767,7 +767,7 @@ systray_box_compare_function (gconstpointer a,
 GtkWidget *
 systray_box_new (void)
 {
-  return g_object_new (XFCE_TYPE_SYSTRAY_BOX, NULL);
+  return g_object_new (EXPIDUS_TYPE_SYSTRAY_BOX, NULL);
 }
 
 
@@ -778,7 +778,7 @@ systray_box_set_orientation (SystrayBox     *box,
 {
   gboolean horizontal;
 
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   horizontal = !!(orientation == GTK_ORIENTATION_HORIZONTAL);
   if (G_LIKELY (box->horizontal != horizontal))
@@ -799,7 +799,7 @@ systray_box_set_dimensions (SystrayBox *box,
                             gint        row_size,
                             gint        padding)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   if (G_UNLIKELY (icon_size == box->size_max && n_rows == box->nrows && row_size == box->row_size && padding == box->row_padding))
     {
@@ -821,7 +821,7 @@ void
 systray_box_set_size_alloc (SystrayBox *box,
                             gint        size_alloc)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   if (G_LIKELY (size_alloc != box->size_alloc))
     {
@@ -839,7 +839,7 @@ void
 systray_box_set_show_hidden (SystrayBox *box,
                              gboolean    show_hidden)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   if (box->show_hidden != show_hidden)
     {
@@ -855,7 +855,7 @@ systray_box_set_show_hidden (SystrayBox *box,
 gboolean
 systray_box_get_show_hidden (SystrayBox *box)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_BOX (box), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box), FALSE);
 
   return box->show_hidden;
 }
@@ -866,7 +866,7 @@ void
 systray_box_set_squared (SystrayBox *box,
                          gboolean    square_icons)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   if (box->square_icons != square_icons)
     {
@@ -882,7 +882,7 @@ systray_box_set_squared (SystrayBox *box,
 gboolean
 systray_box_get_squared (SystrayBox *box)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_BOX (box), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box), FALSE);
 
   return box->square_icons;
 }
@@ -896,7 +896,7 @@ systray_box_update (SystrayBox *box,
   GSList *li;
   gint    i;
 
-  panel_return_if_fail (XFCE_IS_SYSTRAY_BOX (box));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box));
 
   g_hash_table_remove_all (box->names_ordered);
 
@@ -916,7 +916,7 @@ systray_box_update (SystrayBox *box,
 gboolean
 systray_box_has_hidden_items (SystrayBox *box)
 {
-  g_return_val_if_fail (XFCE_IS_SYSTRAY_BOX (box), FALSE);
+  g_return_val_if_fail (EXPIDUS_IS_SYSTRAY_BOX (box), FALSE);
   return box->n_hidden_children > 0;
 }
 

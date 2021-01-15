@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2010 Nick Schermer <nick@expidus.org>
  *
  * The game code has been taken (with adjustments) from the javascript
  * game of Stephen Ostermiller: http://ostermiller.org/calc/tictactoe.html.
@@ -27,8 +27,8 @@
 #include <string.h>
 #endif
 
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <common/panel-private.h>
 #include <panel/panel-tic-tac-toe.h>
@@ -56,12 +56,12 @@ static void panel_tic_tac_toe_new_game       (PanelTicTacToe *dialog);
 
 struct _PanelTicTacToeClass
 {
-  XfceTitledDialogClass __parent__;
+  ExpidusTitledDialogClass __parent__;
 };
 
 struct _PanelTicTacToe
 {
-  XfceTitledDialog  __parent__;
+  ExpidusTitledDialog  __parent__;
 
   GtkWidget *buttons[9];
   GtkWidget *labels[9];
@@ -86,7 +86,7 @@ enum
 
 
 
-G_DEFINE_TYPE (PanelTicTacToe, panel_tic_tac_toe, XFCE_TYPE_TITLED_DIALOG)
+G_DEFINE_TYPE (PanelTicTacToe, panel_tic_tac_toe, EXPIDUS_TYPE_TITLED_DIALOG)
 
 
 
@@ -118,11 +118,11 @@ panel_tic_tac_toe_init (PanelTicTacToe *dialog)
   gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   gtk_window_set_icon_name (GTK_WINDOW (dialog), "applications-games");
 
-  xfce_titled_dialog_create_action_area (XFCE_TITLED_DIALOG (dialog));
+  expidus_titled_dialog_create_action_area (EXPIDUS_TITLED_DIALOG (dialog));
 
-  button = xfce_gtk_button_new_mixed ("document-new", _("_New Game"));
-  xfce_titled_dialog_add_action_widget (XFCE_TITLED_DIALOG (dialog), button, GTK_RESPONSE_ACCEPT);
-  xfce_titled_dialog_add_button (XFCE_TITLED_DIALOG (dialog), _("_Close"), GTK_RESPONSE_CLOSE);
+  button = expidus_gtk_button_new_mixed ("document-new", _("_New Game"));
+  expidus_titled_dialog_add_action_widget (EXPIDUS_TITLED_DIALOG (dialog), button, GTK_RESPONSE_ACCEPT);
+  expidus_titled_dialog_add_button (EXPIDUS_TITLED_DIALOG (dialog), _("_Close"), GTK_RESPONSE_CLOSE);
 
   vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
   gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), vbox, TRUE, TRUE, 0);

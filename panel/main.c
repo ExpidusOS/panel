@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017 Ali Abdallah <ali@xfce.org>
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2017 Ali Abdallah <ali@expidus.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,13 +39,13 @@
 
 #include <glib.h>
 #include <gio/gio.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 #include <libwnck/libwnck.h>
 
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <panel/panel-application.h>
 #include <panel/panel-dbus-service.h>
 #include <panel/panel-dbus-client.h>
@@ -145,9 +145,9 @@ panel_signal_handler (gint signum)
 
 
 static void
-panel_sm_client_quit (XfceSMClient *sm_client)
+panel_sm_client_quit (ExpidusSMClient *sm_client)
 {
-  panel_return_if_fail (XFCE_IS_SM_CLIENT (sm_client));
+  panel_return_if_fail (EXPIDUS_IS_SM_CLIENT (sm_client));
   panel_return_if_fail (!panel_dbus_service_get_restart ());
 
   panel_debug (PANEL_DEBUG_MAIN,
@@ -232,11 +232,11 @@ main (gint argc, gchar **argv)
   guint             i;
   const gint        signums[] = { SIGINT, SIGQUIT, SIGTERM, SIGABRT, SIGUSR1 };
   const gchar      *error_msg;
-  XfceSMClient     *sm_client;
+  ExpidusSMClient     *sm_client;
 
   panel_debug (PANEL_DEBUG_MAIN,
                "version %s on gtk+ %d.%d.%d (%d.%d.%d), glib %d.%d.%d (%d.%d.%d)",
-               LIBXFCE4PANEL_VERSION,
+               LIBEXPIDUS1PANEL_VERSION,
                gtk_major_version, gtk_minor_version, gtk_micro_version,
                GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION,
                glib_major_version, glib_minor_version, glib_micro_version,
@@ -246,7 +246,7 @@ main (gint argc, gchar **argv)
   panel_debug_notify_proxy ();
 
   /* set translation domain */
-  xfce_textdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+  expidus_textdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
 #ifdef G_ENABLE_DEBUG
   /* do NOT remove this line for now, If something doesn't work,
@@ -268,7 +268,7 @@ main (gint argc, gchar **argv)
   context = g_option_context_new (_("[ARGUMENTS...]"));
   g_option_context_add_main_entries (context, option_entries, GETTEXT_PACKAGE);
   g_option_context_add_group (context, gtk_get_option_group (TRUE));
-  g_option_context_add_group (context, xfce_sm_client_get_option_group (argc, argv));
+  g_option_context_add_group (context, expidus_sm_client_get_option_group (argc, argv));
   if (!g_option_context_parse (context, &argc, &argv, &error))
     {
       g_print ("%s: %s.\n", PACKAGE_NAME, error->message);
@@ -289,9 +289,9 @@ main (gint argc, gchar **argv)
         g_print ("%s (%s)", *opt_arguments, PACKAGE_NAME);
       else
         g_print ("%s", PACKAGE_NAME);
-      g_print (" %s (Xfce %s)\n\n", PACKAGE_VERSION, xfce_version_string ());
+      g_print (" %s (Expidus %s)\n\n", PACKAGE_VERSION, expidus_version_string ());
       g_print ("%s\n", "Copyright (c) 2004-2011");
-      g_print ("\t%s\n\n", _("The Xfce development team. All rights reserved."));
+      g_print ("\t%s\n\n", _("The Expidus development team. All rights reserved."));
       g_print (_("Please report bugs to <%s>."), PACKAGE_BUGREPORT);
       g_print ("\n");
 
@@ -363,12 +363,12 @@ main (gint argc, gchar **argv)
     }
 
   /* start session management */
-  sm_client = xfce_sm_client_get ();
-  xfce_sm_client_set_restart_style (sm_client, XFCE_SM_CLIENT_RESTART_IMMEDIATELY);
-  xfce_sm_client_set_priority (sm_client, XFCE_SM_CLIENT_PRIORITY_CORE);
+  sm_client = expidus_sm_client_get ();
+  expidus_sm_client_set_restart_style (sm_client, EXPIDUS_SM_CLIENT_RESTART_IMMEDIATELY);
+  expidus_sm_client_set_priority (sm_client, EXPIDUS_SM_CLIENT_PRIORITY_CORE);
   g_signal_connect (G_OBJECT (sm_client), "quit",
       G_CALLBACK (panel_sm_client_quit), NULL);
-  if (!xfce_sm_client_connect (sm_client, &error))
+  if (!expidus_sm_client_connect (sm_client, &error))
     {
       g_printerr ("%s: Failed to connect to session manager: %s\n",
                   G_LOG_DOMAIN, error->message);
@@ -438,7 +438,7 @@ dbus_return:
             {
               g_clear_error (&error);
 
-              if (xfce_dialog_confirm (NULL, "system-run", _("Execute"),
+              if (expidus_dialog_confirm (NULL, "system-run", _("Execute"),
                                        _("Do you want to start the panel? If you do, make sure "
                                          "you save the session on logout, so the panel is "
                                          "automatically started the next time you login."),
@@ -454,14 +454,14 @@ dbus_return:
             }
           else
             {
-              /* I18N: %s is replaced with xfce4-panel */
+              /* I18N: %s is replaced with expidus1-panel */
               g_clear_error (&error);
               g_set_error (&error, 0, 0, _("No running instance of %s was found"), G_LOG_DOMAIN);
             }
         }
 
       /* show error dialog */
-      xfce_dialog_show_error (NULL, error, "%s", error_msg);
+      expidus_dialog_show_error (NULL, error, "%s", error_msg);
       g_error_free (error);
     }
 

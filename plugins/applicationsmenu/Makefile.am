@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"libapplicationsmenu\" \
 	$(PLATFORM_CPPFLAGS)
 
-plugindir = $(libdir)/xfce4/panel/plugins
+plugindir = $(libdir)/expidus1/panel/plugins
 
 plugin_LTLIBRARIES = \
 	libapplicationsmenu.la
@@ -19,62 +19,62 @@ libapplicationsmenu_la_SOURCES = \
 
 libapplicationsmenu_la_CFLAGS = \
 	$(GTK_CFLAGS) \
-	$(EXO_CFLAGS) \
-	$(XFCONF_CFLAGS) \
-	$(LIBXFCE4UTIL_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
-	$(GARCON_CFLAGS) \
-	$(GARCON_GTK3_CFLAGS) \
+	$(ENDO_CFLAGS) \
+	$(ESCONF_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
+	$(MARKON_CFLAGS) \
+	$(MARKON_GTK3_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libapplicationsmenu_la_LDFLAGS = \
 	-avoid-version \
 	-module \
 	-no-undefined \
-	-export-symbols-regex '^xfce_panel_module_(preinit|init|construct)' \
+	-export-symbols-regex '^expidus_panel_module_(preinit|init|construct)' \
 	$(PLATFORM_LDFLAGS)
 
 libapplicationsmenu_la_LIBADD = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la \
 	$(GTK_LIBS) \
-	$(EXO_LIBS) \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(LIBXFCE4UI_LIBS) \
-	$(GARCON_LIBS) \
-	$(GARCON_GTK3_LIBS) \
-	$(XFCONF_LIBS)
+	$(ENDO_LIBS) \
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(LIBEXPIDUS1UI_LIBS) \
+	$(MARKON_LIBS) \
+	$(MARKON_GTK3_LIBS) \
+	$(ESCONF_LIBS)
 
 libapplicationsmenu_la_DEPENDENCIES = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la
 
 #
-# xfce4-popup-applicationsmenu script
+# expidus1-popup-applicationsmenu script
 #
 bin_SCRIPTS = \
-	xfce4-popup-applicationsmenu
+	expidus1-popup-applicationsmenu
 
-xfce4-popup-applicationsmenu: xfce4-popup-applicationsmenu.sh Makefile
+expidus1-popup-applicationsmenu: expidus1-popup-applicationsmenu.sh Makefile
 	$(AM_V_GEN) $(SED) -e "s,\@bindir\@,$(bindir),g" \
 	-e "s,\@localedir\@,$(localedir),g" $< >$@
 
 #
 # .desktop file
 #
-desktopdir = $(datadir)/xfce4/panel/plugins
+desktopdir = $(datadir)/expidus1/panel/plugins
 desktop_in_files = applicationsmenu.desktop.in.in
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 EXTRA_DIST = \
 	applicationsmenu-dialog.glade \
-	xfce4-popup-applicationsmenu.sh \
+	expidus1-popup-applicationsmenu.sh \
 	$(desktop_in_files)
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
-	xfce4-popup-applicationsmenu
+	expidus1-popup-applicationsmenu
 
 if MAINTAINER_MODE
 BUILT_SOURCES = \

@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@xfce.org>
- *  Copyright (c) 2017      Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@expidus.org>
+ *  Copyright (c) 2017      Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ G_BEGIN_DECLS
 typedef struct _SnDialogClass SnDialogClass;
 typedef struct _SnDialog      SnDialog;
 
-#define XFCE_TYPE_SN_DIALOG            (sn_dialog_get_type ())
-#define XFCE_SN_DIALOG(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_SN_DIALOG, SnDialog))
-#define XFCE_SN_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_SN_DIALOG, SnDialogClass))
-#define XFCE_IS_SN_DIALOG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_SN_DIALOG))
-#define XFCE_IS_SN_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_SN_DIALOG))
-#define XFCE_SN_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_SN_DIALOG, SnDialogClass))
+#define EXPIDUS_TYPE_SN_DIALOG            (sn_dialog_get_type ())
+#define EXPIDUS_SN_DIALOG(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_SN_DIALOG, SnDialog))
+#define EXPIDUS_SN_DIALOG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_SN_DIALOG, SnDialogClass))
+#define EXPIDUS_IS_SN_DIALOG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_SN_DIALOG))
+#define EXPIDUS_IS_SN_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_SN_DIALOG))
+#define EXPIDUS_SN_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_SN_DIALOG, SnDialogClass))
 
 GType                  sn_dialog_get_type                      (void) G_GNUC_CONST;
 

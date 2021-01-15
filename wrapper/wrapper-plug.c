@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2009 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2009 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ wrapper_plug_init (WrapperPlug *plug)
   plug->background_image = NULL;
   plug->background_image_cache = NULL;
 
-  gtk_widget_set_name (GTK_WIDGET (plug), "XfcePanelWindowWrapper");
+  gtk_widget_set_name (GTK_WIDGET (plug), "ExpidusPanelWindowWrapper");
 
   /* allow painting, else compositing won't work */
   gtk_widget_set_app_paintable (GTK_WIDGET (plug), TRUE);
@@ -102,7 +102,7 @@ wrapper_plug_init (WrapperPlug *plug)
   /* set the panel class */
   context = gtk_widget_get_style_context (GTK_WIDGET (plug));
   gtk_style_context_add_class (context, "panel");
-  gtk_style_context_add_class (context, "xfce4-panel");
+  gtk_style_context_add_class (context, "expidus1-panel");
 
   gtk_drag_dest_unset (GTK_WIDGET (plug));
 }

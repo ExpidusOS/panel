@@ -1,0 +1,5 @@
+#include <libexpidus1panel/libexpidus1panel.h>
+
+expidus_arrow_button_get_type
+expidus_panel_image_get_type
+expidus_panel_plugin_get_type

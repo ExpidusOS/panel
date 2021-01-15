@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -168,7 +168,7 @@ sn_backend_class_init (SnBackendClass *klass)
                   G_SIGNAL_RUN_LAST,
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, XFCE_TYPE_SN_ITEM);
+                  G_TYPE_NONE, 1, EXPIDUS_TYPE_SN_ITEM);
 
   sn_backend_signals[ITEM_REMOVED] =
     g_signal_new (g_intern_static_string ("item-removed"),
@@ -176,7 +176,7 @@ sn_backend_class_init (SnBackendClass *klass)
                   G_SIGNAL_RUN_LAST,
                   0, NULL, NULL,
                   g_cclosure_marshal_VOID__OBJECT,
-                  G_TYPE_NONE, 1, XFCE_TYPE_SN_ITEM);
+                  G_TYPE_NONE, 1, EXPIDUS_TYPE_SN_ITEM);
 }
 
 
@@ -199,7 +199,7 @@ sn_backend_init (SnBackend *backend)
 static void
 sn_backend_finalize (GObject *object)
 {
-  SnBackend *backend = XFCE_SN_BACKEND (object);
+  SnBackend *backend = EXPIDUS_SN_BACKEND (object);
 
   g_object_unref (backend->host_cancellable);
 
@@ -228,7 +228,7 @@ sn_backend_finalize (GObject *object)
 SnBackend *
 sn_backend_new (void)
 {
-  return g_object_new (XFCE_TYPE_SN_BACKEND, NULL);
+  return g_object_new (EXPIDUS_TYPE_SN_BACKEND, NULL);
 }
 
 
@@ -236,7 +236,7 @@ sn_backend_new (void)
 void
 sn_backend_start (SnBackend *backend)
 {
-  g_return_if_fail (XFCE_IS_SN_BACKEND (backend));
+  g_return_if_fail (EXPIDUS_IS_SN_BACKEND (backend));
   g_return_if_fail (backend->watcher_bus_owner_id == 0);
   g_return_if_fail (backend->host_bus_watcher_id == 0);
 
@@ -733,7 +733,7 @@ sn_backend_host_add_item (SnBackend   *backend,
     }
   else
     {
-      item = g_object_new (XFCE_TYPE_SN_ITEM,
+      item = g_object_new (EXPIDUS_TYPE_SN_ITEM,
                            "bus-name", bus_name,
                            "object-path", object_path,
                            "key", service,

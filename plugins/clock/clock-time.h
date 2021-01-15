@@ -20,8 +20,8 @@
 #define __CLOCK_TIME_H__
 
 #include <glib.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 G_BEGIN_DECLS
 
@@ -32,18 +32,18 @@ typedef struct _ClockTime          ClockTime;
 typedef struct _ClockTimeClass     ClockTimeClass;
 typedef struct _ClockTimeTimeout   ClockTimeTimeout;
 
-#define XFCE_TYPE_CLOCK_TIME              (clock_time_get_type ())
-#define XFCE_CLOCK_TIME(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_CLOCK_TIME, ClockTime))
-#define XFCE_CLOCK_TIME_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_CLOCK_TIME, ClockTimeClass))
-#define XFCE_IS_CLOCK_TIME(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_CLOCK_TIME))
-#define XFCE_IS_CLOCK_TIME_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_CLOCK_TIME))
-#define XFCE_CLOCK_TIME_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_CLOCK_TIME, ClockTimeClass))
+#define EXPIDUS_TYPE_CLOCK_TIME              (clock_time_get_type ())
+#define EXPIDUS_CLOCK_TIME(obj)              (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_CLOCK_TIME, ClockTime))
+#define EXPIDUS_CLOCK_TIME_CLASS(klass)      (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_CLOCK_TIME, ClockTimeClass))
+#define EXPIDUS_IS_CLOCK_TIME(obj)           (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_CLOCK_TIME))
+#define EXPIDUS_IS_CLOCK_TIME_CLASS(klass)   (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_CLOCK_TIME))
+#define EXPIDUS_CLOCK_TIME_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_CLOCK_TIME, ClockTimeClass))
 
 
 
 GType               clock_time_get_type               (void) G_GNUC_CONST;
 
-void                clock_time_register_type          (XfcePanelTypeModule *type_module);
+void                clock_time_register_type          (ExpidusPanelTypeModule *type_module);
 
 ClockTime          *clock_time_new                    (void);
 

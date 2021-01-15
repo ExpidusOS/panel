@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@xfce.org>
- * Copyright (c) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@expidus.org>
+ * Copyright (c) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -26,10 +26,10 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <common/panel-xfconf.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
@@ -63,16 +63,16 @@ static void     pager_plugin_drag_end_event               (GtkWidget         *wi
                                                            gpointer           user_data);
 static void     pager_plugin_screen_changed               (GtkWidget         *widget,
                                                            GdkScreen         *previous_screen);
-static void     pager_plugin_construct                    (XfcePanelPlugin   *panel_plugin);
+static void     pager_plugin_construct                    (ExpidusPanelPlugin   *panel_plugin);
 static void     pager_plugin_style_updated                (GtkWidget         *pager,
                                                            gpointer           user_data);
-static void     pager_plugin_free_data                    (XfcePanelPlugin   *panel_plugin);
-static gboolean pager_plugin_size_changed                 (XfcePanelPlugin   *panel_plugin,
+static void     pager_plugin_free_data                    (ExpidusPanelPlugin   *panel_plugin);
+static gboolean pager_plugin_size_changed                 (ExpidusPanelPlugin   *panel_plugin,
                                                            gint               size);
-static void     pager_plugin_mode_changed                 (XfcePanelPlugin     *panel_plugin,
-                                                           XfcePanelPluginMode  mode);
+static void     pager_plugin_mode_changed                 (ExpidusPanelPlugin     *panel_plugin,
+                                                           ExpidusPanelPluginMode  mode);
 static void     pager_plugin_configure_workspace_settings (GtkWidget         *button);
-static void     pager_plugin_configure_plugin             (XfcePanelPlugin   *panel_plugin);
+static void     pager_plugin_configure_plugin             (ExpidusPanelPlugin   *panel_plugin);
 static void     pager_plugin_screen_layout_changed        (PagerPlugin       *plugin);
 static void     pager_plugin_get_preferred_width          (GtkWidget           *widget,
                                                            gint                *minimum_width,
@@ -93,12 +93,12 @@ static void     pager_plugin_get_preferred_height_for_width (GtkWidget          
 
 struct _PagerPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _PagerPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   GtkWidget     *pager;
   GObject       *numbering_switch;
@@ -130,7 +130,7 @@ enum
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN_RESIDENT (PagerPlugin, pager_plugin,
+EXPIDUS_PANEL_DEFINE_PLUGIN_RESIDENT (PagerPlugin, pager_plugin,
     pager_buttons_register_type)
 
 
@@ -138,7 +138,7 @@ XFCE_PANEL_DEFINE_PLUGIN_RESIDENT (PagerPlugin, pager_plugin,
 static void
 pager_plugin_class_init (PagerPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
   GtkWidgetClass       *widget_class;
 
@@ -153,7 +153,7 @@ pager_plugin_class_init (PagerPluginClass *klass)
   widget_class->get_preferred_height = pager_plugin_get_preferred_height;
   widget_class->get_preferred_height_for_width  = pager_plugin_get_preferred_height_for_width;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = pager_plugin_construct;
   plugin_class->free_data = pager_plugin_free_data;
   plugin_class->size_changed = pager_plugin_size_changed;
@@ -219,7 +219,7 @@ pager_plugin_get_property (GObject    *object,
                            GValue     *value,
                            GParamSpec *pspec)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (object);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -268,7 +268,7 @@ pager_plugin_set_property (GObject      *object,
                            const GValue *value,
                            GParamSpec   *pspec)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (object);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -296,7 +296,7 @@ pager_plugin_set_property (GObject      *object,
                            "have more than 1 pager in your panel setup.");
             }
           else
-            pager_buttons_set_n_rows (XFCE_PAGER_BUTTONS (plugin->pager), plugin->rows);
+            pager_buttons_set_n_rows (EXPIDUS_PAGER_BUTTONS (plugin->pager), plugin->rows);
         }
       break;
 
@@ -305,7 +305,7 @@ pager_plugin_set_property (GObject      *object,
 
       if (plugin->pager != NULL
           && !plugin->miniature_view)
-        pager_buttons_set_numbering (XFCE_PAGER_BUTTONS (plugin->pager), plugin->numbering);
+        pager_buttons_set_numbering (EXPIDUS_PAGER_BUTTONS (plugin->pager), plugin->numbering);
       break;
 
     default:
@@ -358,7 +358,7 @@ static gboolean
 pager_plugin_scroll_event (GtkWidget      *widget,
                            GdkEventScroll *event)
 {
-  PagerPlugin        *plugin = XFCE_PAGER_PLUGIN (widget);
+  PagerPlugin        *plugin = EXPIDUS_PAGER_PLUGIN (widget);
   WnckWorkspace      *active_ws;
   WnckWorkspace      *new_ws;
   gint                active_n;
@@ -428,8 +428,8 @@ pager_plugin_drag_begin_event (GtkWidget      *widget,
 {
   PagerPlugin *plugin = user_data;
 
-  panel_return_if_fail (XFCE_IS_PAGER_PLUGIN (plugin));
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), TRUE);
+  panel_return_if_fail (EXPIDUS_IS_PAGER_PLUGIN (plugin));
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), TRUE);
 }
 
 
@@ -441,8 +441,8 @@ pager_plugin_drag_end_event (GtkWidget      *widget,
 {
   PagerPlugin *plugin = user_data;
 
-  panel_return_if_fail (XFCE_IS_PAGER_PLUGIN (plugin));
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), FALSE);
+  panel_return_if_fail (EXPIDUS_IS_PAGER_PLUGIN (plugin));
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), FALSE);
 }
 
 
@@ -450,10 +450,10 @@ pager_plugin_drag_end_event (GtkWidget      *widget,
 static void
 pager_plugin_screen_layout_changed (PagerPlugin *plugin)
 {
-  XfcePanelPluginMode mode;
+  ExpidusPanelPluginMode mode;
   GtkOrientation      orientation;
 
-  panel_return_if_fail (XFCE_IS_PAGER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->wnck_screen));
 
   if (G_UNLIKELY (plugin->pager != NULL))
@@ -462,9 +462,9 @@ pager_plugin_screen_layout_changed (PagerPlugin *plugin)
       wnck_screen_force_update (plugin->wnck_screen);
     }
 
-  mode = xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin));
+  mode = expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin));
   orientation =
-    (mode != XFCE_PANEL_PLUGIN_MODE_VERTICAL) ?
+    (mode != EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ?
     GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
 
   if (plugin->miniature_view)
@@ -486,9 +486,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   else
     {
       plugin->pager = pager_buttons_new (plugin->wnck_screen);
-      pager_buttons_set_n_rows (XFCE_PAGER_BUTTONS (plugin->pager), plugin->rows);
-      pager_buttons_set_orientation (XFCE_PAGER_BUTTONS (plugin->pager), orientation);
-      pager_buttons_set_numbering (XFCE_PAGER_BUTTONS (plugin->pager), plugin->numbering);
+      pager_buttons_set_n_rows (EXPIDUS_PAGER_BUTTONS (plugin->pager), plugin->rows);
+      pager_buttons_set_orientation (EXPIDUS_PAGER_BUTTONS (plugin->pager), orientation);
+      pager_buttons_set_numbering (EXPIDUS_PAGER_BUTTONS (plugin->pager), plugin->numbering);
     }
 
   gtk_container_add (GTK_CONTAINER (plugin), plugin->pager);
@@ -505,7 +505,7 @@ static void
 pager_plugin_screen_changed (GtkWidget *widget,
                              GdkScreen *previous_screen)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (widget);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (widget);
   GdkScreen   *screen;
   WnckScreen  *wnck_screen;
 
@@ -530,9 +530,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
-pager_plugin_construct (XfcePanelPlugin *panel_plugin)
+pager_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  PagerPlugin         *plugin = XFCE_PAGER_PLUGIN (panel_plugin);
+  PagerPlugin         *plugin = EXPIDUS_PAGER_PLUGIN (panel_plugin);
   GtkWidget           *mi, *image;
   const PanelProperty  properties[] =
   {
@@ -544,24 +544,24 @@ pager_plugin_construct (XfcePanelPlugin *panel_plugin)
     { NULL }
   };
 
-  xfce_panel_plugin_menu_show_configure (panel_plugin);
+  expidus_panel_plugin_menu_show_configure (panel_plugin);
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   mi = gtk_image_menu_item_new_with_mnemonic (_("Workspace _Settings..."));
 G_GNUC_END_IGNORE_DEPRECATIONS
-  xfce_panel_plugin_menu_insert_item (panel_plugin, GTK_MENU_ITEM (mi));
+  expidus_panel_plugin_menu_insert_item (panel_plugin, GTK_MENU_ITEM (mi));
   g_signal_connect (G_OBJECT (mi), "activate",
       G_CALLBACK (pager_plugin_configure_workspace_settings), NULL);
   gtk_widget_show (mi);
 
-  image = gtk_image_new_from_icon_name ("org.xfce.panel.pager", GTK_ICON_SIZE_MENU);
+  image = gtk_image_new_from_icon_name ("com.expidus.panel.pager", GTK_ICON_SIZE_MENU);
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mi), image);
 G_GNUC_END_IGNORE_DEPRECATIONS
   gtk_widget_show (image);
 
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   g_signal_connect (G_OBJECT (plugin), "screen-changed",
@@ -574,9 +574,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
-pager_plugin_free_data (XfcePanelPlugin *panel_plugin)
+pager_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (panel_plugin);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (panel_plugin);
 
   g_signal_handlers_disconnect_by_func (G_OBJECT (plugin),
       pager_plugin_screen_changed, NULL);
@@ -585,7 +585,7 @@ pager_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-pager_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+pager_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                            gint             size)
 {
   gtk_widget_queue_resize (GTK_WIDGET (panel_plugin));
@@ -597,20 +597,20 @@ pager_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-pager_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                           XfcePanelPluginMode  mode)
+pager_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                           ExpidusPanelPluginMode  mode)
 {
-  PagerPlugin       *plugin = XFCE_PAGER_PLUGIN (panel_plugin);
+  PagerPlugin       *plugin = EXPIDUS_PAGER_PLUGIN (panel_plugin);
   GtkOrientation     orientation;
 
   orientation =
-    (mode != XFCE_PANEL_PLUGIN_MODE_VERTICAL) ?
+    (mode != EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ?
     GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
 
   if (plugin->miniature_view)
     wnck_pager_set_orientation (WNCK_PAGER (plugin->pager), orientation);
   else
-    pager_buttons_set_orientation (XFCE_PAGER_BUTTONS (plugin->pager), orientation);
+    pager_buttons_set_orientation (EXPIDUS_PAGER_BUTTONS (plugin->pager), orientation);
 }
 
 
@@ -629,12 +629,12 @@ pager_plugin_configure_workspace_settings (GtkWidget *button)
     screen = gdk_screen_get_default ();
 
   /* try to start the settings dialog */
-  if (!xfce_spawn_command_line (screen, WORKSPACE_SETTINGS_COMMAND,
+  if (!expidus_spawn_command_line (screen, WORKSPACE_SETTINGS_COMMAND,
                                 FALSE, FALSE, TRUE, &error))
     {
       /* show an error dialog */
       toplevel = gtk_widget_get_toplevel (button);
-      xfce_dialog_show_error (GTK_WINDOW (toplevel), error,
+      expidus_dialog_show_error (GTK_WINDOW (toplevel), error,
           _("Unable to open the workspace settings"));
       g_error_free (error);
     }
@@ -680,7 +680,7 @@ static void
 pager_plugin_configure_destroyed (gpointer  data,
                                   GObject  *where_the_object_was)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (data);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (data);
 
   g_signal_handlers_disconnect_by_func (G_OBJECT (plugin->wnck_screen),
                                         pager_plugin_configure_n_workspaces_changed,
@@ -690,13 +690,13 @@ pager_plugin_configure_destroyed (gpointer  data,
 
 
 static void
-pager_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+pager_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  PagerPlugin *plugin = XFCE_PAGER_PLUGIN (panel_plugin);
+  PagerPlugin *plugin = EXPIDUS_PAGER_PLUGIN (panel_plugin);
   GtkBuilder  *builder;
   GObject     *dialog, *object;
 
-  panel_return_if_fail (XFCE_IS_PAGER_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_PAGER_PLUGIN (plugin));
 
   /* setup the dialog */
   PANEL_UTILS_LINK_4UI
@@ -760,8 +760,8 @@ pager_plugin_get_preferred_width (GtkWidget *widget,
                                   gint      *minimum_width,
                                   gint      *natural_width)
 {
-  PagerPlugin         *plugin = XFCE_PAGER_PLUGIN (widget);
-  XfcePanelPluginMode  mode;
+  PagerPlugin         *plugin = EXPIDUS_PAGER_PLUGIN (widget);
+  ExpidusPanelPluginMode  mode;
   gint                 n_workspaces, n_cols;
   gint                 min_width = 0;
   gint                 nat_width = 0;
@@ -769,15 +769,15 @@ pager_plugin_get_preferred_width (GtkWidget *widget,
   if (plugin->pager != NULL)
     gtk_widget_get_preferred_width (plugin->pager, &min_width, &nat_width);
 
-  mode = xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin));
-  if (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL ||
-      mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR)
-    min_width = nat_width = xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin));
+  mode = expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin));
+  if (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL ||
+      mode == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR)
+    min_width = nat_width = expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin));
   else if (plugin->miniature_view)
     {
       n_workspaces = wnck_screen_get_workspace_count (plugin->wnck_screen);
       n_cols = MAX (1, (n_workspaces + plugin->rows - 1) / plugin->rows);
-      min_width = nat_width = (gint) (xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)) / plugin->rows * plugin->ratio * n_cols);
+      min_width = nat_width = (gint) (expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)) / plugin->rows * plugin->ratio * n_cols);
     }
 
   if (minimum_width != NULL)
@@ -792,8 +792,8 @@ pager_plugin_get_preferred_height (GtkWidget *widget,
                                    gint      *minimum_height,
                                    gint      *natural_height)
 {
-  PagerPlugin         *plugin = XFCE_PAGER_PLUGIN (widget);
-  XfcePanelPluginMode  mode;
+  PagerPlugin         *plugin = EXPIDUS_PAGER_PLUGIN (widget);
+  ExpidusPanelPluginMode  mode;
   gint                 n_workspaces, n_cols;
   gint                 min_height = 0;
   gint                 nat_height = 0;
@@ -801,17 +801,17 @@ pager_plugin_get_preferred_height (GtkWidget *widget,
   if (plugin->pager != NULL)
     gtk_widget_get_preferred_height (plugin->pager, &min_height, &nat_height);
 
-  mode = xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin));
-  if (mode == XFCE_PANEL_PLUGIN_MODE_HORIZONTAL)
-    min_height = nat_height = xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin));
+  mode = expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin));
+  if (mode == EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL)
+    min_height = nat_height = expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin));
   else if (plugin->miniature_view)
     {
       n_workspaces = wnck_screen_get_workspace_count (plugin->wnck_screen);
       n_cols = MAX (1, (n_workspaces + plugin->rows - 1) / plugin->rows);
-      if (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL)
-        min_height = nat_height = (gint) (xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)) / plugin->rows / plugin->ratio * n_cols);
-      else /* (mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR) */
-        min_height = nat_height = (gint) (xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)) / n_cols / plugin->ratio * plugin->rows);
+      if (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL)
+        min_height = nat_height = (gint) (expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)) / plugin->rows / plugin->ratio * n_cols);
+      else /* (mode == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR) */
+        min_height = nat_height = (gint) (expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)) / n_cols / plugin->ratio * plugin->rows);
     }
 
   if (minimum_height != NULL)

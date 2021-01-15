@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,11 +20,11 @@
 #include <config.h>
 #endif
 
-#include <libxfce4ui/libxfce4ui.h>
-#include <common/panel-xfconf.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-private.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "tasklist-widget.h"
 #include "tasklist-dialog_ui.h"
@@ -36,25 +36,25 @@
 
 /* TODO move to header */
 GType tasklist_plugin_get_type (void) G_GNUC_CONST;
-void tasklist_plugin_register_type (XfcePanelTypeModule *type_module);
-#define XFCE_TYPE_TASKLIST_PLUGIN            (tasklist_plugin_get_type ())
-#define XFCE_TASKLIST_PLUGIN(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_TASKLIST_PLUGIN, TasklistPlugin))
-#define XFCE_TASKLIST_PLUGIN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_TASKLIST_PLUGIN, TasklistPluginClass))
-#define XFCE_IS_TASKLIST_PLUGIN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_TASKLIST_PLUGIN))
-#define XFCE_IS_TASKLIST_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_TASKLIST_PLUGIN))
-#define XFCE_TASKLIST_PLUGIN_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_TASKLIST_PLUGIN, TasklistPluginClass))
+void tasklist_plugin_register_type (ExpidusPanelTypeModule *type_module);
+#define EXPIDUS_TYPE_TASKLIST_PLUGIN            (tasklist_plugin_get_type ())
+#define EXPIDUS_TASKLIST_PLUGIN(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_TASKLIST_PLUGIN, TasklistPlugin))
+#define EXPIDUS_TASKLIST_PLUGIN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_TASKLIST_PLUGIN, TasklistPluginClass))
+#define EXPIDUS_IS_TASKLIST_PLUGIN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_TASKLIST_PLUGIN))
+#define EXPIDUS_IS_TASKLIST_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_TASKLIST_PLUGIN))
+#define EXPIDUS_TASKLIST_PLUGIN_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_TASKLIST_PLUGIN, TasklistPluginClass))
 
 
 typedef struct _TasklistPluginClass TasklistPluginClass;
 struct _TasklistPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 typedef struct _TasklistPlugin TasklistPlugin;
 struct _TasklistPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   /* the tasklist widget */
   GtkWidget     *tasklist;
@@ -63,16 +63,16 @@ struct _TasklistPlugin
 
 
 
-static void     tasklist_plugin_construct               (XfcePanelPlugin    *panel_plugin);
-static void     tasklist_plugin_mode_changed            (XfcePanelPlugin    *panel_plugin,
-                                                         XfcePanelPluginMode mode);
-static gboolean tasklist_plugin_size_changed            (XfcePanelPlugin    *panel_plugin,
+static void     tasklist_plugin_construct               (ExpidusPanelPlugin    *panel_plugin);
+static void     tasklist_plugin_mode_changed            (ExpidusPanelPlugin    *panel_plugin,
+                                                         ExpidusPanelPluginMode mode);
+static gboolean tasklist_plugin_size_changed            (ExpidusPanelPlugin    *panel_plugin,
                                                          gint                size);
-static void     tasklist_plugin_nrows_changed           (XfcePanelPlugin    *panel_plugin,
+static void     tasklist_plugin_nrows_changed           (ExpidusPanelPlugin    *panel_plugin,
                                                          guint               nrows);
-static void     tasklist_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                                         XfceScreenPosition  position);
-static void     tasklist_plugin_configure_plugin        (XfcePanelPlugin    *panel_plugin);
+static void     tasklist_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                                         ExpidusScreenPosition  position);
+static void     tasklist_plugin_configure_plugin        (ExpidusPanelPlugin    *panel_plugin);
 static gboolean tasklist_plugin_handle_draw             (GtkWidget          *widget,
                                                          cairo_t            *cr,
                                                          TasklistPlugin     *plugin);
@@ -80,16 +80,16 @@ static gboolean tasklist_plugin_handle_draw             (GtkWidget          *wid
 
 
 /* define and register the plugin */
-XFCE_PANEL_DEFINE_PLUGIN_RESIDENT (TasklistPlugin, tasklist_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN_RESIDENT (TasklistPlugin, tasklist_plugin)
 
 
 
 static void
 tasklist_plugin_class_init (TasklistPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = tasklist_plugin_construct;
   plugin_class->mode_changed = tasklist_plugin_mode_changed;
   plugin_class->size_changed = tasklist_plugin_size_changed;
@@ -120,7 +120,7 @@ tasklist_plugin_init (TasklistPlugin *plugin)
   gtk_widget_set_size_request (plugin->handle, 8, 8);
   gtk_widget_show (plugin->handle);
 
-  plugin->tasklist = g_object_new (XFCE_TYPE_TASKLIST, NULL);
+  plugin->tasklist = g_object_new (EXPIDUS_TYPE_TASKLIST, NULL);
   gtk_box_pack_start (GTK_BOX (box), plugin->tasklist, TRUE, TRUE, 0);
 
   g_object_bind_property (G_OBJECT (plugin->tasklist), "show-handle",
@@ -131,9 +131,9 @@ tasklist_plugin_init (TasklistPlugin *plugin)
 
 
 static void
-tasklist_plugin_construct (XfcePanelPlugin *panel_plugin)
+tasklist_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  TasklistPlugin      *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin      *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "show-labels", G_TYPE_BOOLEAN },
@@ -155,11 +155,11 @@ tasklist_plugin_construct (XfcePanelPlugin *panel_plugin)
   };
 
   /* show configure */
-  xfce_panel_plugin_menu_show_configure (XFCE_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_menu_show_configure (EXPIDUS_PANEL_PLUGIN (plugin));
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin->tasklist),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   /* show the tasklist */
@@ -169,25 +169,25 @@ tasklist_plugin_construct (XfcePanelPlugin *panel_plugin)
 
 
 static void
-tasklist_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                              XfcePanelPluginMode  mode)
+tasklist_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                              ExpidusPanelPluginMode  mode)
 {
-  TasklistPlugin *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
 
   /* set the new tasklist mode */
-  xfce_tasklist_set_mode (XFCE_TASKLIST (plugin->tasklist), mode);
+  expidus_tasklist_set_mode (EXPIDUS_TASKLIST (plugin->tasklist), mode);
 }
 
 
 
 static gboolean
-tasklist_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+tasklist_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                               gint             size)
 {
-  TasklistPlugin *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
 
   /* set the tasklist size */
-  xfce_tasklist_set_size (XFCE_TASKLIST (plugin->tasklist), size);
+  expidus_tasklist_set_size (EXPIDUS_TASKLIST (plugin->tasklist), size);
 
   return TRUE;
 }
@@ -195,34 +195,34 @@ tasklist_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-tasklist_plugin_nrows_changed (XfcePanelPlugin *panel_plugin,
+tasklist_plugin_nrows_changed (ExpidusPanelPlugin *panel_plugin,
                                guint            nrows)
 {
-  TasklistPlugin *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
 
   /* set the tasklist nrows */
-  xfce_tasklist_set_nrows (XFCE_TASKLIST (plugin->tasklist), nrows);
+  expidus_tasklist_set_nrows (EXPIDUS_TASKLIST (plugin->tasklist), nrows);
 }
 
 
 
 static void
-tasklist_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                         XfceScreenPosition  position)
+tasklist_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                         ExpidusScreenPosition  position)
 {
-  TasklistPlugin *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
 
   /* update monitor geometry; this function is also triggered when
    * the panel is moved to another monitor during runtime */
-  xfce_tasklist_update_monitor_geometry (XFCE_TASKLIST (plugin->tasklist));
+  expidus_tasklist_update_monitor_geometry (EXPIDUS_TASKLIST (plugin->tasklist));
 }
 
 
 
 static void
-tasklist_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+tasklist_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  TasklistPlugin *plugin = XFCE_TASKLIST_PLUGIN (panel_plugin);
+  TasklistPlugin *plugin = EXPIDUS_TASKLIST_PLUGIN (panel_plugin);
   GtkBuilder     *builder;
   GObject        *dialog;
   GObject        *object;
@@ -293,7 +293,7 @@ tasklist_plugin_handle_draw (GtkWidget      *widget,
   guint             i;
   GdkRGBA           fg_rgba;
 
-  panel_return_val_if_fail (XFCE_IS_TASKLIST_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_TASKLIST_PLUGIN (plugin), FALSE);
   panel_return_val_if_fail (plugin->handle == widget, FALSE);
 
   if (!gtk_widget_is_drawable (widget))
@@ -314,7 +314,7 @@ tasklist_plugin_handle_draw (GtkWidget      *widget,
   /* draw the handle */
   for (i = 0; i < 3; i++)
     {
-      if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+      if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
           GTK_ORIENTATION_HORIZONTAL)
         {
           cairo_move_to (cr, x, y + (i * HANDLE_SIZE) - (HANDLE_SIZE / 2));

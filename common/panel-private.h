@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,12 +52,12 @@
 #define PANEL_HAS_FLAG(flags,flag) (((flags) & (flag)) != 0)
 
 /* relative path to the plugin directory */
-#define PANEL_PLUGIN_RELATIVE_PATH "xfce4" G_DIR_SEPARATOR_S "panel"
+#define PANEL_PLUGIN_RELATIVE_PATH "expidus1" G_DIR_SEPARATOR_S "panel"
 
 /* relative plugin's rc filename (printf format) */
 #define PANEL_PLUGIN_RC_RELATIVE_PATH PANEL_PLUGIN_RELATIVE_PATH G_DIR_SEPARATOR_S "%s-%d.rc"
 
-/* xfconf property base (printf format) */
+/* esconf property base (printf format) */
 #define PANEL_PLUGIN_PROPERTY_BASE "/plugins/plugin-%d"
 
 /* minimum time in seconds between automatic restarts of panel plugins
@@ -69,7 +69,7 @@
 #define TRANSPOSE_AREA(area) G_STMT_START { SWAP_INTEGER (area.width, area.height); \
                                             SWAP_INTEGER (area.x, area.y); } G_STMT_END
 
-/* to avoid exo for gtk3 testing */
+/* to avoid endo for gtk3 testing */
 #define panel_str_is_empty(string) ((string) == NULL || *(string) == '\0')
 
 /* quick GList and GSList counting without traversing */

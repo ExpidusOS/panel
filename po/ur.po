@@ -1,11 +1,11 @@
-# translation of xfce4-panel.po to urdu
+# translation of expidus1-panel.po to urdu
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Muhammad Ali Makki <makki.ma@gmail.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: xfce4-panel 4.7.0\n"
+"Project-Id-Version: expidus1-panel 4.7.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-16 21:39+0100\n"
 "PO-Revision-Date: 2009-04-28 16:53+0500\n"
@@ -44,41 +44,41 @@ msgid "Customize the panel"
 msgstr "ایکسفس پینل کی بابت"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1032
+#: ../libexpidus1panel/expidus-panel-plugin.c:1032
 #: ../panel/panel-preferences-dialog.c:1123
 #, fuzzy, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "کیا آپ واقعی مقام کار '%s' کو حذف کرنا چاہتے ہیں؟"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1037
+#: ../libexpidus1panel/expidus-panel-plugin.c:1037
 #: ../panel/panel-preferences-dialog.c:1126
 msgid "If you remove the item from the panel, it is permanently lost."
 msgstr ""
 
 #. move item
-#: ../libxfce4panel/xfce-panel-plugin.c:1197
+#: ../libexpidus1panel/expidus-panel-plugin.c:1197
 #, fuzzy
 msgid "_Move"
 msgstr "منتقل"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1231
+#: ../libexpidus1panel/expidus-panel-plugin.c:1231
 #, fuzzy
 msgid "Pane_l"
 msgstr "پینل %d"
 
 #. add new items
-#: ../libxfce4panel/xfce-panel-plugin.c:1239 ../panel/panel-window.c:2365
+#: ../libexpidus1panel/expidus-panel-plugin.c:1239 ../panel/panel-window.c:2365
 #, fuzzy
 msgid "Add _New Items..."
 msgstr "نئے پلگ ان شامل کریں..."
 
 #. customize panel
-#: ../libxfce4panel/xfce-panel-plugin.c:1250 ../panel/panel-window.c:2376
+#: ../libexpidus1panel/expidus-panel-plugin.c:1250 ../panel/panel-window.c:2376
 msgid "Panel Pr_eferences..."
 msgstr ""
 
 #. logout item
-#: ../libxfce4panel/xfce-panel-plugin.c:1267 ../panel/panel-window.c:2404
+#: ../libexpidus1panel/expidus-panel-plugin.c:1267 ../panel/panel-window.c:2404
 msgid "Log _Out"
 msgstr ""
 
@@ -123,9 +123,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr ""
 
 #: ../panel/main.c:87
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "ورژن کی معلومات طبع کر کے برخاست کریں:"
 
@@ -140,7 +140,7 @@ msgid "Type \"%s --help\" for usage."
 msgstr ""
 
 #: ../panel/main.c:262
-msgid "The Xfce development team. All rights reserved."
+msgid "The Expidus development team. All rights reserved."
 msgstr "ایکسفس ترقیاتی ٹیم. تمام حقوق محفوظ ہیں."
 
 #: ../panel/main.c:263
@@ -186,7 +186,7 @@ msgstr "پینل میں عنصر شامل کریں"
 #: ../panel/main.c:391
 #, fuzzy
 msgid "Failed to quit the panel"
-msgstr "'xfce4-panel -c' چلانے میں ناکامی"
+msgstr "'expidus1-panel -c' چلانے میں ناکامی"
 
 #: ../panel/main.c:393
 #, fuzzy
@@ -266,7 +266,7 @@ msgid "Inactive Maintainers"
 msgstr ""
 
 #: ../panel/panel-dialogs.c:82
-msgid "The panel of the Xfce Desktop Environment"
+msgid "The panel of the Expidus Desktop Environment"
 msgstr ""
 
 #: ../panel/panel-dialogs.c:87
@@ -660,7 +660,7 @@ msgstr ""
 
 #: ../migrate/main.c:130
 #, fuzzy
-msgid "Migrate the old 4.6 configuration to Xfconf"
+msgid "Migrate the old 4.6 configuration to Esconf"
 msgstr "پینل کی ترتیبات محفوظ کریں"
 
 #: ../migrate/main.c:141
@@ -981,34 +981,34 @@ msgstr "\"%s\" کو چلانے میں ناکامی"
 msgid "Show a menu containing categories of installed applications"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 #, fuzzy
 msgid "Options:"
 msgstr "گھڑی اختیارات"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 #, fuzzy
 msgid "Show help options"
 msgstr "_فلیٹ بٹن استعمال کریں"
@@ -1950,7 +1950,7 @@ msgstr "فہرست کے استعمال سے کھلی ہوئی ونڈوز کے د
 #~ msgstr "_شفافیت (%):"
 
 #, fuzzy
-#~ msgid "Xfce Menu"
+#~ msgid "Expidus Menu"
 #~ msgstr "ایکسفس پینل"
 
 #, fuzzy

@@ -9,12 +9,12 @@
 # Ivica  Kolić <ikoli@yahoo.com>, 2013-2015,2018-2020
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce4-panel\n"
+"Project-Id-Version: Expidus4-panel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 00:46+0200\n"
 "PO-Revision-Date: 2020-08-31 08:40+0000\n"
 "Last-Translator: Ivica  Kolić <ikoli@yahoo.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/xfce/xfce4-panel/language/hr/)\n"
+"Language-Team: Croatian (http://www.transifex.com/expidus/expidus1-panel/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,18 +46,18 @@ msgid "Customize the panel"
 msgstr "Prilagodi ploču"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1105
+#: ../libexpidus1panel/expidus-panel-plugin.c:1105
 #: ../panel/panel-preferences-dialog.c:1321
 #, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "Jeste li sigurni da želite ukloniti \"%s\"?"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1110
+#: ../libexpidus1panel/expidus-panel-plugin.c:1110
 msgid ""
 "Removing the item from the panel also means its configuration will be lost."
 msgstr "Uklanjanjem ove stavke sa ploče ukloniti će se i njene postavke."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
+#: ../libexpidus1panel/expidus-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
 #: ../panel/panel-preferences-dialog.c:1326
 #: ../plugins/applicationsmenu/applicationsmenu.c:602
 #: ../plugins/directorymenu/directorymenu.c:473
@@ -65,8 +65,8 @@ msgstr "Uklanjanjem ove stavke sa ploče ukloniti će se i njene postavke."
 msgid "_Cancel"
 msgstr "_Odustani"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1112
-#: ../libxfce4panel/xfce-panel-plugin.c:1287
+#: ../libexpidus1panel/expidus-panel-plugin.c:1112
+#: ../libexpidus1panel/expidus-panel-plugin.c:1287
 #: ../panel/panel-plugin-external.c:443
 #: ../panel/panel-preferences-dialog.c:961
 #: ../panel/panel-preferences-dialog.c:1327
@@ -74,35 +74,35 @@ msgstr "_Odustani"
 msgid "_Remove"
 msgstr "_Ukloni"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1237
+#: ../libexpidus1panel/expidus-panel-plugin.c:1237
 msgid "_Properties"
 msgstr "_Svojstva"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1252 ../panel/panel-window.c:3024
+#: ../libexpidus1panel/expidus-panel-plugin.c:1252 ../panel/panel-window.c:3024
 msgid "_About"
 msgstr "_O programu"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1267
+#: ../libexpidus1panel/expidus-panel-plugin.c:1267
 msgid "_Move"
 msgstr "_Premjesti"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1308
+#: ../libexpidus1panel/expidus-panel-plugin.c:1308
 msgid "Pane_l"
 msgstr "Ploč_a"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1317 ../panel/panel-window.c:2949
+#: ../libexpidus1panel/expidus-panel-plugin.c:1317 ../panel/panel-window.c:2949
 msgid "Add _New Items..."
 msgstr "Dodaj _nove stavke..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1332 ../panel/panel-window.c:2964
+#: ../libexpidus1panel/expidus-panel-plugin.c:1332 ../panel/panel-window.c:2964
 msgid "Panel Pr_eferences..."
 msgstr "Osobitosti pl_oče..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1353 ../panel/panel-window.c:2996
+#: ../libexpidus1panel/expidus-panel-plugin.c:1353 ../panel/panel-window.c:2996
 msgid "Log _Out"
 msgstr "Odja_va"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1373 ../panel/panel-item-dialog.c:207
+#: ../libexpidus1panel/expidus-panel-plugin.c:1373 ../panel/panel-item-dialog.c:207
 #: ../panel/panel-preferences-dialog.glade.h:12 ../panel/panel-window.c:3015
 #: ../plugins/actions/actions-dialog.glade.h:8
 #: ../plugins/applicationsmenu/applicationsmenu-dialog.glade.h:2
@@ -116,7 +116,7 @@ msgstr "Odja_va"
 msgid "_Help"
 msgstr "_Pomoć"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1388
+#: ../libexpidus1panel/expidus-panel-plugin.c:1388
 msgid "About"
 msgstr "O programu"
 
@@ -157,9 +157,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr "Ne čekaj upravitelja prozora pri pokretanju"
 
 #: ../panel/main.c:88
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "Ispiši informaciju o verziji i izađi"
 
@@ -179,8 +179,8 @@ msgid "Type \"%s --help\" for usage."
 msgstr "Upiši  \"%s --help\" za uporabu. "
 
 #: ../panel/main.c:294
-msgid "The Xfce development team. All rights reserved."
-msgstr "Xfce razvojni tim.Sva prava pridržana."
+msgid "The Expidus development team. All rights reserved."
+msgstr "Expidus razvojni tim.Sva prava pridržana."
 
 #: ../panel/main.c:295
 #, c-format
@@ -297,8 +297,8 @@ msgid "Unable to open the e-mail address"
 msgstr "Nemoguće otvoriti adresu e-pošte"
 
 #: ../panel/panel-dialogs.c:83
-msgid "The panel of the Xfce Desktop Environment"
-msgstr "Ploča Xfce radnog okruženja"
+msgid "The panel of the Expidus Desktop Environment"
+msgstr "Ploča Expidus radnog okruženja"
 
 #: ../panel/panel-dialogs.c:87
 msgid "translator-credits"
@@ -1023,33 +1023,33 @@ msgstr "Neuspjelo izvršenje naredbe \"%s\"."
 msgid "Show a menu containing categories of installed applications"
 msgstr "Pokaži izbornik koji sadrži kategorije instaliranih programa"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr "Upotreba:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr "OPCIJA"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 msgid "Options:"
 msgstr "Opcije:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr "Skočni prozor na trenutnoj poziciji miša"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 msgid "Show help options"
 msgstr "Pokaži opcije pomoći"
 

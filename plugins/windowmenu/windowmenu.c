@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,11 +20,11 @@
 #include <config.h>
 #endif
 
-#include <exo/exo.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <endo/endo.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <libwnck/libwnck.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <gdk/gdkkeysyms.h>
 #include <common/panel-private.h>
@@ -41,12 +41,12 @@
 
 struct _WindowMenuPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _WindowMenuPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   /* the screen we're showing */
   WnckScreen         *screen;
@@ -101,14 +101,14 @@ static void      window_menu_plugin_style_set               (GtkWidget          
                                                              GtkStyle           *previous_style);
 static void      window_menu_plugin_screen_changed          (GtkWidget          *widget,
                                                              GdkScreen          *previous_screen);
-static void      window_menu_plugin_construct               (XfcePanelPlugin    *panel_plugin);
-static void      window_menu_plugin_free_data               (XfcePanelPlugin    *panel_plugin);
-static void      window_menu_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                                             XfceScreenPosition  screen_position);
-static gboolean  window_menu_plugin_size_changed            (XfcePanelPlugin    *panel_plugin,
+static void      window_menu_plugin_construct               (ExpidusPanelPlugin    *panel_plugin);
+static void      window_menu_plugin_free_data               (ExpidusPanelPlugin    *panel_plugin);
+static void      window_menu_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                                             ExpidusScreenPosition  screen_position);
+static gboolean  window_menu_plugin_size_changed            (ExpidusPanelPlugin    *panel_plugin,
                                                              gint                size);
-static void      window_menu_plugin_configure_plugin        (XfcePanelPlugin    *panel_plugin);
-static gboolean  window_menu_plugin_remote_event            (XfcePanelPlugin    *panel_plugin,
+static void      window_menu_plugin_configure_plugin        (ExpidusPanelPlugin    *panel_plugin);
+static gboolean  window_menu_plugin_remote_event            (ExpidusPanelPlugin    *panel_plugin,
                                                              const gchar        *name,
                                                              const GValue       *value);
 static void      window_menu_plugin_active_window_changed   (WnckScreen         *screen,
@@ -133,7 +133,7 @@ static void      window_menu_plugin_menu                    (GtkWidget          
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN_RESIDENT (WindowMenuPlugin, window_menu_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN_RESIDENT (WindowMenuPlugin, window_menu_plugin)
 
 
 
@@ -144,7 +144,7 @@ static GQuark window_quark = 0;
 static void
 window_menu_plugin_class_init (WindowMenuPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
   GtkWidgetClass       *gtkwidget_class;
 
@@ -155,7 +155,7 @@ window_menu_plugin_class_init (WindowMenuPluginClass *klass)
   gtkwidget_class = GTK_WIDGET_CLASS (klass);
   gtkwidget_class->style_set = window_menu_plugin_style_set;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = window_menu_plugin_construct;
   plugin_class->free_data = window_menu_plugin_free_data;
   plugin_class->screen_position_changed = window_menu_plugin_screen_position_changed;
@@ -243,8 +243,8 @@ window_menu_plugin_init (WindowMenuPlugin *plugin)
   plugin->max_width_chars = DEFAULT_MAX_WIDTH_CHARS;
 
   /* create the widgets */
-  plugin->button = xfce_arrow_button_new (GTK_ARROW_NONE);
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->button);
+  plugin->button = expidus_arrow_button_new (GTK_ARROW_NONE);
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->button);
   gtk_container_add (GTK_CONTAINER (plugin), plugin->button);
   gtk_button_set_relief (GTK_BUTTON (plugin->button), GTK_RELIEF_NONE);
   gtk_widget_set_name (plugin->button, "windowmenu-button");
@@ -264,7 +264,7 @@ window_menu_plugin_get_property (GObject    *object,
                                  GValue     *value,
                                  GParamSpec *pspec)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (object);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -302,12 +302,12 @@ window_menu_plugin_set_property (GObject      *object,
                                  const GValue *value,
                                  GParamSpec   *pspec)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (object);
-  XfcePanelPlugin  *panel_plugin = XFCE_PANEL_PLUGIN (object);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (object);
+  ExpidusPanelPlugin  *panel_plugin = EXPIDUS_PANEL_PLUGIN (object);
   guint             button_style;
   gboolean          urgentcy_notification;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
 
   switch (prop_id)
     {
@@ -324,11 +324,11 @@ window_menu_plugin_set_property (GObject      *object,
             gtk_widget_hide (plugin->icon);
 
           /* update the plugin */
-          xfce_panel_plugin_set_small (panel_plugin, plugin->button_style == BUTTON_STYLE_ICON);
+          expidus_panel_plugin_set_small (panel_plugin, plugin->button_style == BUTTON_STYLE_ICON);
           window_menu_plugin_size_changed (panel_plugin,
-              xfce_panel_plugin_get_size (panel_plugin));
+              expidus_panel_plugin_get_size (panel_plugin));
           window_menu_plugin_screen_position_changed (panel_plugin,
-              xfce_panel_plugin_get_screen_position (panel_plugin));
+              expidus_panel_plugin_get_screen_position (panel_plugin));
           if (plugin->screen != NULL)
             window_menu_plugin_active_window_changed (plugin->screen, NULL, plugin);
         }
@@ -375,7 +375,7 @@ static void
 window_menu_plugin_style_set (GtkWidget *widget,
                               GtkStyle  *previous_style)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (widget);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (widget);
 
   /* let gtk update the widget style */
   (*GTK_WIDGET_CLASS (window_menu_plugin_parent_class)->style_set) (widget, previous_style);
@@ -394,7 +394,7 @@ static void
 window_menu_plugin_screen_changed (GtkWidget *widget,
                                    GdkScreen *previous_screen)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (widget);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (widget);
   GdkScreen        *screen;
   WnckScreen       *wnck_screen;
 
@@ -434,9 +434,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
-window_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
+window_menu_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  WindowMenuPlugin    *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin    *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "style", G_TYPE_UINT },
@@ -448,12 +448,12 @@ window_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
   };
 
   /* show configure */
-  xfce_panel_plugin_menu_show_configure (XFCE_PANEL_PLUGIN (plugin));
-  xfce_panel_plugin_set_small (panel_plugin, TRUE);
+  expidus_panel_plugin_menu_show_configure (EXPIDUS_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_set_small (panel_plugin, TRUE);
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   /* monitor screen changes */
@@ -469,9 +469,9 @@ window_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
 
 
 static void
-window_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
+window_menu_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
 
   /* disconnect screen changed signal */
   g_signal_handlers_disconnect_by_func (G_OBJECT (plugin),
@@ -494,39 +494,39 @@ window_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static void
-window_menu_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                            XfceScreenPosition  screen_position)
+window_menu_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                            ExpidusScreenPosition  screen_position)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
   GtkArrowType      arrow_type = GTK_ARROW_NONE;
 
   /* set the arrow direction if the arrow is visible */
   if (plugin->button_style == BUTTON_STYLE_ARROW)
-    arrow_type = xfce_panel_plugin_arrow_type (panel_plugin);
+    arrow_type = expidus_panel_plugin_arrow_type (panel_plugin);
 
-  xfce_arrow_button_set_arrow_type (XFCE_ARROW_BUTTON (plugin->button),
+  expidus_arrow_button_set_arrow_type (EXPIDUS_ARROW_BUTTON (plugin->button),
                                     arrow_type);
 }
 
 
 
 static gboolean
-window_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+window_menu_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                                  gint             size)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
   gint              button_size;
 
   if (plugin->button_style == BUTTON_STYLE_ICON)
     {
       /* square the plugin */
-      size /= xfce_panel_plugin_get_nrows (panel_plugin);
+      size /= expidus_panel_plugin_get_nrows (panel_plugin);
       gtk_widget_set_size_request (GTK_WIDGET (plugin), size, size);
     }
   else
     {
       /* set the size of the arrow button */
-      if (xfce_panel_plugin_get_orientation (panel_plugin) ==
+      if (expidus_panel_plugin_get_orientation (panel_plugin) ==
               GTK_ORIENTATION_HORIZONTAL)
         {
           gtk_widget_get_preferred_width (plugin->button, NULL, &button_size);
@@ -548,9 +548,9 @@ window_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-window_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+window_menu_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
   GtkBuilder       *builder;
   GObject          *dialog, *object;
   guint             i;
@@ -581,11 +581,11 @@ window_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-window_menu_plugin_remote_event (XfcePanelPlugin *panel_plugin,
+window_menu_plugin_remote_event (ExpidusPanelPlugin *panel_plugin,
                                  const gchar     *name,
                                  const GValue    *value)
 {
-  WindowMenuPlugin *plugin = XFCE_WINDOW_MENU_PLUGIN (panel_plugin);
+  WindowMenuPlugin *plugin = EXPIDUS_WINDOW_MENU_PLUGIN (panel_plugin);
 
   panel_return_val_if_fail (value == NULL || G_IS_VALUE (value), FALSE);
 
@@ -627,12 +627,12 @@ window_menu_plugin_active_window_changed (WnckScreen       *screen,
   GtkWidget      *icon = GTK_WIDGET (plugin->icon);
   WnckWindowType  type;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (GTK_IMAGE (icon));
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (plugin->screen == screen);
 
-  icon_size = xfce_panel_plugin_get_icon_size (XFCE_PANEL_PLUGIN (plugin));
+  icon_size = expidus_panel_plugin_get_icon_size (EXPIDUS_PANEL_PLUGIN (plugin));
   /* only do this when the icon is visible */
   if (plugin->button_style == BUTTON_STYLE_ICON)
     {
@@ -680,7 +680,7 @@ window_menu_plugin_window_state_changed (WnckWindow       *window,
                                          WnckWindowState   new_state,
                                          WindowMenuPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_WINDOW (window));
   panel_return_if_fail (plugin->urgentcy_notification);
   panel_return_if_fail (plugin->urgentcy_notification);
@@ -697,9 +697,9 @@ window_menu_plugin_window_state_changed (WnckWindow       *window,
 
   /* check if we need to change the button */
   if (plugin->urgent_windows == 1)
-    xfce_arrow_button_set_blinking (XFCE_ARROW_BUTTON (plugin->button), TRUE);
+    expidus_arrow_button_set_blinking (EXPIDUS_ARROW_BUTTON (plugin->button), TRUE);
   else if (plugin->urgent_windows == 0)
-    xfce_arrow_button_set_blinking (XFCE_ARROW_BUTTON (plugin->button), FALSE);
+    expidus_arrow_button_set_blinking (EXPIDUS_ARROW_BUTTON (plugin->button), FALSE);
 }
 
 
@@ -709,7 +709,7 @@ window_menu_plugin_window_opened (WnckScreen       *screen,
                                   WnckWindow       *window,
                                   WindowMenuPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_WINDOW (window));
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (plugin->screen == screen);
@@ -732,7 +732,7 @@ window_menu_plugin_window_closed (WnckScreen       *screen,
                                   WnckWindow       *window,
                                   WindowMenuPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_WINDOW (window));
   panel_return_if_fail (WNCK_IS_SCREEN (screen));
   panel_return_if_fail (plugin->screen == screen);
@@ -751,7 +751,7 @@ window_menu_plugin_windows_disconnect (WindowMenuPlugin *plugin)
 {
   GList *windows, *li;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->screen));
 
   /* disconnect screen signals */
@@ -771,7 +771,7 @@ window_menu_plugin_windows_disconnect (WindowMenuPlugin *plugin)
 
   /* stop blinking */
   plugin->urgent_windows = 0;
-  xfce_arrow_button_set_blinking (XFCE_ARROW_BUTTON (plugin->button), FALSE);
+  expidus_arrow_button_set_blinking (EXPIDUS_ARROW_BUTTON (plugin->button), FALSE);
 }
 
 
@@ -782,7 +782,7 @@ window_menu_plugin_windows_connect (WindowMenuPlugin *plugin,
 {
   GList *windows, *li;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->screen));
   panel_return_if_fail (plugin->urgentcy_notification);
 
@@ -811,7 +811,7 @@ static void
 window_menu_plugin_workspace_add (GtkWidget        *mi,
                                   WindowMenuPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->screen));
 
   /* increase the number of workspaces */
@@ -827,7 +827,7 @@ window_menu_plugin_workspace_remove (GtkWidget        *mi,
 {
   gint n_workspaces;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->screen));
 
   /* decrease the number of workspaces */
@@ -861,7 +861,7 @@ window_menu_plugin_menu_workspace_item_new (WnckWorkspace        *workspace,
   GtkWidget   *mi, *label;
 
   panel_return_val_if_fail (WNCK_IS_WORKSPACE (workspace), NULL);
-  panel_return_val_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin), NULL);
 
   /* try to get an utf-8 valid name */
   name = wnck_workspace_get_name (workspace);
@@ -1055,8 +1055,8 @@ G_GNUC_END_IGNORE_DEPRECATIONS
           if (wnck_window_is_minimized (window)
               && plugin->minimized_icon_lucency < 100)
             {
-#ifdef EXO_CHECK_VERSION
-              lucent = exo_gdk_pixbuf_lucent (pixbuf, plugin->minimized_icon_lucency);
+#ifdef ENDO_CHECK_VERSION
+              lucent = endo_gdk_pixbuf_lucent (pixbuf, plugin->minimized_icon_lucency);
               if (G_LIKELY (lucent != NULL))
                 pixbuf = lucent;
 #endif
@@ -1181,7 +1181,7 @@ window_menu_plugin_menu_new (WindowMenuPlugin *plugin)
   gchar                *utf8 = NULL, *label;
   gint                  w, h;
 
-  panel_return_val_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin), NULL);
   panel_return_val_if_fail (WNCK_IS_SCREEN (plugin->screen), NULL);
 
   italic = pango_font_description_from_string ("italic");
@@ -1389,7 +1389,7 @@ window_menu_plugin_menu (GtkWidget        *button,
 {
   GtkWidget *menu;
 
-  panel_return_if_fail (XFCE_IS_WINDOW_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_WINDOW_MENU_PLUGIN (plugin));
   panel_return_if_fail (button == NULL || plugin->button == button);
 
   if (button != NULL
@@ -1402,7 +1402,7 @@ window_menu_plugin_menu (GtkWidget        *button,
       G_CALLBACK (window_menu_plugin_menu_selection_done), button);
 
   gtk_menu_popup_at_widget (GTK_MENU (menu), button,
-                            xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             NULL);

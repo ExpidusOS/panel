@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017 Ali Abdallah <ali@xfce.org>
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2017 Ali Abdallah <ali@expidus.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,14 +33,14 @@
 
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <common/panel-private.h>
 #include <common/panel-dbus.h>
 #include <common/panel-debug.h>
 
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 #include <panel/panel-module.h>
 #include <panel/panel-plugin-external.h>
@@ -66,11 +66,11 @@ static gboolean   panel_plugin_external_wrapper_remote_event             (PanelP
                                                                           const gchar                    *name,
                                                                           const GValue                   *value,
                                                                           guint                          *handle);
-static gboolean   panel_plugin_external_wrapper_dbus_provider_signal     (XfcePanelPluginWrapperExported *skeleton,
+static gboolean   panel_plugin_external_wrapper_dbus_provider_signal     (ExpidusPanelPluginWrapperExported *skeleton,
                                                                           GDBusMethodInvocation          *invocation,
-                                                                          XfcePanelPluginProviderSignal   provider_signal,
+                                                                          ExpidusPanelPluginProviderSignal   provider_signal,
                                                                           PanelPluginExternalWrapper     *wrapper);
-static gboolean   panel_plugin_external_wrapper_dbus_remote_event_result (XfcePanelPluginWrapperExported *skeleton,
+static gboolean   panel_plugin_external_wrapper_dbus_remote_event_result (ExpidusPanelPluginWrapperExported *skeleton,
                                                                           GDBusMethodInvocation          *invocation,
                                                                           guint                           handle,
                                                                           gboolean                        result,
@@ -88,7 +88,7 @@ struct _PanelPluginExternalWrapper
 {
   PanelPluginExternal __parent__;
 
-  XfcePanelPluginWrapperExported *skeleton;
+  ExpidusPanelPluginWrapperExported *skeleton;
 
   GDBusConnection                *connection;
 
@@ -158,7 +158,7 @@ panel_plugin_external_wrapper_constructed (GObject *object)
   wrapper->connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL,  &error);
   if (G_LIKELY (wrapper->connection != NULL))
     {
-      wrapper->skeleton = xfce_panel_plugin_wrapper_exported_skeleton_new ();
+      wrapper->skeleton = expidus_panel_plugin_wrapper_exported_skeleton_new ();
 
       /* register the object in dbus, the wrapper will monitor this object */
       panel_return_if_fail (PANEL_PLUGIN_EXTERNAL (object)->unique_id != -1);
@@ -335,7 +335,7 @@ panel_plugin_external_wrapper_set_properties (PanelPluginExternal *external,
   g_dbus_connection_emit_signal (wrapper->connection,
                                  NULL,
                                  g_dbus_interface_skeleton_get_object_path (G_DBUS_INTERFACE_SKELETON (wrapper->skeleton)),
-                                 "org.xfce.Panel.Wrapper",
+                                 "com.expidus.Panel.Wrapper",
                                  "Set",
                                  g_variant_builder_end (&builder),
                                  NULL);
@@ -354,7 +354,7 @@ panel_plugin_external_wrapper_remote_event (PanelPluginExternal *external,
   static guint                 handle_counter = 0;
 
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL_WRAPPER (external), TRUE);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (external), TRUE);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (external), TRUE);
   panel_return_val_if_fail (value == NULL || G_IS_VALUE (value), FALSE);
 
   wrapper = PANEL_PLUGIN_EXTERNAL_WRAPPER (external);
@@ -376,7 +376,7 @@ panel_plugin_external_wrapper_remote_event (PanelPluginExternal *external,
   g_dbus_connection_emit_signal (wrapper->connection,
                                  NULL,
                                  g_dbus_interface_skeleton_get_object_path (G_DBUS_INTERFACE_SKELETON (wrapper->skeleton)),
-                                 "org.xfce.Panel.Wrapper",
+                                 "com.expidus.Panel.Wrapper",
                                  "RemoteEvent",
                                  g_variant_new ("(svu)",
                                                 name,
@@ -389,13 +389,13 @@ panel_plugin_external_wrapper_remote_event (PanelPluginExternal *external,
 
 
 static gboolean
-panel_plugin_external_wrapper_dbus_provider_signal (XfcePanelPluginWrapperExported *skeleton,
+panel_plugin_external_wrapper_dbus_provider_signal (ExpidusPanelPluginWrapperExported *skeleton,
                                                     GDBusMethodInvocation          *invocation,
-                                                    XfcePanelPluginProviderSignal   provider_signal,
+                                                    ExpidusPanelPluginProviderSignal   provider_signal,
                                                     PanelPluginExternalWrapper     *wrapper)
 {
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL (wrapper), FALSE);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (wrapper), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (wrapper), FALSE);
 
   switch (provider_signal)
     {
@@ -409,12 +409,12 @@ panel_plugin_external_wrapper_dbus_provider_signal (XfcePanelPluginWrapperExport
 
     default:
       /* other signals are handled in panel-applications.c */
-      xfce_panel_plugin_provider_emit_signal (XFCE_PANEL_PLUGIN_PROVIDER (wrapper),
+      expidus_panel_plugin_provider_emit_signal (EXPIDUS_PANEL_PLUGIN_PROVIDER (wrapper),
                                               provider_signal);
       break;
     }
 
-  xfce_panel_plugin_wrapper_exported_complete_provider_signal (skeleton, invocation);
+  expidus_panel_plugin_wrapper_exported_complete_provider_signal (skeleton, invocation);
 
   return TRUE;
 }
@@ -422,7 +422,7 @@ panel_plugin_external_wrapper_dbus_provider_signal (XfcePanelPluginWrapperExport
 
 
 static gboolean
-panel_plugin_external_wrapper_dbus_remote_event_result (XfcePanelPluginWrapperExported *skeleton,
+panel_plugin_external_wrapper_dbus_remote_event_result (ExpidusPanelPluginWrapperExported *skeleton,
                                                         GDBusMethodInvocation          *invocation,
                                                         guint                           handle,
                                                         gboolean                        result,
@@ -433,7 +433,7 @@ panel_plugin_external_wrapper_dbus_remote_event_result (XfcePanelPluginWrapperEx
   g_signal_emit (G_OBJECT (wrapper), external_signals[REMOTE_EVENT_RESULT], 0,
                  handle, result);
 
-  xfce_panel_plugin_wrapper_exported_complete_remote_event_result (skeleton, invocation);
+  expidus_panel_plugin_wrapper_exported_complete_remote_event_result (skeleton, invocation);
 
   return TRUE;
 }

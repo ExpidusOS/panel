@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -16,11 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef __XFCE_LAUNCHER_DIALOG_H__
-#define __XFCE_LAUNCHER_DIALOG_H__
+#ifndef __EXPIDUS_LAUNCHER_DIALOG_H__
+#define __EXPIDUS_LAUNCHER_DIALOG_H__
 
 #include "launcher.h"
 
 void launcher_dialog_show (LauncherPlugin *plugin);
 
-#endif /* !__XFCE_LAUNCHER_DIALOG_H__ */
+#endif /* !__EXPIDUS_LAUNCHER_DIALOG_H__ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,13 +20,13 @@
 #include <config.h>
 #endif
 
-#include <exo/exo.h>
-#include <garcon/garcon.h>
-#include <garcon-gtk/garcon-gtk.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <common/panel-xfconf.h>
+#include <endo/endo.h>
+#include <markon/markon.h>
+#include <markon-gtk/markon-gtk.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
@@ -37,19 +37,19 @@
 
 /* I18N: default tooltip of the application menu */
 #define DEFAULT_TITLE     _("Applications")
-#define DEFAULT_ICON_NAME "org.xfce.panel.applicationsmenu"
+#define DEFAULT_ICON_NAME "com.expidus.panel.applicationsmenu"
 #define DEFAULT_ICON_SIZE (16)
 #define DEFAULT_EDITOR    "menulibre"
 
 
 struct _ApplicationsMenuPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _ApplicationsMenuPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   GtkWidget       *button;
   GtkWidget       *box;
@@ -99,14 +99,14 @@ static void      applications_menu_plugin_set_property         (GObject         
                                                                 guint                   prop_id,
                                                                 const GValue           *value,
                                                                 GParamSpec             *pspec);
-static void      applications_menu_plugin_construct            (XfcePanelPlugin        *panel_plugin);
-static void      applications_menu_plugin_free_data            (XfcePanelPlugin        *panel_plugin);
-static gboolean  applications_menu_plugin_size_changed         (XfcePanelPlugin        *panel_plugin,
+static void      applications_menu_plugin_construct            (ExpidusPanelPlugin        *panel_plugin);
+static void      applications_menu_plugin_free_data            (ExpidusPanelPlugin        *panel_plugin);
+static gboolean  applications_menu_plugin_size_changed         (ExpidusPanelPlugin        *panel_plugin,
                                                                 gint                    size);
-static void      applications_menu_plugin_mode_changed         (XfcePanelPlugin        *panel_plugin,
-                                                                XfcePanelPluginMode     mode);
-static void      applications_menu_plugin_configure_plugin     (XfcePanelPlugin        *panel_plugin);
-static gboolean  applications_menu_plugin_remote_event         (XfcePanelPlugin        *panel_plugin,
+static void      applications_menu_plugin_mode_changed         (ExpidusPanelPlugin        *panel_plugin,
+                                                                ExpidusPanelPluginMode     mode);
+static void      applications_menu_plugin_configure_plugin     (ExpidusPanelPlugin        *panel_plugin);
+static gboolean  applications_menu_plugin_remote_event         (ExpidusPanelPlugin        *panel_plugin,
                                                                 const gchar            *name,
                                                                 const GValue           *value);
 static gboolean  applications_menu_plugin_menu                 (GtkWidget              *button,
@@ -114,27 +114,27 @@ static gboolean  applications_menu_plugin_menu                 (GtkWidget       
                                                                 ApplicationsMenuPlugin *plugin);
 static void      applications_menu_plugin_menu_deactivate      (GtkWidget              *menu,
                                                                 ApplicationsMenuPlugin *plugin);
-static void      applications_menu_plugin_set_garcon_menu      (ApplicationsMenuPlugin *plugin);
+static void      applications_menu_plugin_set_markon_menu      (ApplicationsMenuPlugin *plugin);
 static void      applications_menu_button_theme_changed        (ApplicationsMenuPlugin *plugin);
 
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (ApplicationsMenuPlugin, applications_menu_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN (ApplicationsMenuPlugin, applications_menu_plugin)
 
 
 
 static void
 applications_menu_plugin_class_init (ApplicationsMenuPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
   gobject_class->get_property = applications_menu_plugin_get_property;
   gobject_class->set_property = applications_menu_plugin_set_property;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = applications_menu_plugin_construct;
   plugin_class->free_data = applications_menu_plugin_free_data;
   plugin_class->size_changed = applications_menu_plugin_size_changed;
@@ -212,13 +212,13 @@ applications_menu_plugin_init (ApplicationsMenuPlugin *plugin)
 {
   GtkIconTheme *icon_theme;
 
-  /* init garcon environment */
-  garcon_set_environment_xdg (GARCON_ENVIRONMENT_XFCE);
+  /* init markon environment */
+  markon_set_environment_xdg (MARKON_ENVIRONMENT_EXPIDUS);
 
   icon_theme = gtk_icon_theme_get_default ();
 
-  plugin->button = xfce_panel_create_toggle_button ();
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->button);
+  plugin->button = expidus_panel_create_toggle_button ();
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->button);
   gtk_container_add (GTK_CONTAINER (plugin), plugin->button);
   gtk_widget_set_name (plugin->button, "applicationmenu-button");
   gtk_button_set_relief (GTK_BUTTON (plugin->button), GTK_RELIEF_NONE);
@@ -241,7 +241,7 @@ applications_menu_plugin_init (ApplicationsMenuPlugin *plugin)
   gtk_widget_show (plugin->label);
 
   /* prepare the menu */
-  plugin->menu = garcon_gtk_menu_new (NULL);
+  plugin->menu = markon_gtk_menu_new (NULL);
   g_signal_connect (G_OBJECT (plugin->menu), "selection-done",
       G_CALLBACK (applications_menu_plugin_menu_deactivate), plugin);
 
@@ -250,7 +250,7 @@ applications_menu_plugin_init (ApplicationsMenuPlugin *plugin)
   plugin->screen_changed_id = g_signal_connect_swapped (G_OBJECT (plugin->button), "screen-changed",
                                                         G_CALLBACK (applications_menu_button_theme_changed), plugin);
   plugin->theme_changed_id = g_signal_connect_swapped (G_OBJECT (icon_theme), "changed",
-                                                       G_CALLBACK (applications_menu_plugin_set_garcon_menu), plugin);
+                                                       G_CALLBACK (applications_menu_plugin_set_markon_menu), plugin);
 }
 
 
@@ -261,23 +261,23 @@ applications_menu_plugin_get_property (GObject    *object,
                                        GValue     *value,
                                        GParamSpec *pspec)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (object);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (object);
 
   switch (prop_id)
     {
     case PROP_SHOW_GENERIC_NAMES:
       g_value_set_boolean (value,
-          garcon_gtk_menu_get_show_generic_names (GARCON_GTK_MENU (plugin->menu)));
+          markon_gtk_menu_get_show_generic_names (MARKON_GTK_MENU (plugin->menu)));
       break;
 
     case PROP_SHOW_MENU_ICONS:
       g_value_set_boolean (value,
-          garcon_gtk_menu_get_show_menu_icons (GARCON_GTK_MENU (plugin->menu)));
+          markon_gtk_menu_get_show_menu_icons (MARKON_GTK_MENU (plugin->menu)));
       break;
 
     case PROP_SHOW_TOOLTIPS:
       g_value_set_boolean (value,
-          garcon_gtk_menu_get_show_tooltips (GARCON_GTK_MENU (plugin->menu)));
+          markon_gtk_menu_get_show_tooltips (MARKON_GTK_MENU (plugin->menu)));
       break;
 
     case PROP_SHOW_BUTTON_TITLE:
@@ -320,23 +320,23 @@ applications_menu_plugin_set_property (GObject      *object,
                                        const GValue *value,
                                        GParamSpec   *pspec)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (object);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (object);
   gboolean                force_a_resize = FALSE;
 
   switch (prop_id)
     {
     case PROP_SHOW_GENERIC_NAMES:
-      garcon_gtk_menu_set_show_generic_names (GARCON_GTK_MENU (plugin->menu),
+      markon_gtk_menu_set_show_generic_names (MARKON_GTK_MENU (plugin->menu),
                                               g_value_get_boolean (value));
       break;
 
     case PROP_SHOW_MENU_ICONS:
-      garcon_gtk_menu_set_show_menu_icons (GARCON_GTK_MENU (plugin->menu),
+      markon_gtk_menu_set_show_menu_icons (MARKON_GTK_MENU (plugin->menu),
                                            g_value_get_boolean (value));
        break;
 
     case PROP_SHOW_TOOLTIPS:
-      garcon_gtk_menu_set_show_tooltips (GARCON_GTK_MENU (plugin->menu),
+      markon_gtk_menu_set_show_tooltips (MARKON_GTK_MENU (plugin->menu),
                                          g_value_get_boolean (value));
       break;
 
@@ -346,8 +346,8 @@ applications_menu_plugin_set_property (GObject      *object,
         gtk_widget_show (plugin->label);
       else
         gtk_widget_hide (plugin->label);
-      applications_menu_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-          xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+      applications_menu_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+          expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
       return;
 
     case PROP_BUTTON_TITLE:
@@ -359,7 +359,7 @@ applications_menu_plugin_set_property (GObject      *object,
           panel_str_is_empty (plugin->button_title) ? NULL : plugin->button_title);
 
       /* check if the label still fits */
-      if (xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin)) == XFCE_PANEL_PLUGIN_MODE_DESKBAR
+      if (expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin)) == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR
           && plugin->show_button_title)
         {
           force_a_resize = TRUE;
@@ -377,7 +377,7 @@ applications_menu_plugin_set_property (GObject      *object,
       plugin->custom_menu = g_value_get_boolean (value);
 
       if (plugin->is_constructed)
-        applications_menu_plugin_set_garcon_menu (plugin);
+        applications_menu_plugin_set_markon_menu (plugin);
       break;
 
     case PROP_CUSTOM_MENU_FILE:
@@ -385,7 +385,7 @@ applications_menu_plugin_set_property (GObject      *object,
       plugin->custom_menu_file = g_value_dup_string (value);
 
       if (plugin->is_constructed)
-        applications_menu_plugin_set_garcon_menu (plugin);
+        applications_menu_plugin_set_markon_menu (plugin);
       break;
 
     case PROP_MENU_EDITOR:
@@ -399,17 +399,17 @@ applications_menu_plugin_set_property (GObject      *object,
 
   if (force_a_resize)
     {
-      applications_menu_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-          xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+      applications_menu_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+          expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
     }
 }
 
 
 
 static void
-applications_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
+applications_menu_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "show-generic-names", G_TYPE_BOOLEAN },
@@ -424,15 +424,15 @@ applications_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
     { NULL }
   };
 
-  xfce_panel_plugin_menu_show_configure (XFCE_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_menu_show_configure (EXPIDUS_PANEL_PLUGIN (plugin));
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   /* make sure the menu is set */
-  applications_menu_plugin_set_garcon_menu (plugin);
+  applications_menu_plugin_set_markon_menu (plugin);
 
   if (!plugin->menu_editor)
       plugin->menu_editor = DEFAULT_EDITOR;
@@ -440,16 +440,16 @@ applications_menu_plugin_construct (XfcePanelPlugin *panel_plugin)
   gtk_widget_show (plugin->button);
 
   applications_menu_plugin_size_changed (panel_plugin,
-      xfce_panel_plugin_get_size (panel_plugin));
+      expidus_panel_plugin_get_size (panel_plugin));
   plugin->is_constructed = TRUE;
 }
 
 
 
 static void
-applications_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
+applications_menu_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
   GtkIconTheme           *icon_theme;
 
   if (plugin->menu != NULL)
@@ -483,11 +483,11 @@ applications_menu_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+applications_menu_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                                        gint             size)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
-  XfcePanelPluginMode     mode;
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ExpidusPanelPluginMode     mode;
   GtkRequisition          label_size;
   GtkOrientation          orientation;
   gint                    border_thickness;
@@ -504,9 +504,9 @@ applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
                              !plugin->show_button_title,
                              0, GTK_PACK_START);
 
-  mode = xfce_panel_plugin_get_mode (panel_plugin);
+  mode = expidus_panel_plugin_get_mode (panel_plugin);
 
-  if (mode == XFCE_PANEL_PLUGIN_MODE_HORIZONTAL)
+  if (mode == EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL)
     orientation = GTK_ORIENTATION_HORIZONTAL;
   else
     orientation = GTK_ORIENTATION_VERTICAL;
@@ -518,7 +518,7 @@ applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
   border_thickness = MAX (padding.left + padding.right + border.left + border.right,
                           padding.top + padding.bottom + border.top + border.bottom);
 
-  icon_size = xfce_panel_plugin_get_icon_size (panel_plugin);
+  icon_size = expidus_panel_plugin_get_icon_size (panel_plugin);
 
   screen = gtk_widget_get_screen (GTK_WIDGET (plugin));
   if (G_LIKELY (screen != NULL))
@@ -527,7 +527,7 @@ applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
   icon_name = panel_str_is_empty (plugin->button_icon) ?
     DEFAULT_ICON_NAME : plugin->button_icon;
 
-  icon = xfce_panel_pixbuf_from_source_at_size (icon_name,
+  icon = expidus_panel_pixbuf_from_source_at_size (icon_name,
                                                 icon_theme,
                                                 icon_size,
                                                 icon_size);
@@ -539,7 +539,7 @@ applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
     }
 
   if (plugin->show_button_title &&
-      mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR)
+      mode == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR)
     {
       /* check if the label (minimum size) fits next to the icon */
       gtk_widget_get_preferred_size (GTK_WIDGET (plugin->label), &label_size, NULL);
@@ -555,17 +555,17 @@ applications_menu_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-applications_menu_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                                       XfcePanelPluginMode  mode)
+applications_menu_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                                       ExpidusPanelPluginMode  mode)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
   gint                    angle;
 
-  angle = (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0;
+  angle = (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0;
   gtk_label_set_angle (GTK_LABEL (plugin->label), angle);
 
   applications_menu_plugin_size_changed (panel_plugin,
-      xfce_panel_plugin_get_size (panel_plugin));
+      expidus_panel_plugin_get_size (panel_plugin));
 }
 
 
@@ -577,7 +577,7 @@ applications_menu_plugin_configure_plugin_file_set (GtkFileChooserButton   *butt
   gchar *filename;
 
   panel_return_if_fail (GTK_IS_FILE_CHOOSER_BUTTON (button));
-  panel_return_if_fail (XFCE_IS_APPLICATIONS_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_APPLICATIONS_MENU_PLUGIN (plugin));
 
   filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (button));
   g_object_set (G_OBJECT (plugin), "custom-menu-file", filename, NULL);
@@ -590,29 +590,29 @@ static void
 applications_menu_plugin_configure_plugin_icon_chooser (GtkWidget              *button,
                                                         ApplicationsMenuPlugin *plugin)
 {
-#ifdef EXO_CHECK_VERSION
+#ifdef ENDO_CHECK_VERSION
   GtkWidget *chooser;
   gchar     *icon;
 
-  panel_return_if_fail (XFCE_IS_APPLICATIONS_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_APPLICATIONS_MENU_PLUGIN (plugin));
   panel_return_if_fail (GTK_IMAGE (plugin->dialog_icon));
 
-  chooser = exo_icon_chooser_dialog_new (_("Select An Icon"),
+  chooser = endo_icon_chooser_dialog_new (_("Select An Icon"),
                                          GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                          _("_Cancel"), GTK_RESPONSE_CANCEL,
                                          _("_OK"), GTK_RESPONSE_ACCEPT,
                                          NULL);
   gtk_dialog_set_default_response (GTK_DIALOG (chooser), GTK_RESPONSE_ACCEPT);
 
-  exo_icon_chooser_dialog_set_icon (EXO_ICON_CHOOSER_DIALOG (chooser),
+  endo_icon_chooser_dialog_set_icon (ENDO_ICON_CHOOSER_DIALOG (chooser),
       panel_str_is_empty (plugin->button_icon) ? DEFAULT_ICON_NAME : plugin->button_icon);
 
   if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
     {
-      icon = exo_icon_chooser_dialog_get_icon (EXO_ICON_CHOOSER_DIALOG (chooser));
+      icon = endo_icon_chooser_dialog_get_icon (ENDO_ICON_CHOOSER_DIALOG (chooser));
       g_object_set (G_OBJECT (plugin), "button-icon", icon, NULL);
       gtk_image_set_from_icon_name (GTK_IMAGE (plugin->dialog_icon),
-                                    exo_str_is_empty (plugin->button_icon) ?
+                                    endo_str_is_empty (plugin->button_icon) ?
                                     DEFAULT_ICON_NAME : plugin->button_icon,
                                     GTK_ICON_SIZE_DIALOG);
       g_free (icon);
@@ -630,13 +630,13 @@ applications_menu_plugin_configure_plugin_edit (GtkWidget              *button,
 {
   GError      *error = NULL;
 
-  panel_return_if_fail (XFCE_IS_APPLICATIONS_MENU_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_APPLICATIONS_MENU_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_WIDGET (button));
 
-  if (!xfce_spawn_command_line (gtk_widget_get_screen (button), plugin->menu_editor,
+  if (!expidus_spawn_command_line (gtk_widget_get_screen (button), plugin->menu_editor,
                                 FALSE, FALSE, TRUE, &error))
     {
-      xfce_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), plugin->menu_editor);
+      expidus_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), plugin->menu_editor);
       g_error_free (error);
     }
 }
@@ -644,9 +644,9 @@ applications_menu_plugin_configure_plugin_edit (GtkWidget              *button,
 
 
 static void
-applications_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+applications_menu_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
   GtkBuilder             *builder;
   GObject                *dialog, *object, *object2;
   guint                   i;
@@ -734,11 +734,11 @@ applications_menu_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-applications_menu_plugin_remote_event (XfcePanelPlugin *panel_plugin,
+applications_menu_plugin_remote_event (ExpidusPanelPlugin *panel_plugin,
                                        const gchar     *name,
                                        const GValue    *value)
 {
-  ApplicationsMenuPlugin *plugin = XFCE_APPLICATIONS_MENU_PLUGIN (panel_plugin);
+  ApplicationsMenuPlugin *plugin = EXPIDUS_APPLICATIONS_MENU_PLUGIN (panel_plugin);
 
   panel_return_val_if_fail (value == NULL || G_IS_VALUE (value), FALSE);
 
@@ -776,7 +776,7 @@ applications_menu_plugin_menu_deactivate (GtkWidget *menu,
   panel_return_if_fail (plugin->button == NULL || GTK_IS_TOGGLE_BUTTON (plugin->button));
   panel_return_if_fail (GTK_IS_MENU (menu));
 
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), FALSE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), FALSE);
 
   /* button is NULL when we popup the menu under the cursor position */
   if (plugin->button != NULL)
@@ -788,32 +788,32 @@ applications_menu_plugin_menu_deactivate (GtkWidget *menu,
 
 
 static void
-applications_menu_plugin_set_garcon_menu (ApplicationsMenuPlugin *plugin)
+applications_menu_plugin_set_markon_menu (ApplicationsMenuPlugin *plugin)
 {
-  GarconMenu *menu = NULL;
+  MarkonMenu *menu = NULL;
   gchar      *filename;
   GFile      *file;
 
-  panel_return_if_fail (XFCE_IS_APPLICATIONS_MENU_PLUGIN (plugin));
-  panel_return_if_fail (GARCON_GTK_IS_MENU (plugin->menu));
+  panel_return_if_fail (EXPIDUS_IS_APPLICATIONS_MENU_PLUGIN (plugin));
+  panel_return_if_fail (MARKON_GTK_IS_MENU (plugin->menu));
 
   /* load the custom menu if set */
   if (plugin->custom_menu
       && plugin->custom_menu_file != NULL)
-    menu = garcon_menu_new_for_path (plugin->custom_menu_file);
+    menu = markon_menu_new_for_path (plugin->custom_menu_file);
 
   /* use the applications menu, this also respects the
    * XDG_MENU_PREFIX environment variable */
   if (G_LIKELY (menu == NULL))
-    menu = garcon_menu_new_applications ();
+    menu = markon_menu_new_applications ();
 
   /* set the menu */
-  garcon_gtk_menu_set_menu (GARCON_GTK_MENU (plugin->menu), menu);
+  markon_gtk_menu_set_menu (MARKON_GTK_MENU (plugin->menu), menu);
 
   /* debugging information */
   if (0)
     {
-  file = garcon_menu_get_file (menu);
+  file = markon_menu_get_file (menu);
   filename = g_file_get_parse_name (file);
   g_object_unref (G_OBJECT (file));
 
@@ -832,7 +832,7 @@ applications_menu_plugin_menu (GtkWidget              *button,
                                GdkEventButton         *event,
                                ApplicationsMenuPlugin *plugin)
 {
-  panel_return_val_if_fail (XFCE_IS_APPLICATIONS_MENU_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_APPLICATIONS_MENU_PLUGIN (plugin), FALSE);
   panel_return_val_if_fail (button == NULL || plugin->button == button, FALSE);
 
   if (event != NULL /* remove event */
@@ -841,14 +841,14 @@ applications_menu_plugin_menu (GtkWidget              *button,
            && !PANEL_HAS_FLAG (event->state, GDK_CONTROL_MASK)))
     return FALSE;
 
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), TRUE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), TRUE);
 
   if (button != NULL)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 
   /* show the menu */
   gtk_menu_popup_at_widget (GTK_MENU (plugin->menu), button,
-                            xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             (GdkEvent *) event);
@@ -861,8 +861,8 @@ applications_menu_plugin_menu (GtkWidget              *button,
 static void
 applications_menu_button_theme_changed (ApplicationsMenuPlugin *plugin)
 {
-  XfcePanelPlugin *panel_plugin = XFCE_PANEL_PLUGIN (plugin);
+  ExpidusPanelPlugin *panel_plugin = EXPIDUS_PANEL_PLUGIN (plugin);
 
   applications_menu_plugin_size_changed (panel_plugin,
-      xfce_panel_plugin_get_size (panel_plugin));
+      expidus_panel_plugin_get_size (panel_plugin));
 }

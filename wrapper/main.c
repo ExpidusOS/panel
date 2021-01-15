@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017 Ali Abdallah <ali@xfce.org>
- * Copyright (C) 2008-2009 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2017 Ali Abdallah <ali@expidus.org>
+ * Copyright (C) 2008-2009 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,9 @@
 #include <gtk/gtk.h>
 #include <common/panel-private.h>
 #include <common/panel-dbus.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 #include <wrapper/wrapper-plug.h>
 #include <wrapper/wrapper-module.h>
@@ -54,15 +54,15 @@ static gint     retval = PLUGIN_EXIT_FAILURE;
 
 
 static void
-wrapper_gproxy_set (XfcePanelPluginProvider *provider,
+wrapper_gproxy_set (ExpidusPanelPluginProvider *provider,
                     GVariant                *parameters)
 {
   WrapperPlug                    *plug;
   GVariantIter                    iter;
   GVariant                       *variant;
-  XfcePanelPluginProviderPropType type;
+  ExpidusPanelPluginProviderPropType type;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
   panel_return_if_fail (g_variant_is_of_type (parameters, G_VARIANT_TYPE_TUPLE));
 
   g_variant_iter_init (&iter, parameters);
@@ -72,31 +72,31 @@ wrapper_gproxy_set (XfcePanelPluginProvider *provider,
       switch (type)
         {
         case PROVIDER_PROP_TYPE_SET_SIZE:
-          xfce_panel_plugin_provider_set_size (provider, g_variant_get_int32 (variant));
+          expidus_panel_plugin_provider_set_size (provider, g_variant_get_int32 (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_ICON_SIZE:
-          xfce_panel_plugin_provider_set_icon_size (provider, g_variant_get_int32 (variant));
+          expidus_panel_plugin_provider_set_icon_size (provider, g_variant_get_int32 (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_DARK_MODE:
-          xfce_panel_plugin_provider_set_dark_mode (provider, g_variant_get_boolean (variant));
+          expidus_panel_plugin_provider_set_dark_mode (provider, g_variant_get_boolean (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_MODE:
-          xfce_panel_plugin_provider_set_mode (provider, g_variant_get_int32 (variant));
+          expidus_panel_plugin_provider_set_mode (provider, g_variant_get_int32 (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_SCREEN_POSITION:
-          xfce_panel_plugin_provider_set_screen_position (provider, g_variant_get_int32 (variant));
+          expidus_panel_plugin_provider_set_screen_position (provider, g_variant_get_int32 (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_NROWS:
-          xfce_panel_plugin_provider_set_nrows (provider, g_variant_get_int32 (variant));
+          expidus_panel_plugin_provider_set_nrows (provider, g_variant_get_int32 (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_LOCKED:
-          xfce_panel_plugin_provider_set_locked (provider, g_variant_get_boolean (variant));
+          expidus_panel_plugin_provider_set_locked (provider, g_variant_get_boolean (variant));
           break;
 
         case PROVIDER_PROP_TYPE_SET_SENSITIVE:
@@ -122,11 +122,11 @@ wrapper_gproxy_set (XfcePanelPluginProvider *provider,
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_REMOVED:
-          xfce_panel_plugin_provider_removed (provider);
+          expidus_panel_plugin_provider_removed (provider);
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_SAVE:
-          xfce_panel_plugin_provider_save (provider);
+          expidus_panel_plugin_provider_save (provider);
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_QUIT_FOR_RESTART:
@@ -137,21 +137,21 @@ wrapper_gproxy_set (XfcePanelPluginProvider *provider,
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_SHOW_CONFIGURE:
-          xfce_panel_plugin_provider_show_configure (provider);
+          expidus_panel_plugin_provider_show_configure (provider);
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_SHOW_ABOUT:
-          xfce_panel_plugin_provider_show_about (provider);
+          expidus_panel_plugin_provider_show_about (provider);
           break;
 
         case PROVIDER_PROP_TYPE_ACTION_ASK_REMOVE:
-          xfce_panel_plugin_provider_ask_remove (provider);
+          expidus_panel_plugin_provider_ask_remove (provider);
           break;
 
         default:
           g_critical ("Received unknown plugin property %u for %s-%d",
-                      type, xfce_panel_plugin_provider_get_name (provider),
-                      xfce_panel_plugin_provider_get_unique_id (provider));
+                      type, expidus_panel_plugin_provider_get_name (provider),
+                      expidus_panel_plugin_provider_get_unique_id (provider));
           break;
         }
 
@@ -191,7 +191,7 @@ wrapper_dbus_return_remote_event_result (GDBusProxy *proxy,
 
 
 static void
-wrapper_gproxy_remote_event (XfcePanelPluginProvider *provider,
+wrapper_gproxy_remote_event (ExpidusPanelPluginProvider *provider,
                              GDBusProxy *proxy,
                              GVariant   *parameters)
 {
@@ -201,7 +201,7 @@ wrapper_gproxy_remote_event (XfcePanelPluginProvider *provider,
   gboolean      result;
   GValue        real_value = { 0, };
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   if (G_LIKELY (g_variant_is_of_type (parameters, G_VARIANT_TYPE("(svu)"))))
     {
@@ -209,12 +209,12 @@ wrapper_gproxy_remote_event (XfcePanelPluginProvider *provider,
       if ( g_variant_is_of_type (variant, G_VARIANT_TYPE_BYTE) &&
            g_variant_get_byte (variant) == '\0')
         {
-          result = xfce_panel_plugin_provider_remote_event (provider, name, NULL, NULL);
+          result = expidus_panel_plugin_provider_remote_event (provider, name, NULL, NULL);
         }
       else
         {
           g_dbus_gvariant_to_gvalue(variant, &real_value);
-          result = xfce_panel_plugin_provider_remote_event (provider, name, &real_value, NULL);
+          result = expidus_panel_plugin_provider_remote_event (provider, name, &real_value, NULL);
           g_value_unset (&real_value);
         }
 
@@ -237,7 +237,7 @@ wrapper_gproxy_g_signal (GDBusProxy *proxy,
                          gchar      *sender_name,
                          gchar      *signal_name,
                          GVariant   *parameters,
-                         XfcePanelPluginProvider *provider)
+                         ExpidusPanelPluginProvider *provider)
 {
   if (g_strcmp0(signal_name, "RemoteEvent") == 0)
     wrapper_gproxy_remote_event (provider, proxy, parameters);
@@ -250,14 +250,14 @@ wrapper_gproxy_g_signal (GDBusProxy *proxy,
 
 
 static void
-wrapper_gproxy_provider_signal (XfcePanelPluginProvider       *provider,
-                                XfcePanelPluginProviderSignal  provider_signal,
+wrapper_gproxy_provider_signal (ExpidusPanelPluginProvider       *provider,
+                                ExpidusPanelPluginProviderSignal  provider_signal,
                                 GDBusProxy                    *proxy)
 {
   GVariant *variant;
   GError   *error = NULL;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   variant = g_dbus_proxy_call_sync (proxy,
                                     "ProviderSignal",
@@ -304,7 +304,7 @@ main (gint argc, gchar **argv)
   gchar                    process_name[16];
 #endif
   GModule                 *library = NULL;
-  XfcePanelPluginPreInit   preinit_func;
+  ExpidusPanelPluginPreInit   preinit_func;
   GDBusConnection         *dbus_gconnection;
   GDBusProxy              *dbus_gproxy = NULL;
   WrapperModule           *module = NULL;
@@ -323,7 +323,7 @@ main (gint argc, gchar **argv)
   gchar                  **arguments;
 
   /* set translation domain */
-  xfce_textdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+  expidus_textdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
 
 #ifdef G_ENABLE_DEBUG
   /* terminate the program on warnings and critical messages */
@@ -364,7 +364,7 @@ main (gint argc, gchar **argv)
     }
 
   /* check for a plugin preinit function */
-  if (g_module_symbol (library, "xfce_panel_module_preinit", (gpointer) &preinit_func)
+  if (g_module_symbol (library, "expidus_panel_module_preinit", (gpointer) &preinit_func)
       && preinit_func != NULL
       && (*preinit_func) (argc, argv) == FALSE)
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  * Copyright (C) 2012      Guido Berhoerster <gber@opensuse.org>
  *
  * This library is free software; you can redistribute it and/or modify it
@@ -27,10 +27,10 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 
 #include "clock.h"
@@ -72,16 +72,16 @@ static gboolean clock_plugin_enter_notify_event        (GtkWidget             *w
 static gboolean clock_plugin_button_press_event        (GtkWidget             *widget,
                                                         GdkEventButton        *event,
                                                         ClockPlugin           *plugin);
-static void     clock_plugin_construct                 (XfcePanelPlugin       *panel_plugin);
-static void     clock_plugin_free_data                 (XfcePanelPlugin       *panel_plugin);
-static gboolean clock_plugin_size_changed              (XfcePanelPlugin       *panel_plugin,
+static void     clock_plugin_construct                 (ExpidusPanelPlugin       *panel_plugin);
+static void     clock_plugin_free_data                 (ExpidusPanelPlugin       *panel_plugin);
+static gboolean clock_plugin_size_changed              (ExpidusPanelPlugin       *panel_plugin,
                                                         gint                   size);
-static void     clock_plugin_size_ratio_changed        (XfcePanelPlugin       *panel_plugin);
-static void     clock_plugin_mode_changed              (XfcePanelPlugin       *panel_plugin,
-                                                        XfcePanelPluginMode    mode);
-static void     clock_plugin_screen_position_changed   (XfcePanelPlugin       *panel_plugin,
-                                                        XfceScreenPosition     position);
-static void     clock_plugin_configure_plugin          (XfcePanelPlugin       *panel_plugin);
+static void     clock_plugin_size_ratio_changed        (ExpidusPanelPlugin       *panel_plugin);
+static void     clock_plugin_mode_changed              (ExpidusPanelPlugin       *panel_plugin,
+                                                        ExpidusPanelPluginMode    mode);
+static void     clock_plugin_screen_position_changed   (ExpidusPanelPlugin       *panel_plugin,
+                                                        ExpidusScreenPosition     position);
+static void     clock_plugin_configure_plugin          (ExpidusPanelPlugin       *panel_plugin);
 static void     clock_plugin_set_mode                  (ClockPlugin           *plugin);
 static void     clock_plugin_reposition_calendar       (ClockPlugin           *plugin);
 static gboolean clock_plugin_pointer_grab              (ClockPlugin           *plugin,
@@ -132,12 +132,12 @@ ClockPluginMode;
 
 struct _ClockPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _ClockPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   GtkWidget          *clock;
   GtkWidget          *button;
@@ -196,13 +196,13 @@ enum
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (ClockPlugin, clock_plugin,
+EXPIDUS_PANEL_DEFINE_PLUGIN (ClockPlugin, clock_plugin,
   clock_time_register_type,
-  xfce_clock_analog_register_type,
-  xfce_clock_binary_register_type,
-  xfce_clock_digital_register_type,
-  xfce_clock_fuzzy_register_type,
-  xfce_clock_lcd_register_type)
+  expidus_clock_analog_register_type,
+  expidus_clock_binary_register_type,
+  expidus_clock_digital_register_type,
+  expidus_clock_fuzzy_register_type,
+  expidus_clock_lcd_register_type)
 
 
 
@@ -210,13 +210,13 @@ static void
 clock_plugin_class_init (ClockPluginClass *klass)
 {
   GObjectClass         *gobject_class;
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
   gobject_class->set_property = clock_plugin_set_property;
   gobject_class->get_property = clock_plugin_get_property;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = clock_plugin_construct;
   plugin_class->free_data = clock_plugin_free_data;
   plugin_class->size_changed = clock_plugin_size_changed;
@@ -277,8 +277,8 @@ clock_plugin_init (ClockPlugin *plugin)
   plugin->seat_grabbed = FALSE;
   plugin->time = clock_time_new ();
 
-  plugin->button = xfce_panel_create_toggle_button ();
-  /* xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), plugin->button); */
+  plugin->button = expidus_panel_create_toggle_button ();
+  /* expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), plugin->button); */
   gtk_container_add (GTK_CONTAINER (plugin), plugin->button);
   gtk_widget_set_name (plugin->button, "clock-button");
   gtk_button_set_relief (GTK_BUTTON (plugin->button), GTK_RELIEF_NONE);
@@ -301,7 +301,7 @@ clock_plugin_get_property (GObject    *object,
                            GValue     *value,
                            GParamSpec *pspec)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (object);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -339,7 +339,7 @@ clock_plugin_set_property (GObject      *object,
                            const GValue *value,
                            GParamSpec   *pspec)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (object);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (object);
   gboolean     rotate_vertically;
 
   switch (prop_id)
@@ -457,11 +457,11 @@ clock_plugin_button_press_event (GtkWidget      *widget,
                && !panel_str_is_empty (plugin->command))
         {
           /* launch command */
-          if (!xfce_spawn_command_line (gtk_widget_get_screen (widget),
+          if (!expidus_spawn_command_line (gtk_widget_get_screen (widget),
                                         plugin->command, FALSE,
                                         FALSE, TRUE, &error))
             {
-              xfce_dialog_show_error (NULL, error,
+              expidus_dialog_show_error (NULL, error,
                                       _("Failed to execute clock command"));
               g_error_free (error);
             }
@@ -478,9 +478,9 @@ clock_plugin_button_press_event (GtkWidget      *widget,
 
 
 static void
-clock_plugin_construct (XfcePanelPlugin *panel_plugin)
+clock_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  ClockPlugin         *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin         *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "mode", G_TYPE_UINT },
@@ -498,15 +498,15 @@ clock_plugin_construct (XfcePanelPlugin *panel_plugin)
     };
 
   /* show configure */
-  xfce_panel_plugin_menu_show_configure (panel_plugin);
+  expidus_panel_plugin_menu_show_configure (panel_plugin);
 
   /* connect all properties */
   panel_properties_bind (NULL, G_OBJECT (panel_plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   panel_properties_bind (NULL, G_OBJECT (plugin->time),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          time_properties, FALSE);
 
   /* make sure a mode is set */
@@ -517,9 +517,9 @@ clock_plugin_construct (XfcePanelPlugin *panel_plugin)
 
 
 static void
-clock_plugin_free_data (XfcePanelPlugin *panel_plugin)
+clock_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
 
   if (plugin->tooltip_timeout != NULL)
     clock_time_timeout_free (plugin->tooltip_timeout);
@@ -537,10 +537,10 @@ clock_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-clock_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+clock_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                            gint             size)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
   gdouble      ratio;
   gint         ratio_size;
   gint         offset;
@@ -562,7 +562,7 @@ clock_plugin_size_changed (XfcePanelPlugin *panel_plugin,
     }
 
   /* set the clock size */
-  if (xfce_panel_plugin_get_mode (panel_plugin) == XFCE_PANEL_PLUGIN_MODE_HORIZONTAL)
+  if (expidus_panel_plugin_get_mode (panel_plugin) == EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL)
     {
       if (ratio > 0)
         {
@@ -593,38 +593,38 @@ clock_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-clock_plugin_size_ratio_changed (XfcePanelPlugin *panel_plugin)
+clock_plugin_size_ratio_changed (ExpidusPanelPlugin *panel_plugin)
 {
-  clock_plugin_size_changed (panel_plugin, xfce_panel_plugin_get_size (panel_plugin));
+  clock_plugin_size_changed (panel_plugin, expidus_panel_plugin_get_size (panel_plugin));
 }
 
 
 
 static void
-clock_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                           XfcePanelPluginMode  mode)
+clock_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                           ExpidusPanelPluginMode  mode)
 {
-  ClockPlugin    *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin    *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
   GtkOrientation  orientation;
 
   if (plugin->rotate_vertically)
     {
-      orientation = (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL) ?
+      orientation = (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ?
         GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL;
       g_object_set (G_OBJECT (plugin->clock), "orientation", orientation, NULL);
     }
 
   /* do a size update */
-  clock_plugin_size_changed (panel_plugin, xfce_panel_plugin_get_size (panel_plugin));
+  clock_plugin_size_changed (panel_plugin, expidus_panel_plugin_get_size (panel_plugin));
 }
 
 
 
 static void
-clock_plugin_screen_position_changed (XfcePanelPlugin    *panel_plugin,
-                                      XfceScreenPosition  position)
+clock_plugin_screen_position_changed (ExpidusPanelPlugin    *panel_plugin,
+                                      ExpidusScreenPosition  position)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
 
   if (plugin->calendar_window != NULL
       && gtk_widget_get_visible (GTK_WIDGET (plugin->calendar_window)))
@@ -657,7 +657,7 @@ clock_plugin_configure_plugin_mode_changed (GtkComboBox       *combo,
 
   panel_return_if_fail (GTK_IS_COMBO_BOX (combo));
   panel_return_if_fail (GTK_IS_BUILDER (dialog->builder));
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (dialog->plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (dialog->plugin));
 
   /* the active items for each mode */
   mode = gtk_combo_box_get_active (combo);
@@ -849,7 +849,7 @@ clock_plugin_configure_plugin_chooser_fill (ClockPlugin *plugin,
   const gchar  *active_format;
   gboolean      has_active = FALSE;
 
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_COMBO_BOX (combo));
   panel_return_if_fail (GTK_IS_ENTRY (entry));
 
@@ -929,7 +929,7 @@ clock_plugin_configure_config_tool_changed (ClockPluginDialog *dialog)
   gchar   *path;
 
   panel_return_if_fail (GTK_IS_BUILDER (dialog->builder));
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (dialog->plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (dialog->plugin));
 
   object = gtk_builder_get_object (dialog->builder, "run-time-config-tool");
   panel_return_if_fail (GTK_IS_BUTTON (object));
@@ -946,13 +946,13 @@ clock_plugin_configure_run_config_tool (GtkWidget   *button,
 {
   GError *error = NULL;
 
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (plugin));
 
-  if (!xfce_spawn_command_line (gtk_widget_get_screen (button),
+  if (!expidus_spawn_command_line (gtk_widget_get_screen (button),
                                 plugin->time_config_tool,
                                 FALSE, FALSE, TRUE, &error))
     {
-      xfce_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), plugin->time_config_tool);
+      expidus_dialog_show_error (NULL, error, _("Failed to execute command \"%s\"."), plugin->time_config_tool);
       g_error_free (error);
     }
 }
@@ -1036,16 +1036,16 @@ clock_plugin_configure_zoneinfo_model (gpointer data)
 
 
 static void
-clock_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+clock_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  ClockPlugin       *plugin = XFCE_CLOCK_PLUGIN (panel_plugin);
+  ClockPlugin       *plugin = EXPIDUS_CLOCK_PLUGIN (panel_plugin);
   ClockPluginDialog *dialog;
   GtkBuilder        *builder;
   GObject           *window;
   GObject           *object;
   GObject           *combo;
 
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (plugin));
 
   /* setup the dialog */
   PANEL_UTILS_LINK_4UI
@@ -1144,29 +1144,29 @@ clock_plugin_set_mode (ClockPlugin *plugin)
   };
   GtkOrientation      orientation;
 
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (plugin));
 
   if (plugin->clock != NULL)
     gtk_widget_destroy (plugin->clock);
 
   /* create a new clock */
   if (plugin->mode == CLOCK_PLUGIN_MODE_ANALOG)
-    plugin->clock = xfce_clock_analog_new (plugin->time);
+    plugin->clock = expidus_clock_analog_new (plugin->time);
   else if (plugin->mode == CLOCK_PLUGIN_MODE_BINARY)
-    plugin->clock = xfce_clock_binary_new (plugin->time);
+    plugin->clock = expidus_clock_binary_new (plugin->time);
   else if (plugin->mode == CLOCK_PLUGIN_MODE_DIGITAL)
-    plugin->clock = xfce_clock_digital_new (plugin->time);
+    plugin->clock = expidus_clock_digital_new (plugin->time);
   else if (plugin->mode == CLOCK_PLUGIN_MODE_FUZZY)
-    plugin->clock = xfce_clock_fuzzy_new (plugin->time);
+    plugin->clock = expidus_clock_fuzzy_new (plugin->time);
   else
-    plugin->clock = xfce_clock_lcd_new (plugin->time);
+    plugin->clock = expidus_clock_lcd_new (plugin->time);
 
 
   if (plugin->rotate_vertically)
     {
       orientation =
-        (xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin))
-         == XFCE_PANEL_PLUGIN_MODE_VERTICAL) ?
+        (expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin))
+         == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ?
         GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL;
       g_object_set (G_OBJECT (plugin->clock), "orientation", orientation, NULL);
     }
@@ -1175,11 +1175,11 @@ clock_plugin_set_mode (ClockPlugin *plugin)
   g_signal_connect_swapped (G_OBJECT (plugin->clock), "notify::size-ratio",
       G_CALLBACK (clock_plugin_size_ratio_changed), plugin);
 
-  clock_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-      xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+  clock_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+      expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
 
   panel_properties_bind (NULL, G_OBJECT (plugin->clock),
-                         xfce_panel_plugin_get_property_base (XFCE_PANEL_PLUGIN (plugin)),
+                         expidus_panel_plugin_get_property_base (EXPIDUS_PANEL_PLUGIN (plugin)),
                          properties[plugin->mode], FALSE);
 
   gtk_container_add (GTK_CONTAINER (plugin->button), plugin->clock);
@@ -1194,7 +1194,7 @@ clock_plugin_reposition_calendar (ClockPlugin *plugin)
 {
   gint x, y;
 
-  xfce_panel_plugin_position_widget (XFCE_PANEL_PLUGIN (plugin),
+  expidus_panel_plugin_position_widget (EXPIDUS_PANEL_PLUGIN (plugin),
                                      GTK_WIDGET (plugin->calendar_window),
                                      NULL, &x, &y);
   gtk_window_move (GTK_WINDOW (plugin->calendar_window), x, y);
@@ -1208,7 +1208,7 @@ clock_plugin_calendar_show_event (GtkWidget   *calendar_window,
 {
   GDateTime *time;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN (plugin));
 
   clock_plugin_reposition_calendar (plugin);
 
@@ -1225,7 +1225,7 @@ static void
 clock_plugin_pointer_ungrab (ClockPlugin *plugin,
                              GtkWidget   *widget)
 {
-  panel_return_if_fail (XFCE_IS_CLOCK_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_CLOCK_PLUGIN (plugin));
 
   if (plugin->seat != NULL && plugin->seat_grabbed)
     {
@@ -1380,7 +1380,7 @@ clock_plugin_popup_calendar (ClockPlugin *plugin)
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (plugin->button), TRUE);
   gtk_widget_show (GTK_WIDGET (plugin->calendar_window));
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), TRUE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), TRUE);
 }
 
 
@@ -1394,7 +1394,7 @@ clock_plugin_hide_calendar (ClockPlugin *plugin)
 
   clock_plugin_pointer_ungrab (plugin, GTK_WIDGET (plugin->calendar_window));
   gtk_widget_hide (GTK_WIDGET (plugin->calendar_window));
-  xfce_panel_plugin_block_autohide (XFCE_PANEL_PLUGIN (plugin), FALSE);
+  expidus_panel_plugin_block_autohide (EXPIDUS_PANEL_PLUGIN (plugin), FALSE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (plugin->button), FALSE);
 }
 
@@ -1403,7 +1403,7 @@ clock_plugin_hide_calendar (ClockPlugin *plugin)
 static gboolean
 clock_plugin_tooltip (gpointer user_data)
 {
-  ClockPlugin *plugin = XFCE_CLOCK_PLUGIN (user_data);
+  ClockPlugin *plugin = EXPIDUS_CLOCK_PLUGIN (user_data);
   gchar       *string;
 
   /* set the tooltip */

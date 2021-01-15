@@ -3,17 +3,17 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Jasper Huijsmans <jasper@xfce.org>, 2005
+# Jasper Huijsmans <jasper@expidus.org>, 2005
 # Pjotr <pjotrvertaalt@gmail.com>, 2013-2015,2017-2020
 # Pjotr pjotrvertaalt@gmail.com , 2011,2013
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce4-panel\n"
+"Project-Id-Version: Expidus4-panel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-08-21 00:46+0200\n"
 "PO-Revision-Date: 2020-08-23 09:49+0000\n"
 "Last-Translator: Pjotr <pjotrvertaalt@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/xfce/xfce4-panel/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/expidus/expidus1-panel/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,18 +45,18 @@ msgid "Customize the panel"
 msgstr "Pas de werkbalk aan"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1105
+#: ../libexpidus1panel/expidus-panel-plugin.c:1105
 #: ../panel/panel-preferences-dialog.c:1321
 #, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "Weet u zeker dat u '%s' wil verwijderen?"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1110
+#: ../libexpidus1panel/expidus-panel-plugin.c:1110
 msgid ""
 "Removing the item from the panel also means its configuration will be lost."
 msgstr "Verwijderen van het element uit de werkbalk houdt tevens in dat zijn instellingen verloren zullen gaan."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
+#: ../libexpidus1panel/expidus-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
 #: ../panel/panel-preferences-dialog.c:1326
 #: ../plugins/applicationsmenu/applicationsmenu.c:602
 #: ../plugins/directorymenu/directorymenu.c:473
@@ -64,8 +64,8 @@ msgstr "Verwijderen van het element uit de werkbalk houdt tevens in dat zijn ins
 msgid "_Cancel"
 msgstr "_Afbreken"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1112
-#: ../libxfce4panel/xfce-panel-plugin.c:1287
+#: ../libexpidus1panel/expidus-panel-plugin.c:1112
+#: ../libexpidus1panel/expidus-panel-plugin.c:1287
 #: ../panel/panel-plugin-external.c:443
 #: ../panel/panel-preferences-dialog.c:961
 #: ../panel/panel-preferences-dialog.c:1327
@@ -73,35 +73,35 @@ msgstr "_Afbreken"
 msgid "_Remove"
 msgstr "_Verwijderen"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1237
+#: ../libexpidus1panel/expidus-panel-plugin.c:1237
 msgid "_Properties"
 msgstr "Eigenscha_ppen"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1252 ../panel/panel-window.c:3024
+#: ../libexpidus1panel/expidus-panel-plugin.c:1252 ../panel/panel-window.c:3024
 msgid "_About"
 msgstr "_Over"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1267
+#: ../libexpidus1panel/expidus-panel-plugin.c:1267
 msgid "_Move"
 msgstr "_Verplaatsen"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1308
+#: ../libexpidus1panel/expidus-panel-plugin.c:1308
 msgid "Pane_l"
 msgstr "_Werkbalk"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1317 ../panel/panel-window.c:2949
+#: ../libexpidus1panel/expidus-panel-plugin.c:1317 ../panel/panel-window.c:2949
 msgid "Add _New Items..."
 msgstr "_Nieuwe elementen toevoegen..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1332 ../panel/panel-window.c:2964
+#: ../libexpidus1panel/expidus-panel-plugin.c:1332 ../panel/panel-window.c:2964
 msgid "Panel Pr_eferences..."
 msgstr "Werkbalkvoork_euren..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1353 ../panel/panel-window.c:2996
+#: ../libexpidus1panel/expidus-panel-plugin.c:1353 ../panel/panel-window.c:2996
 msgid "Log _Out"
 msgstr "Af_melden"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1373 ../panel/panel-item-dialog.c:207
+#: ../libexpidus1panel/expidus-panel-plugin.c:1373 ../panel/panel-item-dialog.c:207
 #: ../panel/panel-preferences-dialog.glade.h:12 ../panel/panel-window.c:3015
 #: ../plugins/actions/actions-dialog.glade.h:8
 #: ../plugins/applicationsmenu/applicationsmenu-dialog.glade.h:2
@@ -115,7 +115,7 @@ msgstr "Af_melden"
 msgid "_Help"
 msgstr "_Hulp"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1388
+#: ../libexpidus1panel/expidus-panel-plugin.c:1388
 msgid "About"
 msgstr "Over"
 
@@ -156,9 +156,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr "Wacht niet op een vensterbeheerder bij opstarten"
 
 #: ../panel/main.c:88
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "Druk versie-informatie af en sluit af"
 
@@ -178,8 +178,8 @@ msgid "Type \"%s --help\" for usage."
 msgstr "Tik '%s --help' voor gebruiksaanwijzingen."
 
 #: ../panel/main.c:294
-msgid "The Xfce development team. All rights reserved."
-msgstr "De Xfce-ontwikkelploeg. Alle rechten voorbehouden."
+msgid "The Expidus development team. All rights reserved."
+msgstr "De Expidus-ontwikkelploeg. Alle rechten voorbehouden."
 
 #: ../panel/main.c:295
 #, c-format
@@ -295,8 +295,8 @@ msgid "Unable to open the e-mail address"
 msgstr "Kan het e-mailadres niet openen"
 
 #: ../panel/panel-dialogs.c:83
-msgid "The panel of the Xfce Desktop Environment"
-msgstr "De werkbalk van de Xfce-werkomgeving"
+msgid "The panel of the Expidus Desktop Environment"
+msgstr "De werkbalk van de Expidus-werkomgeving"
 
 #: ../panel/panel-dialogs.c:87
 msgid "translator-credits"
@@ -1021,33 +1021,33 @@ msgstr "Kon opdracht '%s' niet uitvoeren."
 msgid "Show a menu containing categories of installed applications"
 msgstr "Geef menu weer met categorieën van geinstalleerde toepassingen"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr "Gebruik:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr "OPTIE"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 msgid "Options:"
 msgstr "Opties:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr "Opduikmenu bij de huidige muispositie"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 msgid "Show help options"
 msgstr "Toon hulpopties"
 

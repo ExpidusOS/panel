@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 #define __PANEL_MODULE_H__
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 G_BEGIN_DECLS
 
@@ -60,7 +60,7 @@ const gchar *panel_module_get_icon_name            (PanelModule             *mod
 
 const gchar *panel_module_get_api                  (PanelModule             *module) G_GNUC_PURE;
 
-PanelModule *panel_module_get_from_plugin_provider (XfcePanelPluginProvider *provider);
+PanelModule *panel_module_get_from_plugin_provider (ExpidusPanelPluginProvider *provider);
 
 gboolean     panel_module_is_valid                 (PanelModule             *module);
 

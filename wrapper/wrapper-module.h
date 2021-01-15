@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #define __WRAPPER_MODULE_H__
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 G_BEGIN_DECLS
 

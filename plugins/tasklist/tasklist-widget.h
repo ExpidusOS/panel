@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -16,78 +16,78 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef __XFCE_TASKLIST_H__
-#define __XFCE_TASKLIST_H__
+#ifndef __EXPIDUS_TASKLIST_H__
+#define __EXPIDUS_TASKLIST_H__
 
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-typedef struct _XfceTasklistClass     XfceTasklistClass;
-typedef struct _XfceTasklist          XfceTasklist;
-typedef enum   _XfceTasklistGrouping  XfceTasklistGrouping;
-typedef enum   _XfceTasklistSortOrder XfceTasklistSortOrder;
-typedef enum   _XfceTasklistMClick    XfceTasklistMClick;
+typedef struct _ExpidusTasklistClass     ExpidusTasklistClass;
+typedef struct _ExpidusTasklist          ExpidusTasklist;
+typedef enum   _ExpidusTasklistGrouping  ExpidusTasklistGrouping;
+typedef enum   _ExpidusTasklistSortOrder ExpidusTasklistSortOrder;
+typedef enum   _ExpidusTasklistMClick    ExpidusTasklistMClick;
 
-#define XFCE_TYPE_TASKLIST            (xfce_tasklist_get_type ())
-#define XFCE_TASKLIST(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_TASKLIST, XfceTasklist))
-#define XFCE_TASKLIST_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_TASKLIST, XfceTasklistClass))
-#define XFCE_IS_TASKLIST(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_TASKLIST))
-#define XFCE_IS_TASKLIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_TASKLIST))
-#define XFCE_TASKLIST_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_TASKLIST, XfceTasklistClass))
+#define EXPIDUS_TYPE_TASKLIST            (expidus_tasklist_get_type ())
+#define EXPIDUS_TASKLIST(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_TASKLIST, ExpidusTasklist))
+#define EXPIDUS_TASKLIST_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_TASKLIST, ExpidusTasklistClass))
+#define EXPIDUS_IS_TASKLIST(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_TASKLIST))
+#define EXPIDUS_IS_TASKLIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_TASKLIST))
+#define EXPIDUS_TASKLIST_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_TASKLIST, ExpidusTasklistClass))
 
 
 
-enum _XfceTasklistGrouping
+enum _ExpidusTasklistGrouping
 {
-  XFCE_TASKLIST_GROUPING_NEVER,
-  XFCE_TASKLIST_GROUPING_ALWAYS,
-  /*XFCE_TASKLIST_GROUPING_AUTO, *//* when space is limited */
+  EXPIDUS_TASKLIST_GROUPING_NEVER,
+  EXPIDUS_TASKLIST_GROUPING_ALWAYS,
+  /*EXPIDUS_TASKLIST_GROUPING_AUTO, *//* when space is limited */
 
-  XFCE_TASKLIST_GROUPING_MIN = XFCE_TASKLIST_GROUPING_NEVER,
-  XFCE_TASKLIST_GROUPING_MAX = XFCE_TASKLIST_GROUPING_ALWAYS,
-  XFCE_TASKLIST_GROUPING_DEFAULT = XFCE_TASKLIST_GROUPING_NEVER
+  EXPIDUS_TASKLIST_GROUPING_MIN = EXPIDUS_TASKLIST_GROUPING_NEVER,
+  EXPIDUS_TASKLIST_GROUPING_MAX = EXPIDUS_TASKLIST_GROUPING_ALWAYS,
+  EXPIDUS_TASKLIST_GROUPING_DEFAULT = EXPIDUS_TASKLIST_GROUPING_NEVER
 };
 
-enum _XfceTasklistSortOrder
+enum _ExpidusTasklistSortOrder
 {
-  XFCE_TASKLIST_SORT_ORDER_TIMESTAMP, /* sort by unique_id */
-  XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP, /* sort by group and then by timestamp */
-  XFCE_TASKLIST_SORT_ORDER_TITLE, /* sort by window title */
-  XFCE_TASKLIST_SORT_ORDER_GROUP_TITLE, /* sort by group and then by title */
-  XFCE_TASKLIST_SORT_ORDER_DND, /* append and support dnd */
+  EXPIDUS_TASKLIST_SORT_ORDER_TIMESTAMP, /* sort by unique_id */
+  EXPIDUS_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP, /* sort by group and then by timestamp */
+  EXPIDUS_TASKLIST_SORT_ORDER_TITLE, /* sort by window title */
+  EXPIDUS_TASKLIST_SORT_ORDER_GROUP_TITLE, /* sort by group and then by title */
+  EXPIDUS_TASKLIST_SORT_ORDER_DND, /* append and support dnd */
 
-  XFCE_TASKLIST_SORT_ORDER_MIN = XFCE_TASKLIST_SORT_ORDER_TIMESTAMP,
-  XFCE_TASKLIST_SORT_ORDER_MAX = XFCE_TASKLIST_SORT_ORDER_DND,
-  XFCE_TASKLIST_SORT_ORDER_DEFAULT = XFCE_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP
+  EXPIDUS_TASKLIST_SORT_ORDER_MIN = EXPIDUS_TASKLIST_SORT_ORDER_TIMESTAMP,
+  EXPIDUS_TASKLIST_SORT_ORDER_MAX = EXPIDUS_TASKLIST_SORT_ORDER_DND,
+  EXPIDUS_TASKLIST_SORT_ORDER_DEFAULT = EXPIDUS_TASKLIST_SORT_ORDER_GROUP_TIMESTAMP
 };
 
-enum _XfceTasklistMClick
+enum _ExpidusTasklistMClick
 {
-  XFCE_TASKLIST_MIDDLE_CLICK_NOTHING, /* do nothing */
-  XFCE_TASKLIST_MIDDLE_CLICK_CLOSE_WINDOW, /* close the window */
-  XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW, /* minimize, never minimize with button 1 */
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_NOTHING, /* do nothing */
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_CLOSE_WINDOW, /* close the window */
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW, /* minimize, never minimize with button 1 */
 
-  XFCE_TASKLIST_MIDDLE_CLICK_MIN = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING,
-  XFCE_TASKLIST_MIDDLE_CLICK_MAX = XFCE_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW,
-  XFCE_TASKLIST_MIDDLE_CLICK_DEFAULT = XFCE_TASKLIST_MIDDLE_CLICK_NOTHING
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_MIN = EXPIDUS_TASKLIST_MIDDLE_CLICK_NOTHING,
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_MAX = EXPIDUS_TASKLIST_MIDDLE_CLICK_MINIMIZE_WINDOW,
+  EXPIDUS_TASKLIST_MIDDLE_CLICK_DEFAULT = EXPIDUS_TASKLIST_MIDDLE_CLICK_NOTHING
 };
 
 
 
-GType xfce_tasklist_get_type                (void) G_GNUC_CONST;
+GType expidus_tasklist_get_type                (void) G_GNUC_CONST;
 
-void  xfce_tasklist_set_mode                (XfceTasklist        *tasklist,
-                                             XfcePanelPluginMode  mode);
+void  expidus_tasklist_set_mode                (ExpidusTasklist        *tasklist,
+                                             ExpidusPanelPluginMode  mode);
 
-void  xfce_tasklist_set_size                (XfceTasklist   *tasklist,
+void  expidus_tasklist_set_size                (ExpidusTasklist   *tasklist,
                                              gint            size);
 
-void  xfce_tasklist_set_nrows               (XfceTasklist   *tasklist,
+void  expidus_tasklist_set_nrows               (ExpidusTasklist   *tasklist,
                                              gint            nrows);
 
-void  xfce_tasklist_update_monitor_geometry (XfceTasklist   *tasklist);
+void  expidus_tasklist_update_monitor_geometry (ExpidusTasklist   *tasklist);
 
 G_END_DECLS
 
-#endif /* !__XFCE_TASKLIST_H__ */
+#endif /* !__EXPIDUS_TASKLIST_H__ */

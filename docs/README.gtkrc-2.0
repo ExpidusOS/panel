@@ -1,4 +1,4 @@
-The Xfce Panel .gtkrc-2.0 hacks
+The Expidus Panel .gtkrc-2.0 hacks
 ===============================
 
 All Plugins
@@ -8,24 +8,24 @@ hovering the plugin in the items tab in the panel preferences dialog.
 
 
 
-XfcePanelWindow
+ExpidusPanelWindow
 ---------------
-style "xfce-panel-window-style"
+style "expidus-panel-window-style"
 {
   # Time in miliseconds before the panel will unhide on an enter event
-  XfcePanelWindow::popup-delay = 225
+  ExpidusPanelWindow::popup-delay = 225
 
   # Time in miliseconds before the panel will hide on a leave event
-  XfcePanelWindow::popdown-delay = 350
+  ExpidusPanelWindow::popdown-delay = 350
 
   # Size of autohide window in pixels
-  XfcePanelWindow::autohide-size = 3
+  ExpidusPanelWindow::autohide-size = 3
 }
-class "XfcePanelWindow" style "xfce-panel-window-style"
+class "ExpidusPanelWindow" style "expidus-panel-window-style"
 
 
 
-XfceActionsPlugin
+ExpidusActionsPlugin
 -----------------
 You can set a custom icon size in gtk-icon-sizes with the name
 panel-actions-menu. The default icon size is 16px.
@@ -33,39 +33,39 @@ Special widget name in this plugin is actions-button.
 
 
 
-XfceShowDesktopPlugin
+ExpidusShowDesktopPlugin
 ---------------------
 Special widget name in this plugin is showdesktop-button.
 
 
-XfceTasklist
+ExpidusTasklist
 ------------
 You can set a custom icon size in gtk-icon-sizes with the name
 panel-tasklist-menu. The default icon size is 16px.
 
-style "xfce-tasklist-style"
+style "expidus-tasklist-style"
 {
   # The maximum length of a button before the label ellipsizes.
   # When this value is set to -1 the button will expand to the
   # entire available space.
-  XfceTasklist::max-button-length = 200
+  ExpidusTasklist::max-button-length = 200
 
   # Ellipsizing used in the task list and overflow menu labels.
-  XfceTasklist::ellipsize-mode = PANGO_ELLIPSIZE_END
+  ExpidusTasklist::ellipsize-mode = PANGO_ELLIPSIZE_END
 
   # Lucency of minimized icons. Valid values are between 0 (completely
   # hide the icon) and 100 (don't lighten the icon).
-  XfceTasklist::minimized-icon-lucency = 50
+  ExpidusTasklist::minimized-icon-lucency = 50
 
   # Maximum number of characters in the menu label before it will
   # be ellipsized.
-  XfceTasklist::menu-max-width-chars = 24
+  ExpidusTasklist::menu-max-width-chars = 24
 }
-class "XfceTasklist" style "xfce-tasklist-style"
+class "ExpidusTasklist" style "expidus-tasklist-style"
 
 
 
-XfceLauncherPlugin
+ExpidusLauncherPlugin
 ------------------
 You can set a custom menu and tooltip icon size in gtk-icon-sizes
 with the name panel-launcher-menu and panel-launcher-tooltip. The default
@@ -74,44 +74,44 @@ Special widget names in this plugin are launcher-button and launcher-arrow.
 
 
 
-XfcePanelImage
+ExpidusPanelImage
 --------------
-style "xfce-panel-image-style"
+style "expidus-panel-image-style"
 {
   # Fix the panel images to a default gtk icon size, is only works for
   # images below 32 pixels. You can for example use this when you have
   # fuzzy launcher icons.
-  XfcePanelImage::force-gtk-icon-sizes = true
+  ExpidusPanelImage::force-gtk-icon-sizes = true
 }
-class "XfcePanelImage" style "xfce-panel-image-style"
+class "ExpidusPanelImage" style "expidus-panel-image-style"
 
 
 
-XfceWindowMenuPlugin
+ExpidusWindowMenuPlugin
 --------------------
 You can set a custom icon size in gtk-icon-sizes with the name
 panel-window-menu. The default icon size is 16px. Note that the window
 icons are 16 or 32 pixels, all other sizes will result in scaling.
 Special widget name in this plugin is windowmenu-button.
 
-style "xfce-window-menu-plugin-style"
+style "expidus-window-menu-plugin-style"
 {
   # Ellipsizing used in the menu label.
-  XfceWindowMenuPlugin::ellipsize-mode = PANGO_ELLIPSIZE_MIDDLE
+  ExpidusWindowMenuPlugin::ellipsize-mode = PANGO_ELLIPSIZE_MIDDLE
 
   # Maximum number of characters in the menu label before it will
   # be ellipsized.
-  XfceWindowMenuPlugin::max-width-chars = 24
+  ExpidusWindowMenuPlugin::max-width-chars = 24
 
   # Lucency of minimized icons. Valid values are between 0 (completely
   # hide the icon) and 100 (don't lighten the icon).
-  XfceWindowMenuPlugin::minimized-icon-lucency = 50
+  ExpidusWindowMenuPlugin::minimized-icon-lucency = 50
 }
-class "XfceWindowMenuPlugin" style "xfce-window-menu-plugin-style"
+class "ExpidusWindowMenuPlugin" style "expidus-window-menu-plugin-style"
 
 
 
-XfceDirectoryMenuPlugin
+ExpidusDirectoryMenuPlugin
 -----------------------
 You can set a custom icon size in gtk-icon-sizes with the name
 panel-directory-menu. The default icon size is 16px.
@@ -119,7 +119,7 @@ Special widget name in this plugin is directorymenu-button.
 
 
 
-XfceApplicationsMenuPlugin
+ExpidusApplicationsMenuPlugin
 -----------------------
 You can set a custom icon size in gtk-icon-sizes with the name
 panel-applications-menu. The default icon size is 16px.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@
 #include <string.h>
 #endif
 
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <common/panel-private.h>
 #include <common/panel-utils.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include <panel/panel-application.h>
 #include <panel/panel-item-dialog.h>
@@ -41,7 +41,7 @@
 
 
 #define BORDER         (6)
-#define ITEMS_HELP_URL "http://www.xfce.org"
+#define ITEMS_HELP_URL "http://www.expidus.org"
 
 
 
@@ -100,12 +100,12 @@ static void         panel_item_dialog_text_renderer          (GtkTreeViewColumn 
 
 struct _PanelItemDialogClass
 {
-  XfceTitledDialogClass __parent__;
+  ExpidusTitledDialogClass __parent__;
 };
 
 struct _PanelItemDialog
 {
-  XfceTitledDialog  __parent__;
+  ExpidusTitledDialog  __parent__;
 
   PanelApplication   *application;
 
@@ -129,17 +129,17 @@ enum
 
 static const GtkTargetEntry drag_targets[] =
 {
-  { "xfce-panel/plugin-name", 0, 0 }
+  { "expidus-panel/plugin-name", 0, 0 }
 };
 
 static const GtkTargetEntry drop_targets[] =
 {
-  { "xfce-panel/plugin-widget", GTK_TARGET_SAME_APP, 0 }
+  { "expidus-panel/plugin-widget", GTK_TARGET_SAME_APP, 0 }
 };
 
 
 
-G_DEFINE_TYPE (PanelItemDialog, panel_item_dialog, XFCE_TYPE_TITLED_DIALOG)
+G_DEFINE_TYPE (PanelItemDialog, panel_item_dialog, EXPIDUS_TYPE_TITLED_DIALOG)
 
 
 
@@ -196,21 +196,21 @@ panel_item_dialog_init (PanelItemDialog *dialog)
   gtk_window_set_icon_name (GTK_WINDOW (dialog), "list-add");
   gtk_window_set_default_size (GTK_WINDOW (dialog), 400, 500);
   gtk_window_set_type_hint (GTK_WINDOW (dialog), GDK_WINDOW_TYPE_HINT_NORMAL);
-  xfce_titled_dialog_create_action_area (XFCE_TITLED_DIALOG (dialog));
+  expidus_titled_dialog_create_action_area (EXPIDUS_TITLED_DIALOG (dialog));
 
-  dialog->add_button = xfce_titled_dialog_add_button (XFCE_TITLED_DIALOG (dialog), _("_Add"), GTK_RESPONSE_OK);
+  dialog->add_button = expidus_titled_dialog_add_button (EXPIDUS_TITLED_DIALOG (dialog), _("_Add"), GTK_RESPONSE_OK);
   icon = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_BUTTON);
   gtk_button_set_image (GTK_BUTTON (dialog->add_button), icon);
 
-  button = xfce_titled_dialog_add_button (XFCE_TITLED_DIALOG (dialog), _("_Help"), GTK_RESPONSE_HELP);
+  button = expidus_titled_dialog_add_button (EXPIDUS_TITLED_DIALOG (dialog), _("_Help"), GTK_RESPONSE_HELP);
   icon = gtk_image_new_from_icon_name ("help-browser", GTK_ICON_SIZE_BUTTON);
   gtk_button_set_image (GTK_BUTTON (button), icon);
 
-  button = xfce_titled_dialog_add_button (XFCE_TITLED_DIALOG (dialog), _("_Close"), GTK_RESPONSE_CLOSE);
+  button = expidus_titled_dialog_add_button (EXPIDUS_TITLED_DIALOG (dialog), _("_Close"), GTK_RESPONSE_CLOSE);
   icon = gtk_image_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_BUTTON);
   gtk_button_set_image (GTK_BUTTON (button), icon);
 
-  xfce_titled_dialog_set_default_response (XFCE_TITLED_DIALOG (dialog), GTK_RESPONSE_CLOSE);
+  expidus_titled_dialog_set_default_response (EXPIDUS_TITLED_DIALOG (dialog), GTK_RESPONSE_CLOSE);
 
   main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, BORDER * 2);
   gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (dialog))), main_vbox);
@@ -592,8 +592,8 @@ panel_item_dialog_drag_data_received (GtkWidget        *treeview,
 
   /* ask the plugin to cleanup when we destroy a panel window */
   widget = gtk_drag_get_source_widget (context);
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
-  xfce_panel_plugin_provider_ask_remove (XFCE_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
+  expidus_panel_plugin_provider_ask_remove (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget));
 
   gtk_drag_finish (context, TRUE, FALSE, drag_time);
 

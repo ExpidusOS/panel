@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@xfce.org>
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@expidus.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -22,12 +22,12 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 
 #include "separator.h"
@@ -52,11 +52,11 @@ static void     separator_plugin_set_property              (GObject             
                                                             GParamSpec            *pspec);
 static gboolean separator_plugin_draw                      (GtkWidget             *widget,
                                                             cairo_t               *cr);
-static void     separator_plugin_construct                 (XfcePanelPlugin       *panel_plugin);
-static gboolean separator_plugin_size_changed              (XfcePanelPlugin       *panel_plugin,
+static void     separator_plugin_construct                 (ExpidusPanelPlugin       *panel_plugin);
+static gboolean separator_plugin_size_changed              (ExpidusPanelPlugin       *panel_plugin,
                                                             gint                   size);
-static void     separator_plugin_configure_plugin          (XfcePanelPlugin       *panel_plugin);
-static void     separator_plugin_orientation_changed       (XfcePanelPlugin       *panel_plugin,
+static void     separator_plugin_configure_plugin          (ExpidusPanelPlugin       *panel_plugin);
+static void     separator_plugin_orientation_changed       (ExpidusPanelPlugin       *panel_plugin,
                                                             GtkOrientation         orientation);
 
 
@@ -78,13 +78,13 @@ enum _SeparatorPluginStyle
 struct _SeparatorPluginClass
 {
   /* parent class */
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _SeparatorPlugin
 {
   /* parent type */
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   /* separator style */
   SeparatorPluginStyle  style;
@@ -100,14 +100,14 @@ enum
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (SeparatorPlugin, separator_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN (SeparatorPlugin, separator_plugin)
 
 
 
 static void
 separator_plugin_class_init (SeparatorPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
   GtkWidgetClass       *widget_class;
 
@@ -118,7 +118,7 @@ separator_plugin_class_init (SeparatorPluginClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->draw = separator_plugin_draw;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = separator_plugin_construct;
   plugin_class->size_changed = separator_plugin_size_changed;
   plugin_class->configure_plugin = separator_plugin_configure_plugin;
@@ -157,7 +157,7 @@ separator_plugin_get_property (GObject    *object,
                                GValue     *value,
                                GParamSpec *pspec)
 {
-  SeparatorPlugin *plugin = XFCE_SEPARATOR_PLUGIN (object);
+  SeparatorPlugin *plugin = EXPIDUS_SEPARATOR_PLUGIN (object);
   gboolean         expand;
 
   switch (prop_id)
@@ -167,7 +167,7 @@ separator_plugin_get_property (GObject    *object,
       break;
 
     case PROP_EXPAND:
-      expand = xfce_panel_plugin_get_expand (XFCE_PANEL_PLUGIN (plugin));
+      expand = expidus_panel_plugin_get_expand (EXPIDUS_PANEL_PLUGIN (plugin));
       g_value_set_boolean (value, expand);
       break;
 
@@ -185,7 +185,7 @@ separator_plugin_set_property (GObject      *object,
                                const GValue *value,
                                GParamSpec   *pspec)
 {
-  SeparatorPlugin *plugin = XFCE_SEPARATOR_PLUGIN (object);
+  SeparatorPlugin *plugin = EXPIDUS_SEPARATOR_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -200,7 +200,7 @@ separator_plugin_set_property (GObject      *object,
       break;
 
     case PROP_EXPAND:
-      xfce_panel_plugin_set_expand (XFCE_PANEL_PLUGIN (plugin),
+      expidus_panel_plugin_set_expand (EXPIDUS_PANEL_PLUGIN (plugin),
                                     g_value_get_boolean (value));
       break;
 
@@ -216,7 +216,7 @@ static gboolean
 separator_plugin_draw (GtkWidget *widget,
                        cairo_t   *cr)
 {
-  SeparatorPlugin  *plugin = XFCE_SEPARATOR_PLUGIN (widget);
+  SeparatorPlugin  *plugin = EXPIDUS_SEPARATOR_PLUGIN (widget);
   GtkAllocation     alloc;
   gdouble           x, y;
   guint             dotcount, i;
@@ -240,7 +240,7 @@ separator_plugin_draw (GtkWidget *widget,
 
     case SEPARATOR_PLUGIN_STYLE_SEPARATOR:
 
-      if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+      if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
           GTK_ORIENTATION_HORIZONTAL)
         {
           gtk_render_line (ctx, cr,
@@ -266,7 +266,7 @@ separator_plugin_draw (GtkWidget *widget,
       /* draw the handle */
       for (i = 0; i < 3; i++)
         {
-          if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+          if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
               GTK_ORIENTATION_HORIZONTAL)
             {
               cairo_move_to (cr, x, y + (i * HANDLE_SIZE) - (HANDLE_SIZE / 2));
@@ -284,7 +284,7 @@ separator_plugin_draw (GtkWidget *widget,
     case SEPARATOR_PLUGIN_STYLE_DOTS:
       x = (alloc.width - DOTS_SIZE) / 2;
       y = (alloc.height - DOTS_SIZE) / 2;
-      if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+      if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
           GTK_ORIENTATION_HORIZONTAL)
         {
           dotcount = MAX(alloc.height / (DOTS_SIZE + DOTS_OFFSET), 1);
@@ -299,7 +299,7 @@ separator_plugin_draw (GtkWidget *widget,
       /* draw the dots */
       for (i = 0; i < dotcount; i++)
         {
-          if (xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) ==
+          if (expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) ==
               GTK_ORIENTATION_HORIZONTAL)
               cairo_arc (cr, x , y + (i * (alloc.height / (double) dotcount)) + (DOTS_SIZE / 2),
                          DOTS_SIZE / 2, 0, 2 * 3.14);
@@ -317,9 +317,9 @@ separator_plugin_draw (GtkWidget *widget,
 
 
 static void
-separator_plugin_construct (XfcePanelPlugin *panel_plugin)
+separator_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  SeparatorPlugin     *plugin = XFCE_SEPARATOR_PLUGIN (panel_plugin);
+  SeparatorPlugin     *plugin = EXPIDUS_SEPARATOR_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "style", G_TYPE_UINT },
@@ -328,12 +328,12 @@ separator_plugin_construct (XfcePanelPlugin *panel_plugin)
   };
 
   /* show the properties dialog */
-  xfce_panel_plugin_menu_show_configure (XFCE_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_menu_show_configure (EXPIDUS_PANEL_PLUGIN (plugin));
 
   /* connect all properties */
   PANEL_UTILS_LINK_4UI
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   /* make sure the plugin is drawn */
@@ -343,11 +343,11 @@ separator_plugin_construct (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-separator_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+separator_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                                gint             size)
 {
   /* set the minimum separator size */
-  if (xfce_panel_plugin_get_orientation (panel_plugin) ==
+  if (expidus_panel_plugin_get_orientation (panel_plugin) ==
       GTK_ORIENTATION_HORIZONTAL)
     gtk_widget_set_size_request (GTK_WIDGET (panel_plugin),
                                  SEPARATOR_SIZE, size);
@@ -361,14 +361,14 @@ separator_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-separator_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+separator_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  SeparatorPlugin *plugin = XFCE_SEPARATOR_PLUGIN (panel_plugin);
+  SeparatorPlugin *plugin = EXPIDUS_SEPARATOR_PLUGIN (panel_plugin);
   GtkBuilder      *builder;
   GObject         *dialog;
   GObject         *style, *expand;
 
-  panel_return_if_fail (XFCE_IS_SEPARATOR_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SEPARATOR_PLUGIN (plugin));
 
   /* setup the dialog */
   builder = panel_utils_builder_new (panel_plugin, separator_dialog_ui,
@@ -392,10 +392,10 @@ separator_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
 
 
 static void
-separator_plugin_orientation_changed (XfcePanelPlugin *panel_plugin,
+separator_plugin_orientation_changed (ExpidusPanelPlugin *panel_plugin,
                                       GtkOrientation   orientation)
 {
   /* for a size change to set the widget size request properly */
   separator_plugin_size_changed (panel_plugin,
-                                 xfce_panel_plugin_get_size (panel_plugin));
+                                 expidus_panel_plugin_get_size (panel_plugin));
 }

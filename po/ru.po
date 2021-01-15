@@ -22,12 +22,12 @@
 # Sergey Fedoseev <fedoseev.sergey@gmail.com>, 2006
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce4-panel\n"
+"Project-Id-Version: Expidus4-panel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-03 00:45+0100\n"
 "PO-Revision-Date: 2020-11-28 06:18+0000\n"
 "Last-Translator: ivmazurenko <ivmazurenko@yandex.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/xfce/xfce4-panel/language/ru/)\n"
+"Language-Team: Russian (http://www.transifex.com/expidus/expidus1-panel/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -59,18 +59,18 @@ msgid "Customize the panel"
 msgstr "Настройка панели"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1105
+#: ../libexpidus1panel/expidus-panel-plugin.c:1105
 #: ../panel/panel-preferences-dialog.c:1321
 #, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "Вы действительно хотите удалить «%s»?"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1110
+#: ../libexpidus1panel/expidus-panel-plugin.c:1110
 msgid ""
 "Removing the item from the panel also means its configuration will be lost."
 msgstr "Удаление элемента с панели также означает, что его настройки будут потеряны."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
+#: ../libexpidus1panel/expidus-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
 #: ../panel/panel-preferences-dialog.c:1326
 #: ../plugins/applicationsmenu/applicationsmenu.c:602
 #: ../plugins/directorymenu/directorymenu.c:473
@@ -78,8 +78,8 @@ msgstr "Удаление элемента с панели также означ�
 msgid "_Cancel"
 msgstr "_Отменить"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1112
-#: ../libxfce4panel/xfce-panel-plugin.c:1287
+#: ../libexpidus1panel/expidus-panel-plugin.c:1112
+#: ../libexpidus1panel/expidus-panel-plugin.c:1287
 #: ../panel/panel-plugin-external.c:443
 #: ../panel/panel-preferences-dialog.c:961
 #: ../panel/panel-preferences-dialog.c:1327
@@ -87,35 +87,35 @@ msgstr "_Отменить"
 msgid "_Remove"
 msgstr "_Удалить"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1237
+#: ../libexpidus1panel/expidus-panel-plugin.c:1237
 msgid "_Properties"
 msgstr "_Свойства"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1252 ../panel/panel-window.c:3038
+#: ../libexpidus1panel/expidus-panel-plugin.c:1252 ../panel/panel-window.c:3038
 msgid "_About"
 msgstr "_О программе"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1267
+#: ../libexpidus1panel/expidus-panel-plugin.c:1267
 msgid "_Move"
 msgstr "_Переместить"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1308
+#: ../libexpidus1panel/expidus-panel-plugin.c:1308
 msgid "Pane_l"
 msgstr "Пане_ль"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1317 ../panel/panel-window.c:2963
+#: ../libexpidus1panel/expidus-panel-plugin.c:1317 ../panel/panel-window.c:2963
 msgid "Add _New Items..."
 msgstr "_Добавить новые элементы..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1332 ../panel/panel-window.c:2978
+#: ../libexpidus1panel/expidus-panel-plugin.c:1332 ../panel/panel-window.c:2978
 msgid "Panel Pr_eferences..."
 msgstr "_Параметры панели..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1353 ../panel/panel-window.c:3010
+#: ../libexpidus1panel/expidus-panel-plugin.c:1353 ../panel/panel-window.c:3010
 msgid "Log _Out"
 msgstr "_Завершить сеанс"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1373 ../panel/panel-item-dialog.c:205
+#: ../libexpidus1panel/expidus-panel-plugin.c:1373 ../panel/panel-item-dialog.c:205
 #: ../panel/panel-preferences-dialog.glade.h:12 ../panel/panel-window.c:3029
 #: ../plugins/actions/actions-dialog.glade.h:8
 #: ../plugins/applicationsmenu/applicationsmenu-dialog.glade.h:2
@@ -129,7 +129,7 @@ msgstr "_Завершить сеанс"
 msgid "_Help"
 msgstr "_Справка"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1388
+#: ../libexpidus1panel/expidus-panel-plugin.c:1388
 msgid "About"
 msgstr "О программе"
 
@@ -170,9 +170,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr "Не дожидаться оконного менеджера при старте"
 
 #: ../panel/main.c:88
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "Показать информацию о версии и выйти"
 
@@ -192,8 +192,8 @@ msgid "Type \"%s --help\" for usage."
 msgstr "Выполните «%s --help» для получения информации об использовании."
 
 #: ../panel/main.c:294
-msgid "The Xfce development team. All rights reserved."
-msgstr "Команда разработчиков Xfce. Все права защищены."
+msgid "The Expidus development team. All rights reserved."
+msgstr "Команда разработчиков Expidus. Все права защищены."
 
 #: ../panel/main.c:295
 #, c-format
@@ -311,8 +311,8 @@ msgid "Unable to open the e-mail address"
 msgstr "Не удалось открыть адрес электронной почты"
 
 #: ../panel/panel-dialogs.c:83
-msgid "The panel of the Xfce Desktop Environment"
-msgstr "Панель окружения Xfce"
+msgid "The panel of the Expidus Desktop Environment"
+msgstr "Панель окружения Expidus"
 
 #: ../panel/panel-dialogs.c:87
 msgid "translator-credits"
@@ -1033,33 +1033,33 @@ msgstr "Не удалось выполнить команду «%s»."
 msgid "Show a menu containing categories of installed applications"
 msgstr "Показывает меню, отображающее установленные приложения по категориям"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr "Использование:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr "ПАРАМЕТР"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 msgid "Options:"
 msgstr "Параметры:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr "Показать всплывающее меню рядом с указателем мыши"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 msgid "Show help options"
 msgstr "Показать справку по использованию"
 

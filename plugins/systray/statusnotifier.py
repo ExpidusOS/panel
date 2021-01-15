@@ -1,5 +1,5 @@
  #
- # Copyright (C) 2020 Simon Steinbeiß <simon@xfce.org>
+ # Copyright (C) 2020 Simon Steinbeiß <simon@expidus.org>
  #
  # This program is free software; you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  #
 
 
-"""Minimalistic StatusIcon test for the Xfce Panel
+"""Minimalistic StatusIcon test for the Expidus Panel
 """
 
 import sys
@@ -29,15 +29,15 @@ from gi.repository import AppIndicator3 as appindicator
 
 
 
-class XfceStatusIcon():
+class ExpidusStatusIcon():
 
     def __init__(self):
         icon_theme = Gtk.IconTheme.get_default()
-        icon_name = "xfce4-logo"
+        icon_name = "expidus1-logo"
 
         # Create StatusNotifierItem
         self.indicator = appindicator.Indicator.new(
-            "xfce-sample-statusicon",
+            "expidus-sample-statusicon",
             icon_name,
             appindicator.IndicatorCategory.APPLICATION_STATUS)
         self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
@@ -69,11 +69,11 @@ class XfceStatusIcon():
         if widget.get_active():
             icon_name = "parole"
         else:
-            icon_name = "xfce4-logo"
+            icon_name = "expidus1-logo"
         self.update_icon(icon_name)
 
     def icon_theme_changed_cb(self, theme):
-        self.update_icon("xfce4-logo")
+        self.update_icon("expidus1-logo")
 
     def quit_menu_item_cb(self, widget, data=None):
         Gtk.main_quit()
@@ -82,7 +82,7 @@ class XfceStatusIcon():
 
 if __name__ == '__main__':
     try:
-        XfceStatusIcon()
+        ExpidusStatusIcon()
         Gtk.main()
     except:
         sys.exit(-1)

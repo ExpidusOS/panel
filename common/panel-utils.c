@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 #include <locale.h>
 #endif
 
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
 #include <common/panel-private.h>
 #include <common/panel-utils.h>
@@ -33,23 +33,23 @@
 
 static void
 panel_utils_help_button_clicked (GtkWidget       *button,
-                                 XfcePanelPlugin *panel_plugin)
+                                 ExpidusPanelPlugin *panel_plugin)
 {
   GtkWidget *toplevel;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN (panel_plugin));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN (panel_plugin));
   panel_return_if_fail (GTK_IS_WIDGET (button));
 
   toplevel = gtk_widget_get_toplevel (button);
   panel_utils_show_help (GTK_WINDOW (toplevel),
-      xfce_panel_plugin_get_name (panel_plugin),
+      expidus_panel_plugin_get_name (panel_plugin),
       NULL);
 }
 
 
 
 GtkBuilder *
-panel_utils_builder_new (XfcePanelPlugin  *panel_plugin,
+panel_utils_builder_new (ExpidusPanelPlugin  *panel_plugin,
                          const gchar      *buffer,
                          gsize             length,
                          GObject         **dialog_return)
@@ -58,7 +58,7 @@ panel_utils_builder_new (XfcePanelPlugin  *panel_plugin,
   GtkBuilder *builder;
   GObject    *dialog, *button;
 
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN (panel_plugin), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN (panel_plugin), NULL);
 
   builder = gtk_builder_new ();
   if (gtk_builder_add_from_string (builder, buffer, length, &error))
@@ -68,11 +68,11 @@ panel_utils_builder_new (XfcePanelPlugin  *panel_plugin,
         {
           g_object_weak_ref (G_OBJECT (dialog),
                              (GWeakNotify) g_object_unref, builder);
-          xfce_panel_plugin_take_window (panel_plugin, GTK_WINDOW (dialog));
+          expidus_panel_plugin_take_window (panel_plugin, GTK_WINDOW (dialog));
 
-          xfce_panel_plugin_block_menu (panel_plugin);
+          expidus_panel_plugin_block_menu (panel_plugin);
           g_object_weak_ref (G_OBJECT (dialog),
-                             (GWeakNotify) xfce_panel_plugin_unblock_menu,
+                             (GWeakNotify) expidus_panel_plugin_unblock_menu,
                              panel_plugin);
 
           button = gtk_builder_get_object (builder, "close-button");
@@ -97,8 +97,8 @@ panel_utils_builder_new (XfcePanelPlugin  *panel_plugin,
     }
 
   g_critical ("Failed to construct the builder for plugin %s-%d: %s.",
-              xfce_panel_plugin_get_name (panel_plugin),
-              xfce_panel_plugin_get_unique_id (panel_plugin),
+              expidus_panel_plugin_get_name (panel_plugin),
+              expidus_panel_plugin_get_unique_id (panel_plugin),
               error->message);
   g_error_free (error);
   g_object_unref (G_OBJECT (builder));
@@ -113,7 +113,7 @@ panel_utils_show_help (GtkWindow   *parent,
                        const gchar *page,
                        const gchar *offset)
 {
-  xfce_dialog_show_help (parent, "xfce4-panel", page, offset);
+  expidus_dialog_show_help (parent, "expidus1-panel", page, offset);
 }
 
 

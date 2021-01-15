@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ G_BEGIN_DECLS
 typedef struct _SnIconBoxClass SnIconBoxClass;
 typedef struct _SnIconBox      SnIconBox;
 
-#define XFCE_TYPE_SN_ICON_BOX            (sn_icon_box_get_type ())
-#define XFCE_SN_ICON_BOX(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_SN_ICON_BOX, SnIconBox))
-#define XFCE_SN_ICON_BOX_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_SN_ICON_BOX, SnIconBoxClass))
-#define XFCE_IS_SN_ICON_BOX(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_SN_ICON_BOX))
-#define XFCE_IS_SN_ICON_BOX_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_SN_ICON_BOX))
-#define XFCE_SN_ICON_BOX_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_SN_ICON_BOX, SnIconBoxClass))
+#define EXPIDUS_TYPE_SN_ICON_BOX            (sn_icon_box_get_type ())
+#define EXPIDUS_SN_ICON_BOX(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_SN_ICON_BOX, SnIconBox))
+#define EXPIDUS_SN_ICON_BOX_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_SN_ICON_BOX, SnIconBoxClass))
+#define EXPIDUS_IS_SN_ICON_BOX(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_SN_ICON_BOX))
+#define EXPIDUS_IS_SN_ICON_BOX_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_SN_ICON_BOX))
+#define EXPIDUS_SN_ICON_BOX_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_SN_ICON_BOX, SnIconBoxClass))
 
 GType                  sn_icon_box_get_type                    (void) G_GNUC_CONST;
 

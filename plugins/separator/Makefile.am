@@ -4,7 +4,7 @@ AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"libseparator\" \
 	$(PLATFORM_CPPFLAGS)
 
-plugindir = $(libdir)/xfce4/panel/plugins
+plugindir = $(libdir)/expidus1/panel/plugins
 
 plugin_LTLIBRARIES = \
 	libseparator.la
@@ -19,36 +19,36 @@ libseparator_la_SOURCES = \
 
 libseparator_la_CFLAGS = \
 	$(GTK_CFLAGS) \
-	$(XFCONF_CFLAGS) \
-	$(LIBXFCE4UTIL_CFLAGS) \
+	$(ESCONF_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
 	$(CAIRO_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libseparator_la_LDFLAGS = \
 	-avoid-version \
 	-module \
 	-no-undefined \
-	-export-symbols-regex '^xfce_panel_module_(preinit|init|construct)' \
+	-export-symbols-regex '^expidus_panel_module_(preinit|init|construct)' \
 	$(PLATFORM_LDFLAGS)
 
 libseparator_la_LIBADD = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la \
 	$(GTK_LIBS) \
 	$(CAIRO_LIBS) \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(LIBXFCE4UI_LIBS) \
-	$(XFCONF_LIBS)
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(LIBEXPIDUS1UI_LIBS) \
+	$(ESCONF_LIBS)
 
 libseparator_la_DEPENDENCIES = \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la \
 	$(top_builddir)/common/libpanel-common.la
 
 #
 # .desktop file
 #
-desktopdir = $(datadir)/xfce4/panel/plugins
+desktopdir = $(datadir)/expidus1/panel/plugins
 desktop_in_files = separator.desktop.in.in
 desktop_DATA = $(desktop_in_files:.desktop.in.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@

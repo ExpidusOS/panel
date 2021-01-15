@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -20,7 +20,7 @@
 #define __SYSTRAY_H__
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 #include "sn-config.h"
 #include "sn-plugin.h"
 
@@ -41,9 +41,9 @@ void  systray_plugin_screen_changed      (GtkWidget             *widget,
 void  systray_plugin_composited_changed  (GtkWidget             *widget);
 void  systray_plugin_configuration_changed  (SnConfig           *config,
                                              SnPlugin           *plugin);
-void  systray_plugin_orientation_changed (XfcePanelPlugin       *panel_plugin,
+void  systray_plugin_orientation_changed (ExpidusPanelPlugin       *panel_plugin,
                                           GtkOrientation         orientation);
-gboolean systray_plugin_size_changed     (XfcePanelPlugin       *panel_plugin,
+gboolean systray_plugin_size_changed     (ExpidusPanelPlugin       *panel_plugin,
                                           gint                   size);
 G_END_DECLS
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -37,29 +37,29 @@
 
 
 
-static void      xfce_clock_analog_set_property  (GObject              *object,
+static void      expidus_clock_analog_set_property  (GObject              *object,
                                                   guint                 prop_id,
                                                   const GValue         *value,
                                                   GParamSpec           *pspec);
-static void      xfce_clock_analog_get_property  (GObject              *object,
+static void      expidus_clock_analog_get_property  (GObject              *object,
                                                   guint                 prop_id,
                                                   GValue               *value,
                                                   GParamSpec           *pspec);
-static void      xfce_clock_analog_finalize      (GObject              *object);
-static gboolean  xfce_clock_analog_draw          (GtkWidget            *widget,
+static void      expidus_clock_analog_finalize      (GObject              *object);
+static gboolean  expidus_clock_analog_draw          (GtkWidget            *widget,
                                                   cairo_t              *cr);
-static void      xfce_clock_analog_draw_ticks    (cairo_t              *cr,
+static void      expidus_clock_analog_draw_ticks    (cairo_t              *cr,
                                                   gdouble               xc,
                                                   gdouble               yc,
                                                   gdouble               radius);
-static void      xfce_clock_analog_draw_pointer  (cairo_t              *cr,
+static void      expidus_clock_analog_draw_pointer  (cairo_t              *cr,
                                                   gdouble               xc,
                                                   gdouble               yc,
                                                   gdouble               radius,
                                                   gdouble               angle,
                                                   gdouble               scale,
                                                   gboolean              line);
-static gboolean  xfce_clock_analog_update        (XfceClockAnalog      *analog,
+static gboolean  expidus_clock_analog_update        (ExpidusClockAnalog      *analog,
                                                   ClockTime            *time);
 
 
@@ -73,12 +73,12 @@ enum
   PROP_ORIENTATION
 };
 
-struct _XfceClockAnalogClass
+struct _ExpidusClockAnalogClass
 {
   GtkImageClass __parent__;
 };
 
-struct _XfceClockAnalog
+struct _ExpidusClockAnalog
 {
   GtkImage __parent__;
 
@@ -90,23 +90,23 @@ struct _XfceClockAnalog
 
 
 
-XFCE_PANEL_DEFINE_TYPE (XfceClockAnalog, xfce_clock_analog, GTK_TYPE_IMAGE)
+EXPIDUS_PANEL_DEFINE_TYPE (ExpidusClockAnalog, expidus_clock_analog, GTK_TYPE_IMAGE)
 
 
 
 static void
-xfce_clock_analog_class_init (XfceClockAnalogClass *klass)
+expidus_clock_analog_class_init (ExpidusClockAnalogClass *klass)
 {
   GObjectClass   *gobject_class;
   GtkWidgetClass *gtkwidget_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
-  gobject_class->set_property = xfce_clock_analog_set_property;
-  gobject_class->get_property = xfce_clock_analog_get_property;
-  gobject_class->finalize = xfce_clock_analog_finalize;
+  gobject_class->set_property = expidus_clock_analog_set_property;
+  gobject_class->get_property = expidus_clock_analog_get_property;
+  gobject_class->finalize = expidus_clock_analog_finalize;
 
   gtkwidget_class = GTK_WIDGET_CLASS (klass);
-  gtkwidget_class->draw = xfce_clock_analog_draw;
+  gtkwidget_class->draw = expidus_clock_analog_draw;
 
   g_object_class_install_property (gobject_class,
                                    PROP_SIZE_RATIO,
@@ -134,7 +134,7 @@ xfce_clock_analog_class_init (XfceClockAnalogClass *klass)
 
 
 static void
-xfce_clock_analog_init (XfceClockAnalog *analog)
+expidus_clock_analog_init (ExpidusClockAnalog *analog)
 {
   analog->show_seconds = FALSE;
 }
@@ -142,12 +142,12 @@ xfce_clock_analog_init (XfceClockAnalog *analog)
 
 
 static void
-xfce_clock_analog_set_property (GObject      *object,
+expidus_clock_analog_set_property (GObject      *object,
                                 guint         prop_id,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-  XfceClockAnalog *analog = XFCE_CLOCK_ANALOG (object);
+  ExpidusClockAnalog *analog = EXPIDUS_CLOCK_ANALOG (object);
 
   switch (prop_id)
     {
@@ -166,18 +166,18 @@ xfce_clock_analog_set_property (GObject      *object,
   /* reschedule the timeout and redraw */
   clock_time_timeout_set_interval (analog->timeout,
       analog->show_seconds ? CLOCK_INTERVAL_SECOND : CLOCK_INTERVAL_MINUTE);
-  xfce_clock_analog_update (analog, analog->time);
+  expidus_clock_analog_update (analog, analog->time);
 }
 
 
 
 static void
-xfce_clock_analog_get_property (GObject    *object,
+expidus_clock_analog_get_property (GObject    *object,
                                 guint       prop_id,
                                 GValue     *value,
                                 GParamSpec *pspec)
 {
-  XfceClockAnalog *analog = XFCE_CLOCK_ANALOG (object);
+  ExpidusClockAnalog *analog = EXPIDUS_CLOCK_ANALOG (object);
 
   switch (prop_id)
     {
@@ -198,21 +198,21 @@ xfce_clock_analog_get_property (GObject    *object,
 
 
 static void
-xfce_clock_analog_finalize (GObject *object)
+expidus_clock_analog_finalize (GObject *object)
 {
   /* stop the timeout */
-  clock_time_timeout_free (XFCE_CLOCK_ANALOG (object)->timeout);
+  clock_time_timeout_free (EXPIDUS_CLOCK_ANALOG (object)->timeout);
 
-  (*G_OBJECT_CLASS (xfce_clock_analog_parent_class)->finalize) (object);
+  (*G_OBJECT_CLASS (expidus_clock_analog_parent_class)->finalize) (object);
 }
 
 
 
 static gboolean
-xfce_clock_analog_draw (GtkWidget *widget,
+expidus_clock_analog_draw (GtkWidget *widget,
                         cairo_t   *cr)
 {
-  XfceClockAnalog *analog = XFCE_CLOCK_ANALOG (widget);
+  ExpidusClockAnalog *analog = EXPIDUS_CLOCK_ANALOG (widget);
   gdouble          xc, yc;
   gdouble          angle, radius;
   GDateTime       *time;
@@ -220,7 +220,7 @@ xfce_clock_analog_draw (GtkWidget *widget,
   GtkStyleContext *ctx;
   GdkRGBA          fg_rgba;
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_ANALOG (analog), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_ANALOG (analog), FALSE);
   panel_return_val_if_fail (cr != NULL, FALSE);
 
   /* get center of the widget and the radius */
@@ -239,22 +239,22 @@ xfce_clock_analog_draw (GtkWidget *widget,
   gdk_cairo_set_source_rgba (cr, &fg_rgba);
 
   /* draw the ticks */
-  xfce_clock_analog_draw_ticks (cr, xc, yc, radius);
+  expidus_clock_analog_draw_ticks (cr, xc, yc, radius);
 
   if (analog->show_seconds)
     {
       /* second pointer */
       angle = TICKS_TO_RADIANS (g_date_time_get_second (time));
-      xfce_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.7, TRUE);
+      expidus_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.7, TRUE);
     }
 
   /* minute pointer */
   angle = TICKS_TO_RADIANS (g_date_time_get_minute (time) + g_date_time_get_second (time) / 60.0);
-  xfce_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.8, FALSE);
+  expidus_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.8, FALSE);
 
   /* hour pointer */
   angle = HOURS_TO_RADIANS (g_date_time_get_hour (time), g_date_time_get_minute (time));
-  xfce_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.5, FALSE);
+  expidus_clock_analog_draw_pointer (cr, xc, yc, radius, angle, 0.5, FALSE);
 
   /* cleanup */
   g_date_time_unref (time);
@@ -265,7 +265,7 @@ xfce_clock_analog_draw (GtkWidget *widget,
 
 
 static void
-xfce_clock_analog_draw_ticks (cairo_t *cr,
+expidus_clock_analog_draw_ticks (cairo_t *cr,
                               gdouble  xc,
                               gdouble  yc,
                               gdouble  radius)
@@ -321,7 +321,7 @@ xfce_clock_analog_draw_ticks (cairo_t *cr,
 
 
 static void
-xfce_clock_analog_draw_pointer (cairo_t *cr,
+expidus_clock_analog_draw_pointer (cairo_t *cr,
                                 gdouble  xc,
                                 gdouble  yc,
                                 gdouble  radius,
@@ -365,13 +365,13 @@ xfce_clock_analog_draw_pointer (cairo_t *cr,
 
 
 static gboolean
-xfce_clock_analog_update (XfceClockAnalog *analog,
+expidus_clock_analog_update (ExpidusClockAnalog *analog,
                           ClockTime       *time)
 {
   GtkWidget *widget = GTK_WIDGET (analog);
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_ANALOG (analog), FALSE);
-  panel_return_val_if_fail (XFCE_IS_CLOCK_TIME (time), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_ANALOG (analog), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_CLOCK_TIME (time), FALSE);
 
   /* update if the widget if visible */
   if (G_LIKELY (gtk_widget_get_visible (widget)))
@@ -383,14 +383,14 @@ xfce_clock_analog_update (XfceClockAnalog *analog,
 
 
 GtkWidget *
-xfce_clock_analog_new (ClockTime *time)
+expidus_clock_analog_new (ClockTime *time)
 {
-  XfceClockAnalog *analog = g_object_new (XFCE_CLOCK_TYPE_ANALOG, NULL);
+  ExpidusClockAnalog *analog = g_object_new (EXPIDUS_CLOCK_TYPE_ANALOG, NULL);
 
   analog->time = time;
   analog->timeout = clock_time_timeout_new (CLOCK_INTERVAL_MINUTE,
                                             analog->time,
-                                            G_CALLBACK (xfce_clock_analog_update), analog);
+                                            G_CALLBACK (expidus_clock_analog_update), analog);
 
   return GTK_WIDGET (analog);
 }

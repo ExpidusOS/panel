@@ -1,8 +1,8 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
 _Name=Separator
 _Comment=Adds a separator or space between panel items
-Icon=org.xfce.panel.separator
-X-XFCE-Module=separator
-X-XFCE-Internal=TRUE
-X-XFCE-API=@LIBXFCE4PANEL_VERSION_API@
+Icon=com.expidus.panel.separator
+X-EXPIDUS-Module=separator
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 
 #include <gio/gio.h>
 
@@ -41,8 +41,8 @@
 #include <common/panel-debug.h>
 #include <common/panel-utils.h>
 
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 #include <panel/panel-module.h>
 #include <panel/panel-plugin-external.h>
@@ -51,7 +51,7 @@
 
 
 
-static void         panel_plugin_external_provider_init           (XfcePanelPluginProviderInterface *iface);
+static void         panel_plugin_external_provider_init           (ExpidusPanelPluginProviderInterface *iface);
 static void         panel_plugin_external_finalize                (GObject                          *object);
 static void         panel_plugin_external_get_property            (GObject                          *object,
                                                                    guint                             prop_id,
@@ -75,37 +75,37 @@ static void         panel_plugin_external_child_watch_destroyed   (gpointer     
 static void         panel_plugin_external_queue_free              (PanelPluginExternal              *external);
 static void         panel_plugin_external_queue_send_to_child     (PanelPluginExternal              *external);
 static void         panel_plugin_external_queue_add               (PanelPluginExternal              *external,
-                                                                   XfcePanelPluginProviderPropType   type,
+                                                                   ExpidusPanelPluginProviderPropType   type,
                                                                    const GValue                     *value);
 static void         panel_plugin_external_queue_add_action        (PanelPluginExternal              *external,
-                                                                   XfcePanelPluginProviderPropType   type);
-static const gchar *panel_plugin_external_get_name                (XfcePanelPluginProvider          *provider);
-static gint         panel_plugin_external_get_unique_id           (XfcePanelPluginProvider          *provider);
-static void         panel_plugin_external_set_size                (XfcePanelPluginProvider          *provider,
+                                                                   ExpidusPanelPluginProviderPropType   type);
+static const gchar *panel_plugin_external_get_name                (ExpidusPanelPluginProvider          *provider);
+static gint         panel_plugin_external_get_unique_id           (ExpidusPanelPluginProvider          *provider);
+static void         panel_plugin_external_set_size                (ExpidusPanelPluginProvider          *provider,
                                                                    gint                              size);
-static void         panel_plugin_external_set_icon_size           (XfcePanelPluginProvider          *provider,
+static void         panel_plugin_external_set_icon_size           (ExpidusPanelPluginProvider          *provider,
                                                                    gint                              icon_size);
-static void         panel_plugin_external_set_dark_mode           (XfcePanelPluginProvider          *provider,
+static void         panel_plugin_external_set_dark_mode           (ExpidusPanelPluginProvider          *provider,
                                                                    gboolean                          dark_mode);
-static void         panel_plugin_external_set_mode                (XfcePanelPluginProvider          *provider,
-                                                                   XfcePanelPluginMode               mode);
-static void         panel_plugin_external_set_nrows               (XfcePanelPluginProvider          *provider,
+static void         panel_plugin_external_set_mode                (ExpidusPanelPluginProvider          *provider,
+                                                                   ExpidusPanelPluginMode               mode);
+static void         panel_plugin_external_set_nrows               (ExpidusPanelPluginProvider          *provider,
                                                                    guint                             rows);
-static void         panel_plugin_external_set_screen_position     (XfcePanelPluginProvider          *provider,
-                                                                   XfceScreenPosition                screen_position);
-static void         panel_plugin_external_save                    (XfcePanelPluginProvider          *provider);
-static gboolean     panel_plugin_external_get_show_configure      (XfcePanelPluginProvider          *provider);
-static void         panel_plugin_external_show_configure          (XfcePanelPluginProvider          *provider);
-static gboolean     panel_plugin_external_get_show_about          (XfcePanelPluginProvider          *provider);
-static void         panel_plugin_external_show_about              (XfcePanelPluginProvider          *provider);
-static void         panel_plugin_external_removed                 (XfcePanelPluginProvider          *provider);
-static gboolean     panel_plugin_external_remote_event            (XfcePanelPluginProvider          *provider,
+static void         panel_plugin_external_set_screen_position     (ExpidusPanelPluginProvider          *provider,
+                                                                   ExpidusScreenPosition                screen_position);
+static void         panel_plugin_external_save                    (ExpidusPanelPluginProvider          *provider);
+static gboolean     panel_plugin_external_get_show_configure      (ExpidusPanelPluginProvider          *provider);
+static void         panel_plugin_external_show_configure          (ExpidusPanelPluginProvider          *provider);
+static gboolean     panel_plugin_external_get_show_about          (ExpidusPanelPluginProvider          *provider);
+static void         panel_plugin_external_show_about              (ExpidusPanelPluginProvider          *provider);
+static void         panel_plugin_external_removed                 (ExpidusPanelPluginProvider          *provider);
+static gboolean     panel_plugin_external_remote_event            (ExpidusPanelPluginProvider          *provider,
                                                                    const gchar                      *name,
                                                                    const GValue                     *value,
                                                                    guint                            *handler_id);
-static void         panel_plugin_external_set_locked              (XfcePanelPluginProvider          *provider,
+static void         panel_plugin_external_set_locked              (ExpidusPanelPluginProvider          *provider,
                                                                    gboolean                          locked);
-static void         panel_plugin_external_ask_remove              (XfcePanelPluginProvider          *provider);
+static void         panel_plugin_external_ask_remove              (ExpidusPanelPluginProvider          *provider);
 static void         panel_plugin_external_set_sensitive           (PanelPluginExternal              *external);
 
 
@@ -143,7 +143,7 @@ enum
 
 G_DEFINE_ABSTRACT_TYPE_WITH_CODE (PanelPluginExternal, panel_plugin_external, GTK_TYPE_SOCKET,
                                   G_ADD_PRIVATE (PanelPluginExternal)
-                                  G_IMPLEMENT_INTERFACE (XFCE_TYPE_PANEL_PLUGIN_PROVIDER,
+                                  G_IMPLEMENT_INTERFACE (EXPIDUS_TYPE_PANEL_PLUGIN_PROVIDER,
                                                          panel_plugin_external_provider_init))
 
 
@@ -220,7 +220,7 @@ panel_plugin_external_init (PanelPluginExternal *external)
 
 
 static void
-panel_plugin_external_provider_init (XfcePanelPluginProviderInterface *iface)
+panel_plugin_external_provider_init (ExpidusPanelPluginProviderInterface *iface)
 {
   iface->get_name = panel_plugin_external_get_name;
   iface->get_unique_id = panel_plugin_external_get_unique_id;
@@ -484,7 +484,7 @@ panel_plugin_external_child_ask_restart (PanelPluginExternal *external)
 
       /* cleanup the plugin configuration (in PanelApplication) and
        * destroy the plugin */
-      xfce_panel_plugin_provider_emit_signal (XFCE_PANEL_PLUGIN_PROVIDER (external),
+      expidus_panel_plugin_provider_emit_signal (EXPIDUS_PANEL_PLUGIN_PROVIDER (external),
                                               PROVIDER_SIGNAL_REMOVE_PLUGIN);
 
       return FALSE;
@@ -629,7 +629,7 @@ panel_plugin_external_child_spawn (PanelPluginExternal *external)
     }
   else
     {
-      g_critical ("Failed to spawn the xfce4-panel-wrapper: %s", error->message);
+      g_critical ("Failed to spawn the expidus1-panel-wrapper: %s", error->message);
       g_error_free (error);
     }
 
@@ -749,7 +749,7 @@ panel_plugin_external_child_watch (GPid     pid,
                      external->unique_id, WEXITSTATUS (status));
 
           /* cleanup the plugin configuration (in PanelApplication) */
-          xfce_panel_plugin_provider_emit_signal (XFCE_PANEL_PLUGIN_PROVIDER (external),
+          expidus_panel_plugin_provider_emit_signal (EXPIDUS_PANEL_PLUGIN_PROVIDER (external),
                                                   PROVIDER_SIGNAL_REMOVE_PLUGIN);
 
           /* wait until everything is settled before we destroy */
@@ -829,7 +829,7 @@ panel_plugin_external_queue_send_to_child (PanelPluginExternal *external)
 
 static void
 panel_plugin_external_queue_add (PanelPluginExternal             *external,
-                                 XfcePanelPluginProviderPropType  type,
+                                 ExpidusPanelPluginProviderPropType  type,
                                  const GValue                    *value)
 {
   PluginProperty *prop;
@@ -852,7 +852,7 @@ panel_plugin_external_queue_add (PanelPluginExternal             *external,
 
 static void
 panel_plugin_external_queue_add_action (PanelPluginExternal             *external,
-                                        XfcePanelPluginProviderPropType  type)
+                                        ExpidusPanelPluginProviderPropType  type)
 {
   GValue value = { 0, };
 
@@ -867,10 +867,10 @@ panel_plugin_external_queue_add_action (PanelPluginExternal             *externa
 
 
 static const gchar *
-panel_plugin_external_get_name (XfcePanelPluginProvider *provider)
+panel_plugin_external_get_name (ExpidusPanelPluginProvider *provider)
 {
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider), NULL);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider), NULL);
 
   return panel_module_get_name (PANEL_PLUGIN_EXTERNAL (provider)->module);
 }
@@ -878,10 +878,10 @@ panel_plugin_external_get_name (XfcePanelPluginProvider *provider)
 
 
 static gint
-panel_plugin_external_get_unique_id (XfcePanelPluginProvider *provider)
+panel_plugin_external_get_unique_id (ExpidusPanelPluginProvider *provider)
 {
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider), -1);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider), -1);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider), -1);
 
   return PANEL_PLUGIN_EXTERNAL (provider)->unique_id;
 }
@@ -889,13 +889,13 @@ panel_plugin_external_get_unique_id (XfcePanelPluginProvider *provider)
 
 
 static void
-panel_plugin_external_set_size (XfcePanelPluginProvider *provider,
+panel_plugin_external_set_size (ExpidusPanelPluginProvider *provider,
                                 gint                     size)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_INT);
   g_value_set_int (&value, size);
@@ -909,13 +909,13 @@ panel_plugin_external_set_size (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_icon_size (XfcePanelPluginProvider *provider,
+panel_plugin_external_set_icon_size (ExpidusPanelPluginProvider *provider,
                                      gint                     icon_size)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_INT);
   g_value_set_int (&value, icon_size);
@@ -929,13 +929,13 @@ panel_plugin_external_set_icon_size (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_dark_mode (XfcePanelPluginProvider *provider,
+panel_plugin_external_set_dark_mode (ExpidusPanelPluginProvider *provider,
                                      gboolean                 dark_mode)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_BOOLEAN);
   g_value_set_boolean (&value, dark_mode);
@@ -949,13 +949,13 @@ panel_plugin_external_set_dark_mode (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_mode (XfcePanelPluginProvider *provider,
-                                XfcePanelPluginMode      mode)
+panel_plugin_external_set_mode (ExpidusPanelPluginProvider *provider,
+                                ExpidusPanelPluginMode      mode)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_INT);
   g_value_set_int (&value, mode);
@@ -969,13 +969,13 @@ panel_plugin_external_set_mode (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_nrows (XfcePanelPluginProvider *provider,
+panel_plugin_external_set_nrows (ExpidusPanelPluginProvider *provider,
                                  guint                    rows)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_INT);
   g_value_set_int (&value, rows);
@@ -989,13 +989,13 @@ panel_plugin_external_set_nrows (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_screen_position (XfcePanelPluginProvider *provider,
-                                           XfceScreenPosition       screen_position)
+panel_plugin_external_set_screen_position (ExpidusPanelPluginProvider *provider,
+                                           ExpidusScreenPosition       screen_position)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_INT);
   g_value_set_int (&value, screen_position);
@@ -1009,10 +1009,10 @@ panel_plugin_external_set_screen_position (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_save (XfcePanelPluginProvider *provider)
+panel_plugin_external_save (ExpidusPanelPluginProvider *provider)
 {
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   panel_plugin_external_queue_add_action (PANEL_PLUGIN_EXTERNAL (provider),
                                           PROVIDER_PROP_TYPE_ACTION_SAVE);
@@ -1021,10 +1021,10 @@ panel_plugin_external_save (XfcePanelPluginProvider *provider)
 
 
 static gboolean
-panel_plugin_external_get_show_configure (XfcePanelPluginProvider *provider)
+panel_plugin_external_get_show_configure (ExpidusPanelPluginProvider *provider)
 {
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider), FALSE);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider), FALSE);
 
   return PANEL_PLUGIN_EXTERNAL (provider)->show_configure;
 }
@@ -1032,10 +1032,10 @@ panel_plugin_external_get_show_configure (XfcePanelPluginProvider *provider)
 
 
 static void
-panel_plugin_external_show_configure (XfcePanelPluginProvider *provider)
+panel_plugin_external_show_configure (ExpidusPanelPluginProvider *provider)
 {
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   panel_plugin_external_queue_add_action (PANEL_PLUGIN_EXTERNAL (provider),
                                           PROVIDER_PROP_TYPE_ACTION_SHOW_CONFIGURE);
@@ -1044,10 +1044,10 @@ panel_plugin_external_show_configure (XfcePanelPluginProvider *provider)
 
 
 static gboolean
-panel_plugin_external_get_show_about (XfcePanelPluginProvider *provider)
+panel_plugin_external_get_show_about (ExpidusPanelPluginProvider *provider)
 {
   panel_return_val_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider), FALSE);
-  panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider), FALSE);
 
   return PANEL_PLUGIN_EXTERNAL (provider)->show_about;
 }
@@ -1055,10 +1055,10 @@ panel_plugin_external_get_show_about (XfcePanelPluginProvider *provider)
 
 
 static void
-panel_plugin_external_show_about (XfcePanelPluginProvider *provider)
+panel_plugin_external_show_about (ExpidusPanelPluginProvider *provider)
 {
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   panel_plugin_external_queue_add_action (PANEL_PLUGIN_EXTERNAL (provider),
                                           PROVIDER_PROP_TYPE_ACTION_SHOW_ABOUT);
@@ -1067,10 +1067,10 @@ panel_plugin_external_show_about (XfcePanelPluginProvider *provider)
 
 
 static void
-panel_plugin_external_removed (XfcePanelPluginProvider *provider)
+panel_plugin_external_removed (ExpidusPanelPluginProvider *provider)
 {
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   panel_plugin_external_queue_add_action (PANEL_PLUGIN_EXTERNAL (provider),
                                           PROVIDER_PROP_TYPE_ACTION_REMOVED);
@@ -1079,7 +1079,7 @@ panel_plugin_external_removed (XfcePanelPluginProvider *provider)
 
 
 static gboolean
-panel_plugin_external_remote_event (XfcePanelPluginProvider *provider,
+panel_plugin_external_remote_event (ExpidusPanelPluginProvider *provider,
                                     const gchar             *name,
                                     const GValue            *value,
                                     guint                   *handle)
@@ -1091,13 +1091,13 @@ panel_plugin_external_remote_event (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_set_locked (XfcePanelPluginProvider *provider,
+panel_plugin_external_set_locked (ExpidusPanelPluginProvider *provider,
                                   gboolean                 locked)
 {
   GValue value = { 0, };
 
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   g_value_init (&value, G_TYPE_BOOLEAN);
   g_value_set_boolean (&value, locked);
@@ -1111,10 +1111,10 @@ panel_plugin_external_set_locked (XfcePanelPluginProvider *provider,
 
 
 static void
-panel_plugin_external_ask_remove (XfcePanelPluginProvider *provider)
+panel_plugin_external_ask_remove (ExpidusPanelPluginProvider *provider)
 {
   panel_return_if_fail (PANEL_IS_PLUGIN_EXTERNAL (provider));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
   panel_plugin_external_queue_add_action (PANEL_PLUGIN_EXTERNAL (provider),
                                           PROVIDER_PROP_TYPE_ACTION_ASK_REMOVE);

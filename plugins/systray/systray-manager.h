@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2002      Anders Carlsson <andersca@gnu.org>
- * Copyright (c) 2003-2004 Benedikt Meurer <benny@xfce.org>
- * Copyright (c) 2003-2004 Olivier Fourdan <fourdan@xfce.org>
+ * Copyright (c) 2003-2004 Benedikt Meurer <benny@expidus.org>
+ * Copyright (c) 2003-2004 Olivier Fourdan <fourdan@expidus.org>
  * Copyright (c) 2003-2006 Vincent Untz
- * Copyright (c) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -29,26 +29,26 @@ typedef struct _SystrayManagerClass SystrayManagerClass;
 typedef struct _SystrayManager      SystrayManager;
 typedef struct _SystrayMessage      SystrayMessage;
 
-#define XFCE_TYPE_SYSTRAY_MANAGER            (systray_manager_get_type ())
-#define XFCE_SYSTRAY_MANAGER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_SYSTRAY_MANAGER, SystrayManager))
-#define XFCE_SYSTRAY_MANAGER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_SYSTRAY_MANAGER, SystrayManagerClass))
-#define XFCE_IS_SYSTRAY_MANAGER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_SYSTRAY_MANAGER))
-#define XFCE_IS_SYSTRAY_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_SYSTRAY_MANAGER))
-#define XFCE_SYSTRAY_MANAGER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_SYSTRAY_MANAGER, SystrayManagerClass))
-#define XFCE_SYSTRAY_MANAGER_ERROR           (systray_manager_error_quark())
+#define EXPIDUS_TYPE_SYSTRAY_MANAGER            (systray_manager_get_type ())
+#define EXPIDUS_SYSTRAY_MANAGER(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_SYSTRAY_MANAGER, SystrayManager))
+#define EXPIDUS_SYSTRAY_MANAGER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_SYSTRAY_MANAGER, SystrayManagerClass))
+#define EXPIDUS_IS_SYSTRAY_MANAGER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_SYSTRAY_MANAGER))
+#define EXPIDUS_IS_SYSTRAY_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_SYSTRAY_MANAGER))
+#define EXPIDUS_SYSTRAY_MANAGER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_SYSTRAY_MANAGER, SystrayManagerClass))
+#define EXPIDUS_SYSTRAY_MANAGER_ERROR           (systray_manager_error_quark())
 
 
 
 enum
 {
-    XFCE_SYSTRAY_MANAGER_ERROR_SELECTION_FAILED
+    EXPIDUS_SYSTRAY_MANAGER_ERROR_SELECTION_FAILED
 };
 
 
 
 GType           systray_manager_get_type             (void) G_GNUC_CONST;
 
-void            systray_manager_register_type        (XfcePanelTypeModule *type_module);
+void            systray_manager_register_type        (ExpidusPanelTypeModule *type_module);
 
 GQuark          systray_manager_error_quark          (void);
 

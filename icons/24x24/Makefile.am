@@ -1,8 +1,8 @@
 
 iconsdir = $(datadir)/icons/hicolor/24x24/apps
 icons_DATA = \
-	org.xfce.panel.applicationsmenu.png	\
-	org.xfce.panel.png
+	com.expidus.panel.applicationsmenu.png	\
+	com.expidus.panel.png
 
 EXTRA_DIST = \
 	$(icons_DATA)

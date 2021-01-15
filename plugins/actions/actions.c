@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2011 Nick Schermer <nick@expidus.org>
  * Copyright (c) 2009      Brian Tarricone <brian@tarricone.org>
  *
  * This library is free software; you can redistribute it and/or modify it
@@ -22,14 +22,14 @@
 #endif
 
 #include <gtk/gtk.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
 #include <gio/gio.h>
 
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 
 #include "actions.h"
@@ -51,13 +51,13 @@ static void       actions_plugin_set_property        (GObject               *obj
                                                       guint                  prop_id,
                                                       const GValue          *value,
                                                       GParamSpec            *pspec);
-static void       actions_plugin_construct           (XfcePanelPlugin       *panel_plugin);
-static void       actions_plugin_free_data           (XfcePanelPlugin       *panel_plugin);
-static gboolean   actions_plugin_size_changed        (XfcePanelPlugin       *panel_plugin,
+static void       actions_plugin_construct           (ExpidusPanelPlugin       *panel_plugin);
+static void       actions_plugin_free_data           (ExpidusPanelPlugin       *panel_plugin);
+static gboolean   actions_plugin_size_changed        (ExpidusPanelPlugin       *panel_plugin,
                                                       gint                   size);
-static void       actions_plugin_configure_plugin    (XfcePanelPlugin       *panel_plugin);
-static void       actions_plugin_mode_changed        (XfcePanelPlugin       *panel_plugin,
-                                                      XfcePanelPluginMode    mode);
+static void       actions_plugin_configure_plugin    (ExpidusPanelPlugin       *panel_plugin);
+static void       actions_plugin_mode_changed        (ExpidusPanelPlugin       *panel_plugin,
+                                                      ExpidusPanelPluginMode    mode);
 static void       actions_plugin_pack                (ActionsPlugin         *plugin);
 static GPtrArray *actions_plugin_default_array       (void);
 static void       actions_plugin_menu                (GtkWidget             *button,
@@ -101,12 +101,12 @@ enum
 
 struct _ActionsPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _ActionsPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   AppearanceType  type;
   ButtonTitleType button_title;
@@ -243,7 +243,7 @@ static ActionEntry action_entries[] =
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (ActionsPlugin, actions_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN (ActionsPlugin, actions_plugin)
 
 
 
@@ -254,14 +254,14 @@ static GQuark      action_quark = 0;
 static void
 actions_plugin_class_init (ActionsPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
   GObjectClass         *gobject_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
   gobject_class->set_property = actions_plugin_set_property;
   gobject_class->get_property = actions_plugin_get_property;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = actions_plugin_construct;
   plugin_class->free_data = actions_plugin_free_data;
   plugin_class->size_changed = actions_plugin_size_changed;
@@ -339,7 +339,7 @@ actions_plugin_get_property (GObject    *object,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (object);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -378,7 +378,7 @@ actions_plugin_set_property (GObject      *object,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (object);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (object);
 
   switch (prop_id)
     {
@@ -419,9 +419,9 @@ actions_plugin_set_property (GObject      *object,
 
 
 static void
-actions_plugin_construct (XfcePanelPlugin *panel_plugin)
+actions_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  ActionsPlugin       *plugin = XFCE_ACTIONS_PLUGIN (panel_plugin);
+  ActionsPlugin       *plugin = EXPIDUS_ACTIONS_PLUGIN (panel_plugin);
   const PanelProperty  properties[] =
   {
     { "items", G_TYPE_PTR_ARRAY },
@@ -433,26 +433,26 @@ actions_plugin_construct (XfcePanelPlugin *panel_plugin)
   };
 
   /* show the properties dialog */
-  xfce_panel_plugin_menu_show_configure (XFCE_PANEL_PLUGIN (plugin));
+  expidus_panel_plugin_menu_show_configure (EXPIDUS_PANEL_PLUGIN (plugin));
 
   /* bind all properties */
   panel_properties_bind (NULL, G_OBJECT (plugin),
-                         xfce_panel_plugin_get_property_base (panel_plugin),
+                         expidus_panel_plugin_get_property_base (panel_plugin),
                          properties, FALSE);
 
   actions_plugin_pack (plugin);
 
   /* set orientation and size */
   actions_plugin_mode_changed (panel_plugin,
-      xfce_panel_plugin_get_mode (panel_plugin));
+      expidus_panel_plugin_get_mode (panel_plugin));
 }
 
 
 
 static void
-actions_plugin_free_data (XfcePanelPlugin *panel_plugin)
+actions_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (panel_plugin);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (panel_plugin);
 
   if (plugin->pack_idle_id != 0)
     g_source_remove (plugin->pack_idle_id);
@@ -467,10 +467,10 @@ actions_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-actions_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+actions_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                              gint             size)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (panel_plugin);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (panel_plugin);
   GtkWidget     *box;
   GList         *children, *li;
   gint           max_size;
@@ -479,7 +479,7 @@ actions_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
   if (plugin->type == APPEARANCE_TYPE_BUTTONS)
     {
-      max_size = size / xfce_panel_plugin_get_nrows (panel_plugin);
+      max_size = size / expidus_panel_plugin_get_nrows (panel_plugin);
       box = gtk_bin_get_child (GTK_BIN (plugin));
       if (box != NULL)
         {
@@ -494,7 +494,7 @@ actions_plugin_size_changed (XfcePanelPlugin *panel_plugin,
                   gtk_widget_set_size_request (GTK_WIDGET (li->data),
                                                max_size, max_size);
                   icon = GTK_IMAGE (gtk_bin_get_child (GTK_BIN (li->data)));
-                  icon_size = xfce_panel_plugin_get_icon_size (panel_plugin);
+                  icon_size = expidus_panel_plugin_get_icon_size (panel_plugin);
                   gtk_image_set_pixel_size (GTK_IMAGE (icon), icon_size);
                 }
             }
@@ -509,7 +509,7 @@ actions_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 static gboolean
 actions_plugin_configure_store (gpointer data)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (data);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (data);
   GtkTreeModel  *model;
   GtkTreeIter    iter;
   GPtrArray     *array;
@@ -572,7 +572,7 @@ actions_plugin_configure_visible_toggled (GtkCellRendererToggle *renderer,
   gboolean      visible;
   GtkTreeModel *model;
 
-  panel_return_if_fail (XFCE_IS_ACTIONS_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_ACTIONS_PLUGIN (plugin));
 
   model = g_object_get_data (G_OBJECT (plugin), "items-store");
   panel_return_if_fail (GTK_IS_LIST_STORE (model));
@@ -617,9 +617,9 @@ actions_plugin_combo_title_changed_cb (GtkWidget *widget,
 
 
 static void
-actions_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+actions_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  ActionsPlugin *plugin = XFCE_ACTIONS_PLUGIN (panel_plugin);
+  ActionsPlugin *plugin = EXPIDUS_ACTIONS_PLUGIN (panel_plugin);
   GtkBuilder    *builder;
   GObject       *dialog;
   GObject       *object;
@@ -635,7 +635,7 @@ actions_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
   gchar         *sep_str;
   const gchar   *display_name;
 
-  panel_return_if_fail (XFCE_IS_ACTIONS_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_ACTIONS_PLUGIN (plugin));
   panel_return_if_fail (plugin->items != NULL);
 
   /* setup the dialog */
@@ -753,10 +753,10 @@ actions_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
 
 
 static void
-actions_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                             XfcePanelPluginMode  mode)
+actions_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                             ExpidusPanelPluginMode  mode)
 {
-  actions_plugin_pack (XFCE_ACTIONS_PLUGIN (panel_plugin));
+  actions_plugin_pack (EXPIDUS_ACTIONS_PLUGIN (panel_plugin));
 }
 
 
@@ -851,9 +851,9 @@ actions_plugin_action_dbus_proxy_session (GDBusConnection *conn)
   return g_dbus_proxy_new_sync (conn,
                                 G_DBUS_PROXY_FLAGS_NONE,
                                 NULL,
-                                "org.xfce.SessionManager",
-                                "/org/xfce/SessionManager",
-                                "org.xfce.Session.Manager",
+                                "com.expidus.SessionManager",
+                                "/com/expidus/SessionManager",
+                                "com.expidus.Session.Manager",
                                 NULL,
                                 NULL);
 }
@@ -987,11 +987,11 @@ actions_plugin_actions_allowed (void)
   conn = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
   if (conn != NULL)
     {
-      /* xfce4-session */
+      /* expidus1-session */
       proxy = actions_plugin_action_dbus_proxy_session (conn);
       if (G_LIKELY (proxy != NULL))
         {
-          /* when xfce4-session is connected, we can logout */
+          /* when expidus1-session is connected, we can logout */
           PANEL_SET_FLAG (allow_mask, ACTION_TYPE_LOGOUT | ACTION_TYPE_LOGOUT_DIALOG);
 
           if (actions_plugin_action_dbus_can (proxy, "CanShutdown"))
@@ -1031,7 +1031,7 @@ actions_plugin_action_activate (GtkWidget      *widget,
   gboolean       unattended = FALSE;
   GError        *error = NULL;
   gboolean       succeed = FALSE;
-  XfconfChannel *channel;
+  EsconfChannel *channel;
   gboolean       allow_save;
   gchar         *path;
 
@@ -1044,8 +1044,8 @@ actions_plugin_action_activate (GtkWidget      *widget,
       && !actions_plugin_action_confirmation (plugin, entry, &unattended))
     return;
 
-  channel = xfconf_channel_get ("xfce4-session");
-  allow_save = xfconf_channel_get_bool (channel, "/general/SaveOnExit", FALSE);
+  channel = esconf_channel_get ("expidus1-session");
+  allow_save = esconf_channel_get_bool (channel, "/general/SaveOnExit", FALSE);
   /* unattended shutdown, don't save the session to avoid blocking the logout */
   allow_save = allow_save && !unattended;
 
@@ -1106,7 +1106,7 @@ actions_plugin_action_activate (GtkWidget      *widget,
 
   if (!succeed)
     {
-      xfce_dialog_show_error (NULL, error,
+      expidus_dialog_show_error (NULL, error,
                               _("Failed to run action \"%s\""),
                               _(entry->display_name));
     }
@@ -1138,7 +1138,7 @@ actions_plugin_action_button (ActionsPlugin  *plugin,
     }
   else
     {
-      widget = xfce_panel_create_button ();
+      widget = expidus_panel_create_button ();
       gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
       g_object_set_qdata (G_OBJECT (widget), action_quark, entry);
       gtk_widget_set_tooltip_text (widget, _(entry->display_name));
@@ -1154,7 +1154,7 @@ actions_plugin_action_button (ActionsPlugin  *plugin,
       gtk_widget_show (image);
     }
 
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), widget);
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), widget);
 
   return widget;
 }
@@ -1206,7 +1206,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 static gboolean
 actions_plugin_pack_idle (gpointer data)
 {
-  ActionsPlugin       *plugin = XFCE_ACTIONS_PLUGIN (data);
+  ActionsPlugin       *plugin = EXPIDUS_ACTIONS_PLUGIN (data);
   GtkWidget           *label;
   GtkWidget           *button;
   GtkWidget           *widget;
@@ -1219,7 +1219,7 @@ actions_plugin_pack_idle (gpointer data)
   GtkOrientation       orientation;
   ActionType           allowed_types;
   ActionType           type;
-  XfcePanelPluginMode  mode;
+  ExpidusPanelPluginMode  mode;
 
   child = gtk_bin_get_child (GTK_BIN (plugin));
   if (child != NULL)
@@ -1235,7 +1235,7 @@ actions_plugin_pack_idle (gpointer data)
 
   if (plugin->type == APPEARANCE_TYPE_BUTTONS)
     {
-      if (xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin)) == XFCE_PANEL_PLUGIN_MODE_VERTICAL)
+      if (expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin)) == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL)
         orientation = GTK_ORIENTATION_VERTICAL;
       else
         orientation = GTK_ORIENTATION_HORIZONTAL;
@@ -1260,8 +1260,8 @@ actions_plugin_pack_idle (gpointer data)
             }
         }
 
-      actions_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-          xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+      actions_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+          expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
     }
   else
     {
@@ -1301,10 +1301,10 @@ actions_plugin_pack_idle (gpointer data)
             break;
         }
 
-      button = xfce_arrow_button_new (GTK_ARROW_NONE);
+      button = expidus_arrow_button_new (GTK_ARROW_NONE);
       gtk_widget_set_name (button, "actions-button");
       gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-      xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), button);
+      expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), button);
       gtk_container_add (GTK_CONTAINER (plugin), button);
       g_signal_connect (G_OBJECT (button), "toggled",
           G_CALLBACK (actions_plugin_menu), plugin);
@@ -1312,11 +1312,11 @@ actions_plugin_pack_idle (gpointer data)
 
       label = gtk_label_new (button_title);
       gtk_container_add (GTK_CONTAINER (button), label);
-      mode = xfce_panel_plugin_get_mode (XFCE_PANEL_PLUGIN (plugin));
+      mode = expidus_panel_plugin_get_mode (EXPIDUS_PANEL_PLUGIN (plugin));
       gtk_label_set_angle (GTK_LABEL (label),
-          (mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0);
+          (mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL) ? 270 : 0);
       gtk_label_set_ellipsize (GTK_LABEL (label),
-                               (mode == XFCE_PANEL_PLUGIN_MODE_DESKBAR) ?
+                               (mode == EXPIDUS_PANEL_PLUGIN_MODE_DESKBAR) ?
                                PANGO_ELLIPSIZE_END : PANGO_ELLIPSIZE_NONE);
       gtk_widget_show (label);
     }
@@ -1329,7 +1329,7 @@ actions_plugin_pack_idle (gpointer data)
 static void
 actions_plugin_pack_idle_destoyed (gpointer data)
 {
-  XFCE_ACTIONS_PLUGIN (data)->pack_idle_id = 0;
+  EXPIDUS_ACTIONS_PLUGIN (data)->pack_idle_id = 0;
 }
 
 
@@ -1408,7 +1408,7 @@ actions_plugin_menu (GtkWidget     *button,
   ActionType    type;
   ActionType    allowed_types;
 
-  panel_return_if_fail (XFCE_IS_ACTIONS_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_ACTIONS_PLUGIN (plugin));
   panel_return_if_fail (button != NULL);
 
   /* do not popup the menu if the button is being toggled off */
@@ -1442,7 +1442,7 @@ actions_plugin_menu (GtkWidget     *button,
     }
 
   gtk_menu_popup_at_widget (GTK_MENU (plugin->menu), button,
-                            xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
+                            expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)) == GTK_ORIENTATION_VERTICAL
                             ? GDK_GRAVITY_NORTH_EAST : GDK_GRAVITY_SOUTH_WEST,
                             GDK_GRAVITY_NORTH_WEST,
                             NULL);

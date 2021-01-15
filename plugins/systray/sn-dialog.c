@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@xfce.org>
- *  Copyright (c) 2017      Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2012-2013 Andrzej Radecki <andrzejr@expidus.org>
+ *  Copyright (c) 2017      Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,9 +26,9 @@
 #include <string.h>
 #endif
 
-#include <libxfce4ui/libxfce4ui.h>
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1ui/libexpidus1ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "sn-dialog.h"
 #include "sn-dialog-ui.h"
@@ -96,16 +96,16 @@ static const gchar *known_legacy_applications[][3] =
 {
   /* application name, icon-name, understandable name */
   { "audacious2", "audacious", "Audacious" },
-  { "drop-down terminal", "utilities-terminal", "Xfce Dropdown Terminal" },
+  { "drop-down terminal", "utilities-terminal", "Expidus Dropdown Terminal" },
   { "networkmanager applet", "network-workgroup", "Network Manager Applet" },
   { "parole", "parole", "Parole Media Player" },
-  { "task manager", "org.xfce.taskmanager", "Xfce Taskmanager" },
+  { "task manager", "com.expidus.taskmanager", "Expidus Taskmanager" },
   { "thunar", "Thunar", "Thunar Progress Dialog" },
   { "wicd-client.py", "wicd-gtk", "Wicd" },
   { "workrave tray icon", NULL, "Workrave Applet" },
   { "workrave", NULL, "Workrave" },
-  { "xfce terminal", "utilities-terminal", "Xfce Terminal" },
-  { "xfce4-power-manager", "xfpm-ac-adapter", "Xfce Power Manager" },
+  { "expidus terminal", "utilities-terminal", "Expidus Terminal" },
+  { "expidus1-power-manager", "xfpm-ac-adapter", "Expidus Power Manager" },
   { "redshift-gtk", "redshift", "Redshift" },
   { "skypeforlinux", "skypeforlinux", "Skype" },
   { "blueman-applet", "blueman", "Blueman Applet" },
@@ -147,7 +147,7 @@ sn_dialog_add_item (SnDialog   *dialog,
 {
   GtkTreeIter iter;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
   g_return_if_fail (name == NULL || g_utf8_validate (name, -1, NULL));
 
@@ -172,7 +172,7 @@ sn_dialog_add_legacy_item(SnDialog *dialog,
 {
   GtkTreeIter iter;
 
-  g_return_if_fail(XFCE_IS_SN_DIALOG(dialog));
+  g_return_if_fail(EXPIDUS_IS_SN_DIALOG(dialog));
   g_return_if_fail(GTK_IS_LIST_STORE(dialog->legacy_store));
   g_return_if_fail(name == NULL || g_utf8_validate(name, -1, NULL));
 
@@ -198,8 +198,8 @@ sn_dialog_update_names (SnDialog *dialog)
   GdkPixbuf   *pixbuf;
   guint        i;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
-  g_return_if_fail (XFCE_IS_SN_CONFIG (dialog->config));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_CONFIG (dialog->config));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
 
   for (li = sn_config_get_known_items (dialog->config); li != NULL; li = li->next)
@@ -219,7 +219,7 @@ sn_dialog_update_names (SnDialog *dialog)
             }
         }
 
-      pixbuf = xfce_panel_pixbuf_from_source (icon_name, NULL, 22);
+      pixbuf = expidus_panel_pixbuf_from_source (icon_name, NULL, 22);
 
       /* insert item in the store */
       sn_dialog_add_item (dialog, pixbuf, name, title,
@@ -242,8 +242,8 @@ sn_dialog_update_legacy_names(SnDialog *dialog)
   GdkPixbuf *pixbuf;
   guint i;
 
-  g_return_if_fail(XFCE_IS_SN_DIALOG(dialog));
-  g_return_if_fail(XFCE_IS_SN_CONFIG(dialog->config));
+  g_return_if_fail(EXPIDUS_IS_SN_DIALOG(dialog));
+  g_return_if_fail(EXPIDUS_IS_SN_CONFIG(dialog->config));
   g_return_if_fail(GTK_IS_LIST_STORE(dialog->legacy_store));
 
   for (li = sn_config_get_known_legacy_items(dialog->config); li != NULL; li = li->next)
@@ -263,7 +263,7 @@ sn_dialog_update_legacy_names(SnDialog *dialog)
       }
     }
 
-    pixbuf = xfce_panel_pixbuf_from_source(icon_name, NULL, 22);
+    pixbuf = expidus_panel_pixbuf_from_source(icon_name, NULL, 22);
 
     /* insert item in the store */
     sn_dialog_add_legacy_item(dialog, pixbuf, name, title,
@@ -363,8 +363,8 @@ sn_dialog_hidden_toggled (GtkCellRendererToggle *renderer,
   gboolean     hidden;
   gchar       *name;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
-  g_return_if_fail (XFCE_IS_SN_CONFIG (dialog->config));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_CONFIG (dialog->config));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
 
   if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (dialog->store), &iter, path_string))
@@ -395,8 +395,8 @@ sn_dialog_legacy_hidden_toggled (GtkCellRendererToggle *renderer,
   gboolean     hidden;
   gchar       *name;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
-  g_return_if_fail (XFCE_IS_SN_CONFIG (dialog->config));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_CONFIG (dialog->config));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
 
   if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (dialog->legacy_store), &iter, path_string))
@@ -428,8 +428,8 @@ sn_dialog_swap_rows (SnDialog   *dialog,
   gboolean   hidden1, hidden2;
   gchar     *tip1, *tip2;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
-  g_return_if_fail (XFCE_IS_SN_CONFIG (dialog->config));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_CONFIG (dialog->config));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
 
   gtk_tree_model_get (GTK_TREE_MODEL (dialog->store), iter_prev,
@@ -469,8 +469,8 @@ sn_dialog_legacy_swap_rows(SnDialog *dialog,
   gboolean hidden1, hidden2;
   gchar *tip1, *tip2;
 
-  g_return_if_fail(XFCE_IS_SN_DIALOG(dialog));
-  g_return_if_fail(XFCE_IS_SN_CONFIG(dialog->config));
+  g_return_if_fail(EXPIDUS_IS_SN_DIALOG(dialog));
+  g_return_if_fail(EXPIDUS_IS_SN_CONFIG(dialog->config));
   g_return_if_fail(GTK_IS_LIST_STORE(dialog->legacy_store));
 
   gtk_tree_model_get(GTK_TREE_MODEL(dialog->legacy_store), iter_prev,
@@ -519,7 +519,7 @@ sn_dialog_item_up_clicked (GtkWidget *button,
   GtkTreeSelection *selection;
   GtkTreeIter       iter, iter_prev, iter_tmp;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
   g_return_if_fail (GTK_IS_LIST_STORE (dialog->store));
 
   treeview = gtk_builder_get_object (dialog->builder, "items-treeview");
@@ -556,7 +556,7 @@ sn_dialog_legacy_item_up_clicked(GtkWidget *button,
   GtkTreeSelection *selection;
   GtkTreeIter iter, iter_prev, iter_tmp;
 
-  g_return_if_fail(XFCE_IS_SN_DIALOG(dialog));
+  g_return_if_fail(EXPIDUS_IS_SN_DIALOG(dialog));
   g_return_if_fail(GTK_IS_LIST_STORE(dialog->legacy_store));
 
   treeview = gtk_builder_get_object(dialog->builder, "legacy-items-treeview");
@@ -593,7 +593,7 @@ sn_dialog_item_down_clicked (GtkWidget *button,
   GtkTreeSelection *selection;
   GtkTreeIter       iter, iter_next;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
 
   treeview = gtk_builder_get_object (dialog->builder, "items-treeview");
   g_return_if_fail (GTK_IS_TREE_VIEW (treeview));
@@ -620,7 +620,7 @@ sn_dialog_legacy_item_down_clicked(GtkWidget *button,
   GtkTreeSelection *selection;
   GtkTreeIter iter, iter_next;
 
-  g_return_if_fail(XFCE_IS_SN_DIALOG(dialog));
+  g_return_if_fail(EXPIDUS_IS_SN_DIALOG(dialog));
 
   treeview = gtk_builder_get_object(dialog->builder, "legacy-items-treeview");
   g_return_if_fail(GTK_IS_TREE_VIEW(treeview));
@@ -643,9 +643,9 @@ static void
 sn_dialog_clear_clicked (GtkWidget *button,
                          SnDialog *dialog)
 {
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
 
-  if (xfce_dialog_confirm (GTK_WINDOW (gtk_widget_get_toplevel (button)),
+  if (expidus_dialog_confirm (GTK_WINDOW (gtk_widget_get_toplevel (button)),
                            "edit-clear", _("Clear"), NULL,
                            _("Are you sure you want to clear the list of "
                              "known items?")))
@@ -682,7 +682,7 @@ reveal_icon_size (GtkWidget  *widget,
   gboolean active;
   gint     icon_size;
 
-  g_return_if_fail (XFCE_IS_SN_DIALOG (dialog));
+  g_return_if_fail (EXPIDUS_IS_SN_DIALOG (dialog));
 
   active = gtk_switch_get_active (GTK_SWITCH (widget));
 
@@ -704,7 +704,7 @@ sn_dialog_build (SnDialog *dialog)
   GError           *error = NULL;
   GtkTreeSelection *selection;
 
-  if (xfce_titled_dialog_get_type () == 0)
+  if (expidus_titled_dialog_get_type () == 0)
     return FALSE;
 
   dialog->builder = gtk_builder_new ();
@@ -714,7 +714,7 @@ sn_dialog_build (SnDialog *dialog)
                                    sn_dialog_ui_length, &error))
     {
       object = gtk_builder_get_object (dialog->builder, "dialog");
-      g_return_val_if_fail (XFCE_IS_TITLED_DIALOG (object), FALSE);
+      g_return_val_if_fail (EXPIDUS_IS_TITLED_DIALOG (object), FALSE);
       dialog->dialog = GTK_WIDGET (object);
 
       object = gtk_builder_get_object (dialog->builder, "close-button");
@@ -867,9 +867,9 @@ sn_dialog_new (SnConfig  *config,
 {
   SnDialog *dialog;
 
-  g_return_val_if_fail (XFCE_IS_SN_CONFIG (config), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_CONFIG (config), NULL);
 
-  dialog = g_object_new (XFCE_TYPE_SN_DIALOG, NULL);
+  dialog = g_object_new (EXPIDUS_TYPE_SN_DIALOG, NULL);
   dialog->config = config;
 
   if (sn_dialog_build (dialog))
@@ -890,7 +890,7 @@ sn_dialog_new (SnConfig  *config,
 static void
 sn_dialog_finalize (GObject *object)
 {
-  SnDialog *dialog = XFCE_SN_DIALOG (object);
+  SnDialog *dialog = EXPIDUS_SN_DIALOG (object);
 
   if (dialog->dialog != NULL)
     gtk_widget_destroy (dialog->dialog);

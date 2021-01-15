@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include <string.h>
 #endif
 
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include "sn-icon-box.h"
 #include "sn-util.h"
@@ -127,7 +127,7 @@ sn_icon_box_forall (GtkContainer *container,
                     GtkCallback   callback,
                     gpointer      callback_data)
 {
-  SnIconBox *box = XFCE_SN_ICON_BOX (container);
+  SnIconBox *box = EXPIDUS_SN_ICON_BOX (container);
 
   /* z-order depends on forall order */
 
@@ -146,9 +146,9 @@ sn_icon_box_remove (GtkContainer *container,
 {
   SnIconBox *box;
 
-  g_return_if_fail (XFCE_IS_SN_ICON_BOX (container));
+  g_return_if_fail (EXPIDUS_IS_SN_ICON_BOX (container));
 
-  box = XFCE_SN_ICON_BOX (container);
+  box = EXPIDUS_SN_ICON_BOX (container);
 
   if (child == box->icon)
     {
@@ -170,10 +170,10 @@ GtkWidget *
 sn_icon_box_new (SnItem   *item,
                  SnConfig *config)
 {
-  SnIconBox   *box = g_object_new (XFCE_TYPE_SN_ICON_BOX, NULL);
+  SnIconBox   *box = g_object_new (EXPIDUS_TYPE_SN_ICON_BOX, NULL);
   GtkSettings *settings;
 
-  g_return_val_if_fail (XFCE_IS_SN_CONFIG (config), NULL);
+  g_return_val_if_fail (EXPIDUS_IS_SN_CONFIG (config), NULL);
 
   box->item = item;
   box->config = config;
@@ -391,7 +391,7 @@ sn_icon_box_icon_changed (GtkWidget *widget)
   gint          icon_size;
   gboolean      symbolic_icons;
 
-  box = XFCE_SN_ICON_BOX (widget);
+  box = EXPIDUS_SN_ICON_BOX (widget);
   icon_theme = gtk_icon_theme_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (widget)));
 
   sn_config_get_dimensions (box->config, &icon_size, NULL, NULL, NULL);
@@ -425,7 +425,7 @@ sn_icon_box_get_preferred_size (GtkWidget *widget,
                                 gint      *natural_size,
                                 gboolean   horizontal)
 {
-  SnIconBox      *box = XFCE_SN_ICON_BOX (widget);
+  SnIconBox      *box = EXPIDUS_SN_ICON_BOX (widget);
   gint            icon_size;
   GtkRequisition  child_req;
   GdkPixbuf      *pixbuf1, *pixbuf2;
@@ -490,7 +490,7 @@ static void
 sn_icon_box_size_allocate (GtkWidget     *widget,
                            GtkAllocation *allocation)
 {
-  SnIconBox *box = XFCE_SN_ICON_BOX (widget);
+  SnIconBox *box = EXPIDUS_SN_ICON_BOX (widget);
 
   gtk_widget_set_allocation (widget, allocation);
 

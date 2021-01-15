@@ -1,0 +1,156 @@
+/*-
+ * Copyright (c) 2009 Nick Schermer <nick@expidus.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
+/* This file lists all exported symbols. It is used to generate
+ * the libexpidus1panel-alias.h/libexpidus1panel-aliasdef.c files used
+ * to avoid PLT entries for internal uses of exported functions (see
+ * make-libexpidus1panel-alias.pl).
+ *
+ * Every symbol must be included in the right
+ * #ifdef IN_HEADER(sym) #endif and
+ * #ifdef IN_SOURCE(sym) #endif sections.
+ */
+
+#ifdef ALL_FILES
+#define IN_HEADER(x) 1
+#define IN_SOURCE(x) 1
+#endif
+
+/* libexpidus1panel-condif.h */
+#if IN_HEADER(__LIBEXPIDUS1PANEL_CONFIG_H__)
+#if IN_SOURCE(__LIBEXPIDUS1PANEL_CONFIG_C__)
+libexpidus1panel_check_version
+libexpidus1panel_major_version
+libexpidus1panel_micro_version
+libexpidus1panel_minor_version
+#endif
+#endif
+
+/* libexpidus1panel-enum-types.h */
+#if IN_HEADER(__LIBEXPIDUS1PANEL_ENUM_TYPES_H__)
+#if IN_SOURCE(__LIBEXPIDUS1PANEL_ENUM_TYPES_C__)
+expidus_screen_position_get_type G_GNUC_CONST
+expidus_panel_plugin_mode_get_type G_GNUC_CONST
+#endif
+#endif
+
+/* expidus-arrow-button.h */
+#if IN_HEADER(__EXPIDUS_ARROW_BUTTON_H__)
+#if IN_SOURCE(__EXPIDUS_ARROW_BUTTON_C__)
+expidus_arrow_button_get_type G_GNUC_CONST
+expidus_arrow_button_new G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
+expidus_arrow_button_get_arrow_type
+expidus_arrow_button_set_arrow_type
+expidus_arrow_button_get_blinking
+expidus_arrow_button_set_blinking
+#endif
+#endif
+
+/* expidus-panel-convenience.h */
+#if IN_HEADER(__EXPIDUS_PANEL_CONVENIENCE_H__)
+#if IN_SOURCE(__EXPIDUS_PANEL_CONVENIENCE_C__)
+expidus_panel_create_button G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
+expidus_panel_create_toggle_button G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
+expidus_panel_get_channel_name
+expidus_panel_pixbuf_from_source
+expidus_panel_pixbuf_from_source_at_size
+#endif
+#endif
+
+/* expidus-panel-image.h */
+#if IN_HEADER(__EXPIDUS_PANEL_IMAGE_H__)
+#if IN_SOURCE(__EXPIDUS_PANEL_IMAGE_C__)
+expidus_panel_image_get_type G_GNUC_CONST
+expidus_panel_image_new G_GNUC_MALLOC
+expidus_panel_image_new_from_pixbuf G_GNUC_MALLOC
+expidus_panel_image_new_from_source G_GNUC_MALLOC
+expidus_panel_image_set_from_pixbuf
+expidus_panel_image_set_from_source
+expidus_panel_image_set_size
+expidus_panel_image_get_size
+expidus_panel_image_clear
+#endif
+#endif
+
+/* expidus-panel-plugin.h */
+#if IN_HEADER(__EXPIDUS_PANEL_PLUGIN_H__)
+#if IN_SOURCE(__EXPIDUS_PANEL_PLUGIN_C__)
+expidus_panel_plugin_get_type G_GNUC_CONST
+expidus_panel_plugin_get_name G_GNUC_PURE
+expidus_panel_plugin_get_display_name G_GNUC_PURE
+expidus_panel_plugin_get_comment G_GNUC_PURE
+expidus_panel_plugin_get_unique_id G_GNUC_PURE
+expidus_panel_plugin_get_property_base G_GNUC_PURE
+expidus_panel_plugin_get_arguments G_GNUC_PURE
+expidus_panel_plugin_get_size G_GNUC_PURE
+expidus_panel_plugin_get_small G_GNUC_PURE
+expidus_panel_plugin_get_icon_size G_GNUC_PURE
+expidus_panel_plugin_get_expand G_GNUC_PURE
+expidus_panel_plugin_set_expand
+expidus_panel_plugin_get_shrink G_GNUC_PURE
+expidus_panel_plugin_set_shrink
+expidus_panel_plugin_set_small
+expidus_panel_plugin_get_locked
+expidus_panel_plugin_get_orientation G_GNUC_PURE
+expidus_panel_plugin_get_mode G_GNUC_PURE
+expidus_panel_plugin_get_nrows G_GNUC_PURE
+expidus_panel_plugin_get_screen_position G_GNUC_PURE
+expidus_panel_plugin_take_window
+expidus_panel_plugin_add_action_widget
+expidus_panel_plugin_menu_insert_item
+expidus_panel_plugin_menu_show_configure
+expidus_panel_plugin_menu_show_about
+expidus_panel_plugin_menu_destroy
+expidus_panel_plugin_block_menu
+expidus_panel_plugin_unblock_menu
+expidus_panel_plugin_register_menu
+expidus_panel_plugin_arrow_type
+expidus_panel_plugin_remove
+expidus_panel_plugin_position_widget
+expidus_panel_plugin_position_menu
+expidus_panel_plugin_focus_widget
+expidus_panel_plugin_block_autohide
+expidus_panel_plugin_lookup_rc_file G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
+expidus_panel_plugin_save_location G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
+#endif
+#endif
+
+/* expidus-panel-plugin-provider.h */
+#if IN_HEADER(__EXPIDUS_PANEL_PLUGIN_PROVIDER_H__)
+#if IN_SOURCE(__EXPIDUS_PANEL_PLUGIN_PROVIDER_C__)
+expidus_panel_plugin_provider_ask_remove
+expidus_panel_plugin_provider_get_type G_GNUC_CONST
+expidus_panel_plugin_provider_get_name
+expidus_panel_plugin_provider_get_unique_id
+expidus_panel_plugin_provider_set_size
+expidus_panel_plugin_provider_set_icon_size
+expidus_panel_plugin_provider_set_dark_mode
+expidus_panel_plugin_provider_set_mode
+expidus_panel_plugin_provider_set_nrows
+expidus_panel_plugin_provider_set_screen_position
+expidus_panel_plugin_provider_save
+expidus_panel_plugin_provider_emit_signal
+expidus_panel_plugin_provider_get_show_configure
+expidus_panel_plugin_provider_show_configure
+expidus_panel_plugin_provider_get_show_about
+expidus_panel_plugin_provider_show_about
+expidus_panel_plugin_provider_removed
+expidus_panel_plugin_provider_remote_event
+expidus_panel_plugin_provider_set_locked
+#endif
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -27,16 +27,16 @@ typedef struct _SystrayBox      SystrayBox;
 #define SIZE_MAX_MAX     (64)
 #define SIZE_MAX_DEFAULT (22)
 
-#define XFCE_TYPE_SYSTRAY_BOX            (systray_box_get_type ())
-#define XFCE_SYSTRAY_BOX(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), XFCE_TYPE_SYSTRAY_BOX, SystrayBox))
-#define XFCE_SYSTRAY_BOX_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), XFCE_TYPE_SYSTRAY_BOX, SystrayBoxClass))
-#define XFCE_IS_SYSTRAY_BOX(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), XFCE_TYPE_SYSTRAY_BOX))
-#define XFCE_IS_SYSTRAY_BOX_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), XFCE_TYPE_SYSTRAY_BOX))
-#define XFCE_SYSTRAY_BOX_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), XFCE_TYPE_SYSTRAY_BOX, SystrayBoxClass))
+#define EXPIDUS_TYPE_SYSTRAY_BOX            (systray_box_get_type ())
+#define EXPIDUS_SYSTRAY_BOX(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), EXPIDUS_TYPE_SYSTRAY_BOX, SystrayBox))
+#define EXPIDUS_SYSTRAY_BOX_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), EXPIDUS_TYPE_SYSTRAY_BOX, SystrayBoxClass))
+#define EXPIDUS_IS_SYSTRAY_BOX(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), EXPIDUS_TYPE_SYSTRAY_BOX))
+#define EXPIDUS_IS_SYSTRAY_BOX_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), EXPIDUS_TYPE_SYSTRAY_BOX))
+#define EXPIDUS_SYSTRAY_BOX_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), EXPIDUS_TYPE_SYSTRAY_BOX, SystrayBoxClass))
 
 GType      systray_box_get_type        (void) G_GNUC_CONST;
 
-void       systray_box_register_type   (XfcePanelTypeModule *module);
+void       systray_box_register_type   (ExpidusPanelTypeModule *module);
 
 GtkWidget *systray_box_new             (void) G_GNUC_MALLOC;
 

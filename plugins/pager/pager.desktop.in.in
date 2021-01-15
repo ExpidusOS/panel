@@ -1,8 +1,8 @@
-[Xfce Panel]
-Type=X-XFCE-PanelPlugin
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
 _Name=Workspace Switcher
 _Comment=Switch between virtual desktops
-Icon=org.xfce.panel.pager
-X-XFCE-Module=pager
-X-XFCE-Internal=TRUE
-X-XFCE-API=@LIBXFCE4PANEL_VERSION_API@
+Icon=com.expidus.panel.pager
+X-EXPIDUS-Module=pager
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

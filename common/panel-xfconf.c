@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,15 +21,15 @@
 #endif
 
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
-#include <libxfce4panel/xfce-panel-macros.h>
+#include <common/panel-esconf.h>
+#include <libexpidus1panel/expidus-panel-macros.h>
 
 
 
 static void
-panel_properties_store_value (XfconfChannel *channel,
-                              const gchar   *xfconf_property,
-                              GType          xfconf_property_type,
+panel_properties_store_value (EsconfChannel *channel,
+                              const gchar   *esconf_property,
+                              GType          esconf_property_type,
                               GObject       *object,
                               const gchar   *object_property)
 {
@@ -40,35 +40,35 @@ panel_properties_store_value (XfconfChannel *channel,
 #endif
 
   panel_return_if_fail (G_IS_OBJECT (object));
-  panel_return_if_fail (XFCONF_IS_CHANNEL (channel));
+  panel_return_if_fail (ESCONF_IS_CHANNEL (channel));
 
 #ifndef NDEBUG
   /* check if the types match */
   pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (object), object_property);
   panel_assert (pspec != NULL);
-  if (G_PARAM_SPEC_VALUE_TYPE (pspec) != xfconf_property_type)
+  if (G_PARAM_SPEC_VALUE_TYPE (pspec) != esconf_property_type)
     {
-      g_critical ("Object and Xfconf properties don't match! %s::%s. %s != %s",
-                  G_OBJECT_TYPE_NAME (object), xfconf_property,
-                  g_type_name (xfconf_property_type),
+      g_critical ("Object and Esconf properties don't match! %s::%s. %s != %s",
+                  G_OBJECT_TYPE_NAME (object), esconf_property,
+                  g_type_name (esconf_property_type),
                   g_type_name (G_PARAM_SPEC_VALUE_TYPE (pspec)));
     }
 #endif
 
-  /* write the property to the xfconf channel */
-  g_value_init (&value, xfconf_property_type);
+  /* write the property to the esconf channel */
+  g_value_init (&value, esconf_property_type);
   g_object_get_property (G_OBJECT (object), object_property, &value);
 
-  if (G_LIKELY (xfconf_property_type != GDK_TYPE_RGBA))
+  if (G_LIKELY (esconf_property_type != GDK_TYPE_RGBA))
     {
-        xfconf_channel_set_property (channel, xfconf_property, &value);
+        esconf_channel_set_property (channel, esconf_property, &value);
     }
   else
     {
-      /* work around xfconf's lack of storing colors (bug #7117) and
-       * do the same as xfconf_g_property_bind_gdkcolor() does */
+      /* work around esconf's lack of storing colors (bug #7117) and
+       * do the same as esconf_g_property_bind_gdkcolor() does */
       rgba = g_value_get_boxed (&value);
-      xfconf_channel_set_array (channel, xfconf_property,
+      esconf_channel_set_array (channel, esconf_property,
                                 G_TYPE_DOUBLE, &rgba->red,
                                 G_TYPE_DOUBLE, &rgba->green,
                                 G_TYPE_DOUBLE, &rgba->blue,
@@ -81,23 +81,23 @@ panel_properties_store_value (XfconfChannel *channel,
 
 
 
-XfconfChannel *
+EsconfChannel *
 panel_properties_get_channel (GObject *object_for_weak_ref)
 {
   GError        *error = NULL;
-  XfconfChannel *channel;
+  EsconfChannel *channel;
 
   panel_return_val_if_fail (G_IS_OBJECT (object_for_weak_ref), NULL);
 
-  if (!xfconf_init (&error))
+  if (!esconf_init (&error))
     {
-      g_critical ("Failed to initialize Xfconf: %s", error->message);
+      g_critical ("Failed to initialize Esconf: %s", error->message);
       g_error_free (error);
       return NULL;
     }
 
-  channel = xfconf_channel_get (XFCE_PANEL_CHANNEL_NAME);
-  g_object_weak_ref (object_for_weak_ref, (GWeakNotify) xfconf_shutdown, NULL);
+  channel = esconf_channel_get (EXPIDUS_PANEL_CHANNEL_NAME);
+  g_object_weak_ref (object_for_weak_ref, (GWeakNotify) esconf_shutdown, NULL);
 
   return channel;
 }
@@ -105,7 +105,7 @@ panel_properties_get_channel (GObject *object_for_weak_ref)
 
 
 void
-panel_properties_bind (XfconfChannel       *channel,
+panel_properties_bind (EsconfChannel       *channel,
                        GObject             *object,
                        const gchar         *property_base,
                        const PanelProperty *properties,
@@ -114,14 +114,14 @@ panel_properties_bind (XfconfChannel       *channel,
   const PanelProperty *prop;
   gchar               *property;
 
-  panel_return_if_fail (channel == NULL || XFCONF_IS_CHANNEL (channel));
+  panel_return_if_fail (channel == NULL || ESCONF_IS_CHANNEL (channel));
   panel_return_if_fail (G_IS_OBJECT (object));
   panel_return_if_fail (property_base != NULL && *property_base == '/');
   panel_return_if_fail (properties != NULL);
 
   if (G_LIKELY (channel == NULL))
     channel = panel_properties_get_channel (object);
-  panel_return_if_fail (XFCONF_IS_CHANNEL (channel));
+  panel_return_if_fail (ESCONF_IS_CHANNEL (channel));
 
   /* walk the properties array */
   for (prop = properties; prop->property != NULL; prop++)
@@ -132,9 +132,9 @@ panel_properties_bind (XfconfChannel       *channel,
         panel_properties_store_value (channel, property, prop->type, object, prop->property);
 
       if (G_LIKELY (prop->type != GDK_TYPE_RGBA))
-        xfconf_g_property_bind (channel, property, prop->type, object, prop->property);
+        esconf_g_property_bind (channel, property, prop->type, object, prop->property);
       else
-        xfconf_g_property_bind_gdkrgba (channel, property, object, prop->property);
+        esconf_g_property_bind_gdkrgba (channel, property, object, prop->property);
 
       g_free (property);
     }
@@ -145,5 +145,5 @@ panel_properties_bind (XfconfChannel       *channel,
 void
 panel_properties_unbind (GObject *object)
 {
-  xfconf_g_property_unbind_all (object);
+  esconf_g_property_unbind_all (object);
 }

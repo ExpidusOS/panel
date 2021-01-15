@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@xfce.org>
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@expidus.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -21,7 +21,7 @@
 #include <config.h>
 #endif
 
-#include <libxfce4util/libxfce4util.h>
+#include <libexpidus1util/libexpidus1util.h>
 #include <common/panel-private.h>
 #include <common/panel-utils.h>
 
@@ -35,9 +35,9 @@
 
 static void     show_desktop_plugin_screen_changed          (GtkWidget              *widget,
                                                              GdkScreen              *previous_screen);
-static void     show_desktop_plugin_construct               (XfcePanelPlugin        *panel_plugin);
-static void     show_desktop_plugin_free_data               (XfcePanelPlugin        *panel_plugin);
-static gboolean show_desktop_plugin_size_changed            (XfcePanelPlugin        *panel_plugin,
+static void     show_desktop_plugin_construct               (ExpidusPanelPlugin        *panel_plugin);
+static void     show_desktop_plugin_free_data               (ExpidusPanelPlugin        *panel_plugin);
+static gboolean show_desktop_plugin_size_changed            (ExpidusPanelPlugin        *panel_plugin,
                                                              gint                    size);
 static void     show_desktop_plugin_toggled                 (GtkToggleButton        *button,
                                                              ShowDesktopPlugin      *plugin);
@@ -61,12 +61,12 @@ static gboolean show_desktop_plugin_drag_motion             (GtkWidget          
 
 struct _ShowDesktopPluginClass
 {
-  XfcePanelPluginClass __parent__;
+  ExpidusPanelPluginClass __parent__;
 };
 
 struct _ShowDesktopPlugin
 {
-  XfcePanelPlugin __parent__;
+  ExpidusPanelPlugin __parent__;
 
   /* the toggle button */
   GtkWidget  *button;
@@ -82,16 +82,16 @@ struct _ShowDesktopPlugin
 
 
 /* define the plugin */
-XFCE_PANEL_DEFINE_PLUGIN (ShowDesktopPlugin, show_desktop_plugin)
+EXPIDUS_PANEL_DEFINE_PLUGIN (ShowDesktopPlugin, show_desktop_plugin)
 
 
 
 static void
 show_desktop_plugin_class_init (ShowDesktopPluginClass *klass)
 {
-  XfcePanelPluginClass *plugin_class;
+  ExpidusPanelPluginClass *plugin_class;
 
-  plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   plugin_class->construct = show_desktop_plugin_construct;
   plugin_class->free_data = show_desktop_plugin_free_data;
   plugin_class->size_changed = show_desktop_plugin_size_changed;
@@ -111,7 +111,7 @@ show_desktop_plugin_init (ShowDesktopPlugin *plugin)
       G_CALLBACK (show_desktop_plugin_screen_changed), NULL);
 
   /* create the toggle button */
-  button = plugin->button = xfce_panel_create_toggle_button ();
+  button = plugin->button = expidus_panel_create_toggle_button ();
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
   gtk_container_add (GTK_CONTAINER (plugin), button);
   gtk_widget_set_name (button, "showdesktop-button");
@@ -119,7 +119,7 @@ show_desktop_plugin_init (ShowDesktopPlugin *plugin)
       G_CALLBACK (show_desktop_plugin_toggled), plugin);
   g_signal_connect (G_OBJECT (button), "button-release-event",
       G_CALLBACK (show_desktop_plugin_button_release_event), plugin);
-  xfce_panel_plugin_add_action_widget (XFCE_PANEL_PLUGIN (plugin), button);
+  expidus_panel_plugin_add_action_widget (EXPIDUS_PANEL_PLUGIN (plugin), button);
   gtk_widget_show (button);
 
   /* allow toggle the button when drag something.*/
@@ -129,7 +129,7 @@ show_desktop_plugin_init (ShowDesktopPlugin *plugin)
   g_signal_connect (G_OBJECT (plugin->button), "drag_leave",
       G_CALLBACK (show_desktop_plugin_drag_leave), plugin);
 
-  plugin->icon = gtk_image_new_from_icon_name ("org.xfce.panel.showdesktop", GTK_ICON_SIZE_MENU);
+  plugin->icon = gtk_image_new_from_icon_name ("com.expidus.panel.showdesktop", GTK_ICON_SIZE_MENU);
   gtk_container_add (GTK_CONTAINER (button), plugin->icon);
   gtk_widget_show (plugin->icon);
 }
@@ -137,9 +137,9 @@ show_desktop_plugin_init (ShowDesktopPlugin *plugin)
 
 
 static void
-show_desktop_plugin_construct (XfcePanelPlugin *panel_plugin)
+show_desktop_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  xfce_panel_plugin_set_small (panel_plugin, TRUE);
+  expidus_panel_plugin_set_small (panel_plugin, TRUE);
 }
 
 
@@ -148,11 +148,11 @@ static void
 show_desktop_plugin_screen_changed (GtkWidget *widget,
                                     GdkScreen *previous_screen)
 {
-  ShowDesktopPlugin *plugin = XFCE_SHOW_DESKTOP_PLUGIN (widget);
+  ShowDesktopPlugin *plugin = EXPIDUS_SHOW_DESKTOP_PLUGIN (widget);
   WnckScreen        *wnck_screen;
   GdkScreen         *screen;
 
-  panel_return_if_fail (XFCE_IS_SHOW_DESKTOP_PLUGIN (widget));
+  panel_return_if_fail (EXPIDUS_IS_SHOW_DESKTOP_PLUGIN (widget));
 
   /* get the new wnck screen */
   screen = gtk_widget_get_screen (widget);
@@ -186,9 +186,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 
 
 static void
-show_desktop_plugin_free_data (XfcePanelPlugin *panel_plugin)
+show_desktop_plugin_free_data (ExpidusPanelPlugin *panel_plugin)
 {
-  ShowDesktopPlugin *plugin = XFCE_SHOW_DESKTOP_PLUGIN (panel_plugin);
+  ShowDesktopPlugin *plugin = EXPIDUS_SHOW_DESKTOP_PLUGIN (panel_plugin);
 
   /* disconnect screen changed signal */
   g_signal_handlers_disconnect_by_func (G_OBJECT (plugin),
@@ -203,18 +203,18 @@ show_desktop_plugin_free_data (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-show_desktop_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+show_desktop_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                                   gint             size)
 {
-  ShowDesktopPlugin *plugin = XFCE_SHOW_DESKTOP_PLUGIN (panel_plugin);
+  ShowDesktopPlugin *plugin = EXPIDUS_SHOW_DESKTOP_PLUGIN (panel_plugin);
   gint  icon_size;
 
-  panel_return_val_if_fail (XFCE_IS_SHOW_DESKTOP_PLUGIN (panel_plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SHOW_DESKTOP_PLUGIN (panel_plugin), FALSE);
 
   /* keep the button squared */
-  size /= xfce_panel_plugin_get_nrows (panel_plugin);
+  size /= expidus_panel_plugin_get_nrows (panel_plugin);
   gtk_widget_set_size_request (GTK_WIDGET (panel_plugin), size, size);
-  icon_size = xfce_panel_plugin_get_icon_size (panel_plugin);
+  icon_size = expidus_panel_plugin_get_icon_size (panel_plugin);
   gtk_image_set_pixel_size (GTK_IMAGE (plugin->icon), icon_size);
 
   return TRUE;
@@ -229,7 +229,7 @@ show_desktop_plugin_toggled (GtkToggleButton   *button,
   gboolean     active;
   const gchar *text;
 
-  panel_return_if_fail (XFCE_IS_SHOW_DESKTOP_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SHOW_DESKTOP_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_TOGGLE_BUTTON (button));
   panel_return_if_fail (WNCK_IS_SCREEN (plugin->wnck_screen));
 
@@ -258,7 +258,7 @@ show_desktop_plugin_button_release_event (GtkToggleButton   *button,
   GList         *windows, *li;
   WnckWindow    *window;
 
-  panel_return_val_if_fail (XFCE_IS_SHOW_DESKTOP_PLUGIN (plugin), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SHOW_DESKTOP_PLUGIN (plugin), FALSE);
   panel_return_val_if_fail (WNCK_IS_SCREEN (plugin->wnck_screen), FALSE);
 
   if (event->button == 2)
@@ -290,7 +290,7 @@ static void
 show_desktop_plugin_showing_desktop_changed (WnckScreen        *wnck_screen,
                                              ShowDesktopPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_SHOW_DESKTOP_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SHOW_DESKTOP_PLUGIN (plugin));
   panel_return_if_fail (WNCK_IS_SCREEN (wnck_screen));
   panel_return_if_fail (plugin->wnck_screen == wnck_screen);
 

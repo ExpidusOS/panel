@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,8 +20,8 @@
 #define __PANEL_DBUS_H__
 
 /* panel dbus names */
-#define PANEL_DBUS_NAME              "org.xfce.Panel"
-#define PANEL_DBUS_PATH              "/org/xfce/Panel"
+#define PANEL_DBUS_NAME              "com.expidus.Panel"
+#define PANEL_DBUS_PATH              "/com/expidus/Panel"
 #define PANEL_DBUS_INTERFACE         PANEL_DBUS_NAME
 #define PANEL_DBUS_WRAPPER_PATH      PANEL_DBUS_PATH "/Wrapper/%d"
 #define PANEL_DBUS_WRAPPER_INTERFACE PANEL_DBUS_INTERFACE ".Wrapper"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2008-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,14 +24,14 @@
 #include <stdlib.h>
 #endif
 
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
 #include <common/panel-private.h>
 #include <common/panel-utils.h>
 
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 
 #include <panel/panel-window.h>
 #include <panel/panel-application.h>
@@ -43,7 +43,7 @@
 #include <panel/panel-preferences-dialog-ui.h>
 #include <panel/panel-plugin-external.h>
 
-#define PREFERENCES_HELP_URL "http://www.xfce.org"
+#define PREFERENCES_HELP_URL "http://www.expidus.org"
 
 
 
@@ -82,7 +82,7 @@ static void                     panel_preferences_dialog_compositing_clicked    
                                                                                  gpointer                user_data);
 static void                     panel_preferences_dialog_panel_switch           (GtkWidget              *widget,
                                                                                  PanelPreferencesDialog *dialog);
-static XfcePanelPluginProvider *panel_preferences_dialog_item_get_selected      (PanelPreferencesDialog *dialog,
+static ExpidusPanelPluginProvider *panel_preferences_dialog_item_get_selected      (PanelPreferencesDialog *dialog,
                                                                                  GtkTreeIter            *return_iter);
 static void                     panel_preferences_dialog_item_store_rebuild     (GtkWidget              *itembar,
                                                                                  PanelPreferencesDialog *dialog);
@@ -217,10 +217,10 @@ panel_preferences_dialog_init (PanelPreferencesDialog *dialog)
   connect_signal ("panel-remove", "clicked", panel_preferences_dialog_panel_remove);
   connect_signal ("panel-combobox", "changed", panel_preferences_dialog_panel_combobox_changed);
 
-  /* check if xfce4-panel-profiles or panel-switch are installed and if either is show the button */
+  /* check if expidus1-panel-profiles or panel-switch are installed and if either is show the button */
   object = gtk_builder_get_object (GTK_BUILDER (dialog), "panel-profiles");
   path_old = g_find_program_in_path ("xfpanel-switch");
-  path_new = g_find_program_in_path ("xfce4-panel-profiles");
+  path_new = g_find_program_in_path ("expidus1-panel-profiles");
   if (path_new == NULL && path_old == NULL)
     gtk_widget_hide (GTK_WIDGET (object));
   g_free (path_old);
@@ -958,7 +958,7 @@ panel_preferences_dialog_panel_remove (GtkWidget              *widget,
     return;
 
   toplevel = gtk_widget_get_toplevel (widget);
-  if (xfce_dialog_confirm (GTK_WINDOW (toplevel), "list-remove", _("_Remove"),
+  if (expidus_dialog_confirm (GTK_WINDOW (toplevel), "list-remove", _("_Remove"),
           _("The panel and plugin configurations will be permanently removed"),
           _("Are you sure you want to remove panel %d?"),
           panel_window_get_id (dialog->active)))
@@ -1071,7 +1071,7 @@ panel_preferences_dialog_panel_switch (GtkWidget *widget, PanelPreferencesDialog
   gchar     *path_new;
 
   path_old = g_find_program_in_path ("xfpanel-switch");
-  path_new = g_find_program_in_path ("xfce4-panel-profiles");
+  path_new = g_find_program_in_path ("expidus1-panel-profiles");
   if (path_old == NULL && path_new == NULL)
     return;
 
@@ -1091,12 +1091,12 @@ panel_preferences_dialog_panel_switch (GtkWidget *widget, PanelPreferencesDialog
 
 
 
-static XfcePanelPluginProvider *
+static ExpidusPanelPluginProvider *
 panel_preferences_dialog_item_get_selected (PanelPreferencesDialog *dialog,
                                             GtkTreeIter            *return_iter)
 {
   GObject                 *treeview;
-  XfcePanelPluginProvider *provider = NULL;
+  ExpidusPanelPluginProvider *provider = NULL;
   GtkTreeModel            *model;
   GtkTreeIter              iter;
   GtkTreeSelection        *selection;
@@ -1113,7 +1113,7 @@ panel_preferences_dialog_item_get_selected (PanelPreferencesDialog *dialog,
     {
       /* get the selected provider */
       gtk_tree_model_get (model, &iter, ITEM_COLUMN_PROVIDER, &provider, -1);
-      panel_return_val_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider), NULL);
+      panel_return_val_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider), NULL);
 
       if (return_iter)
         *return_iter = iter;
@@ -1132,7 +1132,7 @@ panel_preferences_dialog_item_store_rebuild (GtkWidget              *itembar,
   guint                    i;
   PanelModule             *module;
   gchar                   *tooltip, *display_name;
-  XfcePanelPluginProvider *selected_provider;
+  ExpidusPanelPluginProvider *selected_provider;
   GtkTreeIter              iter;
   GtkTreePath             *path;
   GObject                 *treeview;
@@ -1167,8 +1167,8 @@ panel_preferences_dialog_item_store_rebuild (GtkWidget              *itembar,
            * for external plugins */
           tooltip = g_strdup_printf (_("Internal name: %s-%d\n"
                                        "PID: %d"),
-                                     xfce_panel_plugin_provider_get_name (li->data),
-                                     xfce_panel_plugin_provider_get_unique_id (li->data),
+                                     expidus_panel_plugin_provider_get_name (li->data),
+                                     expidus_panel_plugin_provider_get_unique_id (li->data),
                                      panel_plugin_external_get_pid (PANEL_PLUGIN_EXTERNAL (li->data)));
         }
       else
@@ -1178,8 +1178,8 @@ panel_preferences_dialog_item_store_rebuild (GtkWidget              *itembar,
           /* I18N: tooltip in preferences dialog when hovering an item in the list
            * for internal plugins */
           tooltip = g_strdup_printf (_("Internal name: %s-%d"),
-                                     xfce_panel_plugin_provider_get_name (li->data),
-                                     xfce_panel_plugin_provider_get_unique_id (li->data));
+                                     expidus_panel_plugin_provider_get_name (li->data),
+                                     expidus_panel_plugin_provider_get_unique_id (li->data));
         }
 
       gtk_list_store_insert_with_values (dialog->store, &iter, i,
@@ -1220,7 +1220,7 @@ panel_preferences_dialog_item_move (GtkWidget              *button,
   GObject                 *treeview, *object;
   GtkTreeSelection        *selection;
   GtkTreeIter              iter_a, iter_b;
-  XfcePanelPluginProvider *provider;
+  ExpidusPanelPluginProvider *provider;
   GtkWidget               *itembar;
   gint                     position;
   gint                     direction;
@@ -1303,7 +1303,7 @@ static void
 panel_preferences_dialog_item_remove (GtkWidget              *button,
                                       PanelPreferencesDialog *dialog)
 {
-  XfcePanelPluginProvider *provider;
+  ExpidusPanelPluginProvider *provider;
   GtkWidget               *widget, *toplevel;
   PanelModule             *module;
 
@@ -1314,7 +1314,7 @@ panel_preferences_dialog_item_remove (GtkWidget              *button,
     {
       module = panel_module_get_from_plugin_provider (provider);
 
-      /* create question dialog (same code is also in xfce-panel-plugin.c) */
+      /* create question dialog (same code is also in expidus-panel-plugin.c) */
       toplevel = gtk_widget_get_toplevel (button);
       widget = gtk_message_dialog_new (GTK_WINDOW (toplevel), GTK_DIALOG_MODAL,
                                        GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
@@ -1331,7 +1331,7 @@ panel_preferences_dialog_item_remove (GtkWidget              *button,
       if (gtk_dialog_run (GTK_DIALOG (widget)) == GTK_RESPONSE_YES)
         {
           gtk_widget_hide (widget);
-          xfce_panel_plugin_provider_emit_signal (provider, PROVIDER_SIGNAL_REMOVE_PLUGIN);
+          expidus_panel_plugin_provider_emit_signal (provider, PROVIDER_SIGNAL_REMOVE_PLUGIN);
         }
 
       gtk_widget_destroy (widget);
@@ -1355,13 +1355,13 @@ static void
 panel_preferences_dialog_item_properties (GtkWidget              *button,
                                           PanelPreferencesDialog *dialog)
 {
-  XfcePanelPluginProvider *provider;
+  ExpidusPanelPluginProvider *provider;
 
   panel_return_if_fail (PANEL_IS_PREFERENCES_DIALOG (dialog));
 
   provider = panel_preferences_dialog_item_get_selected (dialog, NULL);
   if (G_LIKELY (provider != NULL))
-    xfce_panel_plugin_provider_show_configure (provider);
+    expidus_panel_plugin_provider_show_configure (provider);
 }
 
 
@@ -1370,13 +1370,13 @@ static void
 panel_preferences_dialog_item_about (GtkWidget              *button,
                                      PanelPreferencesDialog *dialog)
 {
-  XfcePanelPluginProvider *provider;
+  ExpidusPanelPluginProvider *provider;
 
   panel_return_if_fail (PANEL_IS_PREFERENCES_DIALOG (dialog));
 
   provider = panel_preferences_dialog_item_get_selected (dialog, NULL);
   if (G_LIKELY (provider != NULL))
-    xfce_panel_plugin_provider_show_about (provider);
+    expidus_panel_plugin_provider_show_about (provider);
 }
 
 
@@ -1415,7 +1415,7 @@ panel_preferences_dialog_item_row_changed (GtkTreeModel           *model,
                                            GtkTreeIter            *iter,
                                            PanelPreferencesDialog *dialog)
 {
-  XfcePanelPluginProvider *provider = NULL;
+  ExpidusPanelPluginProvider *provider = NULL;
   gint                     position;
   GtkWidget               *itembar;
   gint                     store_position;
@@ -1426,7 +1426,7 @@ panel_preferences_dialog_item_row_changed (GtkTreeModel           *model,
 
   /* get the changed row */
   gtk_tree_model_get (model, iter, ITEM_COLUMN_PROVIDER, &provider, -1);
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
   store_position = gtk_tree_path_get_indices (path)[0];
 
   /* actual position on the panel */
@@ -1457,7 +1457,7 @@ static void
 panel_preferences_dialog_item_selection_changed (GtkTreeSelection       *selection,
                                                  PanelPreferencesDialog *dialog)
 {
-  XfcePanelPluginProvider *provider;
+  ExpidusPanelPluginProvider *provider;
   GtkWidget               *itembar;
   gint                     position;
   gint                     items;
@@ -1493,12 +1493,12 @@ panel_preferences_dialog_item_selection_changed (GtkTreeSelection       *selecti
 
       object = gtk_builder_get_object (GTK_BUILDER (dialog), "item-properties");
       panel_return_if_fail (GTK_IS_WIDGET (object));
-      active = xfce_panel_plugin_provider_get_show_configure (provider);
+      active = expidus_panel_plugin_provider_get_show_configure (provider);
       gtk_widget_set_sensitive (GTK_WIDGET (object), active);
 
       object = gtk_builder_get_object (GTK_BUILDER (dialog), "item-about");
       panel_return_if_fail (GTK_IS_WIDGET (object));
-      active = xfce_panel_plugin_provider_get_show_about (provider);
+      active = expidus_panel_plugin_provider_get_show_about (provider);
       gtk_widget_set_sensitive (GTK_WIDGET (object), active);
     }
   else
@@ -1578,7 +1578,7 @@ panel_preferences_dialog_show_internal (PanelWindow *active,
 
       /* move the vbox to the dialog */
       content_area = gtk_dialog_get_content_area (GTK_DIALOG (window));
-      xfce_widget_reparent (GTK_WIDGET (plug_child), content_area);
+      expidus_widget_reparent (GTK_WIDGET (plug_child), content_area);
       gtk_widget_show (GTK_WIDGET (plug_child));
 
       /* destroy the plug */
@@ -1615,7 +1615,7 @@ panel_preferences_dialog_show_internal (PanelWindow *active,
       gtk_widget_show (plug);
 
       /* move the vbox in the plug */
-      xfce_widget_reparent (GTK_WIDGET (plug_child), plug);
+      expidus_widget_reparent (GTK_WIDGET (plug_child), plug);
       gtk_widget_show (GTK_WIDGET (plug_child));
     }
 }

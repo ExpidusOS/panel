@@ -1,36 +1,36 @@
 ## Process this file with automake to produce Makefile.in
 
 # The name of the module.
-DOC_MODULE=libxfce4panel
+DOC_MODULE=libexpidus1panel
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-DOC_MODULE_VERSION=$(LIBXFCE4PANEL_VERSION_API)
+DOC_MODULE_VERSION=$(LIBEXPIDUS1PANEL_VERSION_API)
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 
 # Extra options to supply to gtkdoc-scan
-SCAN_OPTIONS=--deprecated-guards="LIBXFCE4PANEL_DEPRECATED"
+SCAN_OPTIONS=--deprecated-guards="LIBEXPIDUS1PANEL_DEPRECATED"
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR=../../libxfce4panel
+DOC_SOURCE_DIR=../../libexpidus1panel
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--output-format=xml --sgml-mode --name-space=xfce
+MKDB_OPTIONS=--output-format=xml --sgml-mode --name-space=expidus
 
 # Extra options to supply to gtkdoc-fixxref
 FIXXREF_OPTIONS=
 
 # Used for dependencies
-HFILE_GLOB=$(top_srcdir)/libxfce4panel/*.h
-CFILE_GLOB=$(top_srcdir)/libxfce4panel/*.c
+HFILE_GLOB=$(top_srcdir)/libexpidus1panel/*.h
+CFILE_GLOB=$(top_srcdir)/libexpidus1panel/*.c
 
 # Header files to ignore when scanning
 IGNORE_HFILES= \
-	libxfce4panel-alias.h \
-	libxfce4panel-marshal.h \
-	xfce-panel-plugin-provider.h \
-	libxfce4panel-enum-types.h
+	libexpidus1panel-alias.h \
+	libexpidus1panel-marshal.h \
+	expidus-panel-plugin-provider.h \
+	libexpidus1panel-enum-types.h
 
 # Extra files to add when scanning (relative to $srcdir)
 EXTRA_HFILES=
@@ -48,13 +48,13 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
 	$(GTK_CFLAGS) \
-	$(LIBXFCE4UTIL_CFLAGS) \
+	$(LIBEXPIDUS1UTIL_CFLAGS) \
 	$(GTK_DOC_EXTRA_CFLAGS)
 
 GTKDOC_LIBS = \
 	$(GTK_LIBS) \
-	$(LIBXFCE4UTIL_LIBS) \
-	$(top_builddir)/libxfce4panel/libxfce4panel-$(LIBXFCE4PANEL_VERSION_API).la
+	$(LIBEXPIDUS1UTIL_LIBS) \
+	$(top_builddir)/libexpidus1panel/libexpidus1panel-$(LIBEXPIDUS1PANEL_VERSION_API).la
 
 include $(top_srcdir)/gtk-doc.make
 

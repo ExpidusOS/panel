@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __XFCE_DEFAULT_H__
-#define __XFCE_DEFAULT_H__
+#ifndef __EXPIDUS_DEFAULT_H__
+#define __EXPIDUS_DEFAULT_H__
 
 #include <gtk/gtk.h>
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 
 G_BEGIN_DECLS
 
@@ -28,5 +28,5 @@ gboolean migrate_default (const gchar *filename, GError **error);
 
 G_END_DECLS
 
-#endif /* !__XFCE_DEFAULT_H__ */
+#endif /* !__EXPIDUS_DEFAULT_H__ */
 

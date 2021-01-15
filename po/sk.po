@@ -14,12 +14,12 @@
 # 7dcd6f74323fe8d9c477949ff8fcbb1c_c427b63 <3fcd202e3dfab15fda15b8e88e54d449_7173>, 2011-2012
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce4-panel\n"
+"Project-Id-Version: Expidus4-panel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-03 00:45+0100\n"
 "PO-Revision-Date: 2020-12-12 11:24+0000\n"
 "Last-Translator: Jose Riha <jose1711@gmail.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/xfce/xfce4-panel/language/sk/)\n"
+"Language-Team: Slovak (http://www.transifex.com/expidus/expidus1-panel/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -51,18 +51,18 @@ msgid "Customize the panel"
 msgstr "Prispôsobenie panela"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1105
+#: ../libexpidus1panel/expidus-panel-plugin.c:1105
 #: ../panel/panel-preferences-dialog.c:1321
 #, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "Ste si istý, že chcete odstrániť „%s“?"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1110
+#: ../libexpidus1panel/expidus-panel-plugin.c:1110
 msgid ""
 "Removing the item from the panel also means its configuration will be lost."
 msgstr "Odstránením položky z panela je tiež myslená strata konfigurácie tejto položky."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
+#: ../libexpidus1panel/expidus-panel-plugin.c:1111 ../panel/panel-dialogs.c:163
 #: ../panel/panel-preferences-dialog.c:1326
 #: ../plugins/applicationsmenu/applicationsmenu.c:602
 #: ../plugins/directorymenu/directorymenu.c:473
@@ -70,8 +70,8 @@ msgstr "Odstránením položky z panela je tiež myslená strata konfigurácie t
 msgid "_Cancel"
 msgstr "_Zrušiť"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1112
-#: ../libxfce4panel/xfce-panel-plugin.c:1287
+#: ../libexpidus1panel/expidus-panel-plugin.c:1112
+#: ../libexpidus1panel/expidus-panel-plugin.c:1287
 #: ../panel/panel-plugin-external.c:443
 #: ../panel/panel-preferences-dialog.c:961
 #: ../panel/panel-preferences-dialog.c:1327
@@ -79,35 +79,35 @@ msgstr "_Zrušiť"
 msgid "_Remove"
 msgstr "_Odstrániť"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1237
+#: ../libexpidus1panel/expidus-panel-plugin.c:1237
 msgid "_Properties"
 msgstr "_Vlastnosti"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1252 ../panel/panel-window.c:3038
+#: ../libexpidus1panel/expidus-panel-plugin.c:1252 ../panel/panel-window.c:3038
 msgid "_About"
 msgstr "_O aplikácii ..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1267
+#: ../libexpidus1panel/expidus-panel-plugin.c:1267
 msgid "_Move"
 msgstr "_Presunúť"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1308
+#: ../libexpidus1panel/expidus-panel-plugin.c:1308
 msgid "Pane_l"
 msgstr "Pane_l"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1317 ../panel/panel-window.c:2963
+#: ../libexpidus1panel/expidus-panel-plugin.c:1317 ../panel/panel-window.c:2963
 msgid "Add _New Items..."
 msgstr "Pridať _nové položky..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1332 ../panel/panel-window.c:2978
+#: ../libexpidus1panel/expidus-panel-plugin.c:1332 ../panel/panel-window.c:2978
 msgid "Panel Pr_eferences..."
 msgstr "_Nastavenia panela..."
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1353 ../panel/panel-window.c:3010
+#: ../libexpidus1panel/expidus-panel-plugin.c:1353 ../panel/panel-window.c:3010
 msgid "Log _Out"
 msgstr "_Odhlásiť"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1373 ../panel/panel-item-dialog.c:205
+#: ../libexpidus1panel/expidus-panel-plugin.c:1373 ../panel/panel-item-dialog.c:205
 #: ../panel/panel-preferences-dialog.glade.h:12 ../panel/panel-window.c:3029
 #: ../plugins/actions/actions-dialog.glade.h:8
 #: ../plugins/applicationsmenu/applicationsmenu-dialog.glade.h:2
@@ -121,7 +121,7 @@ msgstr "_Odhlásiť"
 msgid "_Help"
 msgstr "_Pomocník"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1388
+#: ../libexpidus1panel/expidus-panel-plugin.c:1388
 msgid "About"
 msgstr "O aplikácii"
 
@@ -162,9 +162,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr "Nečakať na správcu okien pri spúšťaní"
 
 #: ../panel/main.c:88
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "Zobrazí informáciu o verzii a ukončí sa"
 
@@ -184,8 +184,8 @@ msgid "Type \"%s --help\" for usage."
 msgstr "Informácie pre použitie získate príkazom „%s --help“."
 
 #: ../panel/main.c:294
-msgid "The Xfce development team. All rights reserved."
-msgstr "Tím vývojárov Xfce. Všetky práva vyhradené."
+msgid "The Expidus development team. All rights reserved."
+msgstr "Tím vývojárov Expidus. Všetky práva vyhradené."
 
 #: ../panel/main.c:295
 #, c-format
@@ -303,8 +303,8 @@ msgid "Unable to open the e-mail address"
 msgstr "Nie je možné otvoriť e-mailovú adresu"
 
 #: ../panel/panel-dialogs.c:83
-msgid "The panel of the Xfce Desktop Environment"
-msgstr "Panel pracovného prostredia Xfce"
+msgid "The panel of the Expidus Desktop Environment"
+msgstr "Panel pracovného prostredia Expidus"
 
 #: ../panel/panel-dialogs.c:87
 msgid "translator-credits"
@@ -1025,33 +1025,33 @@ msgstr "Nepodarilo sa spustiť príkaz „%s“."
 msgid "Show a menu containing categories of installed applications"
 msgstr "Zobrazí ponuku obsahujúcu kategórie nainštalovaných aplikácií"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr "Použitie:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr "VOĽBA"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 msgid "Options:"
 msgstr "Voľby:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr "Ponuka v mieste kurzora myši"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 msgid "Show help options"
 msgstr "Zobraziť možnosti pomocníka"
 

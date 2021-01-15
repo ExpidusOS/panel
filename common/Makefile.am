@@ -2,7 +2,7 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-DG_LOG_DOMAIN=\"libpanel-common\" \
-	-DLIBXFCE4PANEL_COMPILATION \
+	-DLIBEXPIDUS1PANEL_COMPILATION \
 	-DHELPDIR=\"$(docdir)/html\" \
 	$(PLATFORM_CPPFLAGS)
 
@@ -14,13 +14,13 @@ libpanel_common_la_SOURCES = \
 	panel-debug.h \
 	panel-utils.c \
 	panel-utils.h \
-	panel-xfconf.c \
-	panel-xfconf.h
+	panel-esconf.c \
+	panel-esconf.h
 
 libpanel_common_la_CFLAGS = \
-	$(XFCONF_CFLAGS) \
+	$(ESCONF_CFLAGS) \
 	$(GTK_CFLAGS) \
-	$(LIBXFCE4UI_CFLAGS) \
+	$(LIBEXPIDUS1UI_CFLAGS) \
 	$(PLATFORM_CFLAGS)
 
 libpanel_common_la_LDFLAGS = \
@@ -28,9 +28,9 @@ libpanel_common_la_LDFLAGS = \
 	$(PLATFORM_LDFLAGS)
 
 libpanel_common_la_LIBADD = \
-	$(XFCONF_LIBS) \
+	$(ESCONF_LIBS) \
 	$(GTK_LIBS) \
-	$(LIBXFCE4UI_LIBS)
+	$(LIBEXPIDUS1UI_LIBS)
 
 EXTRA_DIST = \
 	panel-dbus.h \

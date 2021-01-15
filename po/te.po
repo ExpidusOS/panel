@@ -6,12 +6,12 @@
 # ప్రవీణ్ ఇళ్ళ <mail2ipn@gmail.com>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: Xfce4-panel\n"
+"Project-Id-Version: Expidus4-panel\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-05-04 06:31+0200\n"
 "PO-Revision-Date: 2018-09-14 00:27+0000\n"
-"Last-Translator: Xfce Bot <transifex@xfce.org>\n"
-"Language-Team: Telugu (http://www.transifex.com/xfce/xfce4-panel/language/te/)\n"
+"Last-Translator: Expidus Bot <transifex@expidus.org>\n"
+"Language-Team: Telugu (http://www.transifex.com/expidus/expidus1-panel/language/te/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,25 +39,25 @@ msgid "Customize the panel"
 msgstr "ప్యానల్‌ను అనురూపించు"
 
 #. I18N: %s is the name of the plugin
-#: ../libxfce4panel/xfce-panel-plugin.c:1047
+#: ../libexpidus1panel/expidus-panel-plugin.c:1047
 #: ../panel/panel-preferences-dialog.c:1168
 #, c-format
 msgid "Are you sure that you want to remove \"%s\"?"
 msgstr "\"%s\"ని ఖచ్చితంగా తీసివేయాలనుకుంటున్నారా?"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1052
+#: ../libexpidus1panel/expidus-panel-plugin.c:1052
 #: ../panel/panel-preferences-dialog.c:1171
 msgid "If you remove the item from the panel, it is permanently lost."
 msgstr ""
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1053 ../panel/panel-dialogs.c:127
+#: ../libexpidus1panel/expidus-panel-plugin.c:1053 ../panel/panel-dialogs.c:127
 #: ../panel/panel-preferences-dialog.c:1173
 #: ../plugins/applicationsmenu/applicationsmenu.c:538
 #: ../plugins/directorymenu/directorymenu.c:394
 msgid "Cancel"
 msgstr "రద్దుచేయి"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1054
+#: ../libexpidus1panel/expidus-panel-plugin.c:1054
 #: ../panel/panel-plugin-external.c:436
 #: ../panel/panel-preferences-dialog.c:896
 #: ../panel/panel-preferences-dialog.c:1174
@@ -65,39 +65,39 @@ msgstr "రద్దుచేయి"
 msgid "Remove"
 msgstr ""
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1195
+#: ../libexpidus1panel/expidus-panel-plugin.c:1195
 msgid "_Properties"
 msgstr ""
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1210
+#: ../libexpidus1panel/expidus-panel-plugin.c:1210
 msgid "_About"
 msgstr "గురించి (_A)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1225
+#: ../libexpidus1panel/expidus-panel-plugin.c:1225
 msgid "_Move"
 msgstr "తరలించు (_M)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1249
+#: ../libexpidus1panel/expidus-panel-plugin.c:1249
 msgid "_Remove"
 msgstr ""
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1270
+#: ../libexpidus1panel/expidus-panel-plugin.c:1270
 msgid "Pane_l"
 msgstr "ప్యానల్ (_I)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1279 ../panel/panel-window.c:2679
+#: ../libexpidus1panel/expidus-panel-plugin.c:1279 ../panel/panel-window.c:2679
 msgid "Add _New Items..."
 msgstr "కొత్త అంశాలను చేర్చు...(_N)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1294 ../panel/panel-window.c:2694
+#: ../libexpidus1panel/expidus-panel-plugin.c:1294 ../panel/panel-window.c:2694
 msgid "Panel Pr_eferences..."
 msgstr "ప్యానల్ ప్రాధాన్యతలు...(_e)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1315 ../panel/panel-window.c:2726
+#: ../libexpidus1panel/expidus-panel-plugin.c:1315 ../panel/panel-window.c:2726
 msgid "Log _Out"
 msgstr "నిష్క్రమించు (_O)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1335
+#: ../libexpidus1panel/expidus-panel-plugin.c:1335
 #: ../panel/panel-preferences-dialog.glade.h:12
 #: ../plugins/actions/actions-dialog.glade.h:4
 #: ../plugins/applicationsmenu/applicationsmenu-dialog.glade.h:2
@@ -110,7 +110,7 @@ msgstr "నిష్క్రమించు (_O)"
 msgid "_Help"
 msgstr "సహాయం (_H)"
 
-#: ../libxfce4panel/xfce-panel-plugin.c:1350
+#: ../libexpidus1panel/expidus-panel-plugin.c:1350
 msgid "About"
 msgstr "గురించి"
 
@@ -151,9 +151,9 @@ msgid "Do not wait for a window manager on startup"
 msgstr ""
 
 #: ../panel/main.c:88
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:33
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:33
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:33
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:33
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:33
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:33
 msgid "Print version information and exit"
 msgstr "రూపాంతరము సమాచారం ముద్రించు మరియు నిష్క్రమించు"
 
@@ -173,8 +173,8 @@ msgid "Type \"%s --help\" for usage."
 msgstr "వాడుకకు '%s --help' టైపు చేయండి."
 
 #: ../panel/main.c:284
-msgid "The Xfce development team. All rights reserved."
-msgstr "Xfce అభివృద్ధి బృందం. అన్ని హక్కులు కేటాయించబడినవి."
+msgid "The Expidus development team. All rights reserved."
+msgstr "Expidus అభివృద్ధి బృందం. అన్ని హక్కులు కేటాయించబడినవి."
 
 #: ../panel/main.c:285
 #, c-format
@@ -286,7 +286,7 @@ msgid ""
 msgstr ""
 
 #: ../panel/panel-dialogs.c:49
-msgid "The panel of the Xfce Desktop Environment"
+msgid "The panel of the Expidus Desktop Environment"
 msgstr ""
 
 #: ../panel/panel-dialogs.c:54
@@ -687,7 +687,7 @@ msgid "Migrate old config"
 msgstr ""
 
 #: ../migrate/main.c:130
-msgid "Migrate the old 4.6 configuration to Xfconf"
+msgid "Migrate the old 4.6 configuration to Esconf"
 msgstr ""
 
 #: ../migrate/main.c:141
@@ -1005,33 +1005,33 @@ msgstr "\"%s\" ఆదేశాన్ని అమలుపరుచుటలో 
 msgid "Show a menu containing categories of installed applications"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:27
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:27
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:27
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:27
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:27
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:27
 msgid "Usage:"
 msgstr "వాడుక:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:28
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:28
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:28
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:28
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:28
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:28
 msgid "OPTION"
 msgstr "ఐచ్ఛికము"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:30
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:30
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:30
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:30
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:30
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:30
 msgid "Options:"
 msgstr "ఐచ్ఛికాలు:"
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:31
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:31
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:31
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:31
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:31
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:31
 msgid "Popup menu at current mouse position"
 msgstr ""
 
-#: ../plugins/applicationsmenu/xfce4-popup-applicationsmenu.sh:32
-#: ../plugins/directorymenu/xfce4-popup-directorymenu.sh:32
-#: ../plugins/windowmenu/xfce4-popup-windowmenu.sh:32
+#: ../plugins/applicationsmenu/expidus1-popup-applicationsmenu.sh:32
+#: ../plugins/directorymenu/expidus1-popup-directorymenu.sh:32
+#: ../plugins/windowmenu/expidus1-popup-windowmenu.sh:32
 msgid "Show help options"
 msgstr "సహాయ ఐచ్ఛికాలను చూపించు"
 

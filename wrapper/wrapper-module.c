@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,7 +136,7 @@ wrapper_module_new_provider (WrapperModule  *module,
   g_type_module_use (G_TYPE_MODULE (module));
 
   /* try to link the contruct or init function */
-  if (g_module_symbol (module->library, "xfce_panel_module_init",
+  if (g_module_symbol (module->library, "expidus_panel_module_init",
       (gpointer) &init_func) && init_func != NULL)
     {
       /* initialize the plugin */
@@ -150,7 +150,7 @@ wrapper_module_new_provider (WrapperModule  *module,
                              "comment", comment,
                              "arguments", arguments, NULL);
     }
-  else if (g_module_symbol (module->library, "xfce_panel_module_construct",
+  else if (g_module_symbol (module->library, "expidus_panel_module_construct",
            (gpointer) &construct_func) && construct_func != NULL)
     {
       /* create a new panel plugin */

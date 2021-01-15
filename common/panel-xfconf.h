@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef __PANEL_XFCONF_H__
-#define __PANEL_XFCONF_H__
+#ifndef __PANEL_ESCONF_H__
+#define __PANEL_ESCONF_H__
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 
 
 
@@ -32,9 +32,9 @@ struct _PanelProperty
 
 
 
-XfconfChannel *panel_properties_get_channel          (GObject             *object_for_weak_ref);
+EsconfChannel *panel_properties_get_channel          (GObject             *object_for_weak_ref);
 
-void           panel_properties_bind                 (XfconfChannel       *channel,
+void           panel_properties_bind                 (EsconfChannel       *channel,
                                                       GObject             *object,
                                                       const gchar         *property_base,
                                                       const PanelProperty *properties,
@@ -44,4 +44,4 @@ void           panel_properties_unbind               (GObject             *objec
 
 GType          panel_properties_value_array_get_type (void) G_GNUC_CONST;
 
-#endif /* !__PANEL_XFCONF_H__ */
+#endif /* !__PANEL_ESCONF_H__ */

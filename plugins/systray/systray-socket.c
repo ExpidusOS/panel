@@ -2,7 +2,7 @@
  * Copyright (c) 2002      Anders Carlsson <andersca@gnu.org>
  * Copyright (c) 2003-2006 Vincent Untz
  * Copyright (c) 2008      Red Hat, Inc.
- * Copyright (c) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -34,7 +34,7 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 
-#include <libxfce4panel/libxfce4panel.h>
+#include <libexpidus1panel/libexpidus1panel.h>
 
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
@@ -75,7 +75,7 @@ static void     systray_socket_style_set     (GtkWidget      *widget,
 
 
 
-XFCE_PANEL_DEFINE_TYPE (SystraySocket, systray_socket, GTK_TYPE_SOCKET)
+EXPIDUS_PANEL_DEFINE_TYPE (SystraySocket, systray_socket, GTK_TYPE_SOCKET)
 
 
 
@@ -109,7 +109,7 @@ systray_socket_init (SystraySocket *socket)
 static void
 systray_socket_finalize (GObject *object)
 {
-  SystraySocket *socket = XFCE_SYSTRAY_SOCKET (object);
+  SystraySocket *socket = EXPIDUS_SYSTRAY_SOCKET (object);
 
   g_free (socket->name);
 
@@ -121,7 +121,7 @@ systray_socket_finalize (GObject *object)
 static void
 systray_socket_realize (GtkWidget *widget)
 {
-  SystraySocket *socket = XFCE_SYSTRAY_SOCKET (widget);
+  SystraySocket *socket = EXPIDUS_SYSTRAY_SOCKET (widget);
   GdkRGBA        transparent = { 0.0, 0.0, 0.0, 0.0 };
   GdkWindow     *window;
 
@@ -176,7 +176,7 @@ static void
 systray_socket_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
-  SystraySocket *socket = XFCE_SYSTRAY_SOCKET (widget);
+  SystraySocket *socket = EXPIDUS_SYSTRAY_SOCKET (widget);
   GtkAllocation  widget_allocation;
   gboolean       moved;
   gboolean       resized;
@@ -214,7 +214,7 @@ static gboolean
 systray_socket_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
-  SystraySocket *socket = XFCE_SYSTRAY_SOCKET (widget);
+  SystraySocket *socket = EXPIDUS_SYSTRAY_SOCKET (widget);
 
   if (socket->is_composited)
     {
@@ -275,7 +275,7 @@ systray_socket_new (GdkScreen       *screen,
     return NULL;
 
   /* create a new socket */
-  socket = g_object_new (XFCE_TYPE_SYSTRAY_SOCKET, NULL);
+  socket = g_object_new (EXPIDUS_TYPE_SYSTRAY_SOCKET, NULL);
   socket->window = window;
   socket->is_composited = FALSE;
   gtk_widget_set_visual (GTK_WIDGET (socket), visual);
@@ -304,7 +304,7 @@ systray_socket_force_redraw (SystraySocket *socket)
   GdkDisplay    *display;
   GtkAllocation  allocation;
 
-  panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket));
 
   if (gtk_widget_get_mapped (widget) && socket->parent_relative_bg)
     {
@@ -338,7 +338,7 @@ systray_socket_force_redraw (SystraySocket *socket)
 gboolean
 systray_socket_is_composited (SystraySocket *socket)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket), FALSE);
 
   return socket->is_composited;
 }
@@ -359,7 +359,7 @@ systray_socket_get_name_prop (SystraySocket *socket,
   gulong      bytes_after;
   gchar      *name = NULL;
 
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket), NULL);
   panel_return_val_if_fail (type_name != NULL && prop_name != NULL, NULL);
 
   display = gtk_widget_get_display (GTK_WIDGET (socket));
@@ -403,7 +403,7 @@ systray_socket_get_name_prop (SystraySocket *socket,
 const gchar *
 systray_socket_get_name (SystraySocket *socket)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket), NULL);
 
   if (G_LIKELY (socket->name != NULL))
     return socket->name;
@@ -422,7 +422,7 @@ systray_socket_get_name (SystraySocket *socket)
 Window *
 systray_socket_get_window (SystraySocket *socket)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket), NULL);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket), NULL);
 
   return &socket->window;
 }
@@ -432,7 +432,7 @@ systray_socket_get_window (SystraySocket *socket)
 gboolean
 systray_socket_get_hidden (SystraySocket *socket)
 {
-  panel_return_val_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket), FALSE);
 
   return socket->hidden;
 }
@@ -443,7 +443,7 @@ void
 systray_socket_set_hidden (SystraySocket *socket,
                            gboolean       hidden)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (socket));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (socket));
 
   socket->hidden = hidden;
 }

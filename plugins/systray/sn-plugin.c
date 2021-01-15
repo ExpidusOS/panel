@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2017 Viktor Odintsev <ninetls@xfce.org>
+ *  Copyright (c) 2017 Viktor Odintsev <ninetls@expidus.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-debug.h>
 
@@ -51,23 +51,23 @@
 #define BUTTON_SIZE   (16)
 
 
-static void                  sn_plugin_construct                     (XfcePanelPlugin         *panel_plugin);
+static void                  sn_plugin_construct                     (ExpidusPanelPlugin         *panel_plugin);
 
-static void                  sn_plugin_free                          (XfcePanelPlugin         *panel_plugin);
+static void                  sn_plugin_free                          (ExpidusPanelPlugin         *panel_plugin);
 
-static gboolean              sn_plugin_size_changed                  (XfcePanelPlugin         *panel_plugin,
+static gboolean              sn_plugin_size_changed                  (ExpidusPanelPlugin         *panel_plugin,
                                                                       gint                     size);
 
-static void                  sn_plugin_mode_changed                  (XfcePanelPlugin         *panel_plugin,
-                                                                      XfcePanelPluginMode      mode);
+static void                  sn_plugin_mode_changed                  (ExpidusPanelPlugin         *panel_plugin,
+                                                                      ExpidusPanelPluginMode      mode);
 
-static void                  sn_plugin_configure_plugin              (XfcePanelPlugin         *panel_plugin);
-
-
+static void                  sn_plugin_configure_plugin              (ExpidusPanelPlugin         *panel_plugin);
 
 
 
-XFCE_PANEL_DEFINE_PLUGIN (SnPlugin, sn_plugin,
+
+
+EXPIDUS_PANEL_DEFINE_PLUGIN (SnPlugin, sn_plugin,
                           systray_box_register_type,
                           systray_manager_register_type,
                           systray_socket_register_type)
@@ -77,9 +77,9 @@ XFCE_PANEL_DEFINE_PLUGIN (SnPlugin, sn_plugin,
 static void
 sn_plugin_class_init (SnPluginClass *klass)
 {
-  XfcePanelPluginClass *panel_plugin_class;
+  ExpidusPanelPluginClass *panel_plugin_class;
 
-  panel_plugin_class = XFCE_PANEL_PLUGIN_CLASS (klass);
+  panel_plugin_class = EXPIDUS_PANEL_PLUGIN_CLASS (klass);
   panel_plugin_class->construct = sn_plugin_construct;
   panel_plugin_class->free_data = sn_plugin_free;
   panel_plugin_class->size_changed = sn_plugin_size_changed;
@@ -110,9 +110,9 @@ sn_plugin_init (SnPlugin *plugin)
 
 
 static void
-sn_plugin_free (XfcePanelPlugin *panel_plugin)
+sn_plugin_free (ExpidusPanelPlugin *panel_plugin)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
 
   /* Systray */
   /* stop pending idle startup */
@@ -148,17 +148,17 @@ sn_plugin_free (XfcePanelPlugin *panel_plugin)
 
 
 static gboolean
-sn_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+sn_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                         gint             size)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
 
   sn_config_set_size (plugin->config,
                       size,
-                      xfce_panel_plugin_get_nrows (panel_plugin),
-                      xfce_panel_plugin_get_icon_size (panel_plugin));
+                      expidus_panel_plugin_get_nrows (panel_plugin),
+                      expidus_panel_plugin_get_icon_size (panel_plugin));
   systray_plugin_size_changed (panel_plugin,
-                               xfce_panel_plugin_get_size (panel_plugin));
+                               expidus_panel_plugin_get_size (panel_plugin));
 
   return TRUE;
 }
@@ -166,36 +166,36 @@ sn_plugin_size_changed (XfcePanelPlugin *panel_plugin,
 
 
 static void
-sn_plugin_mode_changed (XfcePanelPlugin     *panel_plugin,
-                        XfcePanelPluginMode  mode)
+sn_plugin_mode_changed (ExpidusPanelPlugin     *panel_plugin,
+                        ExpidusPanelPluginMode  mode)
 {
-  SnPlugin       *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin       *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
   GtkOrientation  orientation;
   GtkOrientation  panel_orientation;
 
-  panel_orientation = xfce_panel_plugin_get_orientation (panel_plugin);
-  orientation = mode == XFCE_PANEL_PLUGIN_MODE_VERTICAL
+  panel_orientation = expidus_panel_plugin_get_orientation (panel_plugin);
+  orientation = mode == EXPIDUS_PANEL_PLUGIN_MODE_VERTICAL
                 ? GTK_ORIENTATION_VERTICAL : GTK_ORIENTATION_HORIZONTAL;
 
   sn_config_set_orientation (plugin->config, panel_orientation, orientation);
   systray_plugin_orientation_changed (panel_plugin, panel_orientation);
 
-  sn_plugin_size_changed (panel_plugin, xfce_panel_plugin_get_size (panel_plugin));
+  sn_plugin_size_changed (panel_plugin, expidus_panel_plugin_get_size (panel_plugin));
 }
 
 
 
 static void
-sn_plugin_configure_plugin (XfcePanelPlugin *panel_plugin)
+sn_plugin_configure_plugin (ExpidusPanelPlugin *panel_plugin)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
   SnDialog *dialog;
 
   dialog = sn_dialog_new (plugin->config, gtk_widget_get_screen (GTK_WIDGET (plugin)));
   if (dialog != NULL)
     {
-      xfce_panel_plugin_block_menu (panel_plugin);
-      g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify)xfce_panel_plugin_unblock_menu, panel_plugin);
+      expidus_panel_plugin_block_menu (panel_plugin);
+      g_object_weak_ref (G_OBJECT (dialog), (GWeakNotify)expidus_panel_plugin_unblock_menu, panel_plugin);
     }
 }
 
@@ -207,7 +207,7 @@ sn_plugin_item_added (SnPlugin *plugin,
   GtkWidget *button;
 
   button = sn_button_new (item,
-                          xfce_panel_plugin_position_menu, plugin,
+                          expidus_panel_plugin_position_menu, plugin,
                           plugin->config);
 
   sn_config_add_known_item (plugin->config, sn_item_get_name (item));
@@ -231,7 +231,7 @@ static void
 sn_plugin_item_removed (SnPlugin *plugin,
                         SnItem   *item)
 {
-  sn_box_remove_item (XFCE_SN_BOX (plugin->sn_box), item);
+  sn_box_remove_item (EXPIDUS_SN_BOX (plugin->sn_box), item);
 }
 #endif
 
@@ -272,16 +272,16 @@ sn_plugin_button_set_arrow(SnPlugin *plugin)
   gboolean show_hidden;
   GtkOrientation orientation;
 
-  panel_return_if_fail(XFCE_IS_SN_PLUGIN(plugin));
+  panel_return_if_fail(EXPIDUS_IS_SN_PLUGIN(plugin));
 
-  show_hidden = systray_box_get_show_hidden(XFCE_SYSTRAY_BOX(plugin->systray_box));
-  orientation = xfce_panel_plugin_get_orientation(XFCE_PANEL_PLUGIN(plugin));
+  show_hidden = systray_box_get_show_hidden(EXPIDUS_SYSTRAY_BOX(plugin->systray_box));
+  orientation = expidus_panel_plugin_get_orientation(EXPIDUS_PANEL_PLUGIN(plugin));
   if (orientation == GTK_ORIENTATION_HORIZONTAL)
     arrow_type = show_hidden ? GTK_ARROW_LEFT : GTK_ARROW_RIGHT;
   else
     arrow_type = show_hidden ? GTK_ARROW_UP : GTK_ARROW_DOWN;
 
-  xfce_arrow_button_set_arrow_type(XFCE_ARROW_BUTTON(plugin->button), arrow_type);
+  expidus_arrow_button_set_arrow_type(EXPIDUS_ARROW_BUTTON(plugin->button), arrow_type);
 }
 
 
@@ -290,13 +290,13 @@ static void
 sn_plugin_button_toggled (GtkWidget     *button,
                           SnPlugin      *plugin)
 {
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
   panel_return_if_fail (GTK_IS_TOGGLE_BUTTON (button));
   panel_return_if_fail (plugin->button == button);
 
-  systray_box_set_show_hidden (XFCE_SYSTRAY_BOX (plugin->systray_box),
+  systray_box_set_show_hidden (EXPIDUS_SYSTRAY_BOX (plugin->systray_box),
       gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
-  sn_box_set_show_hidden (XFCE_SN_BOX (plugin->sn_box),
+  sn_box_set_show_hidden (EXPIDUS_SN_BOX (plugin->sn_box),
       gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
   sn_plugin_button_set_arrow (plugin);
 }
@@ -304,18 +304,18 @@ sn_plugin_button_toggled (GtkWidget     *button,
 
 
 static void
-sn_plugin_construct (XfcePanelPlugin *panel_plugin)
+sn_plugin_construct (ExpidusPanelPlugin *panel_plugin)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
 
   plugin->manager = NULL;
   plugin->idle_startup = 0;
   plugin->names_ordered = NULL;
   plugin->names_hidden = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
-  xfce_panel_plugin_menu_show_configure (panel_plugin);
+  expidus_panel_plugin_menu_show_configure (panel_plugin);
 
-  plugin->config = sn_config_new (xfce_panel_plugin_get_property_base (panel_plugin));
+  plugin->config = sn_config_new (expidus_panel_plugin_get_property_base (panel_plugin));
 
   /* Container for both plugins */
   plugin->box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 1);
@@ -363,7 +363,7 @@ sn_plugin_construct (XfcePanelPlugin *panel_plugin)
 #endif
 
   /* Systray arrow button */
-  plugin->button = xfce_arrow_button_new(GTK_ARROW_RIGHT);
+  plugin->button = expidus_arrow_button_new(GTK_ARROW_RIGHT);
   gtk_box_pack_start(GTK_BOX(plugin->box), plugin->button, FALSE, FALSE, 0);
   g_signal_connect(G_OBJECT(plugin->button), "toggled",
                    G_CALLBACK(sn_plugin_button_toggled), plugin);
@@ -372,5 +372,5 @@ sn_plugin_construct (XfcePanelPlugin *panel_plugin)
                     G_CALLBACK(systray_has_hidden_cb), plugin);
   g_signal_connect (G_OBJECT(plugin->sn_box), "notify::has-hidden",
                     G_CALLBACK(snbox_has_hidden_cb), plugin);
-  xfce_panel_plugin_add_action_widget(XFCE_PANEL_PLUGIN(plugin), plugin->button);
+  expidus_panel_plugin_add_action_widget(EXPIDUS_PANEL_PLUGIN(plugin), plugin->button);
 }

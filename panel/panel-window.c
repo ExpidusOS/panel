@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,14 +38,14 @@
 
 #include <libwnck/libwnck.h>
 
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 
-#include <xfconf/xfconf.h>
+#include <esconf/esconf.h>
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
 #include <common/panel-utils.h>
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 #include <panel/panel-base-window.h>
 #include <panel/panel-window.h>
 #include <panel/panel-item-dialog.h>
@@ -70,7 +70,7 @@
 #define HANDLE_SIZE           (HANDLE_DOTS * (HANDLE_PIXELS + \
                                HANDLE_PIXEL_SPACE) - HANDLE_PIXEL_SPACE)
 #define HANDLE_SIZE_TOTAL     (2 * HANDLE_SPACING + HANDLE_SIZE)
-#define IS_HORIZONTAL(window) ((window)->mode == XFCE_PANEL_PLUGIN_MODE_HORIZONTAL)
+#define IS_HORIZONTAL(window) ((window)->mode == EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL)
 
 
 
@@ -327,7 +327,7 @@ struct _PanelWindow
   guint                icon_size;
   gdouble              length;
   guint                length_adjust : 1;
-  XfcePanelPluginMode  mode;
+  ExpidusPanelPluginMode  mode;
   guint                nrows;
   SnapPosition         snap_position;
   gboolean             floating;
@@ -368,9 +368,9 @@ struct _PanelWindow
   gint                 grab_y;
 };
 
-/* used for a full XfcePanelWindow name in the class, but not in the code */
-typedef PanelWindow      XfcePanelWindow;
-typedef PanelWindowClass XfcePanelWindowClass;
+/* used for a full ExpidusPanelWindow name in the class, but not in the code */
+typedef PanelWindow      ExpidusPanelWindow;
+typedef PanelWindowClass ExpidusPanelWindowClass;
 
 
 
@@ -382,7 +382,7 @@ static GdkAtom net_wm_strut_partial_atom = 0;
 
 
 
-G_DEFINE_TYPE (XfcePanelWindow, panel_window, PANEL_TYPE_BASE_WINDOW)
+G_DEFINE_TYPE (ExpidusPanelWindow, panel_window, PANEL_TYPE_BASE_WINDOW)
 
 
 
@@ -427,8 +427,8 @@ panel_window_class_init (PanelWindowClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_MODE,
                                    g_param_spec_enum ("mode", NULL, NULL,
-                                                      XFCE_TYPE_PANEL_PLUGIN_MODE,
-                                                      XFCE_PANEL_PLUGIN_MODE_HORIZONTAL,
+                                                      EXPIDUS_TYPE_PANEL_PLUGIN_MODE,
+                                                      EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL,
                                                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class,
@@ -556,7 +556,7 @@ panel_window_init (PanelWindow *window)
   window->wnck_active_window = NULL;
   window->struts_edge = STRUTS_EDGE_NONE;
   window->struts_disabled = FALSE;
-  window->mode = XFCE_PANEL_PLUGIN_MODE_HORIZONTAL;
+  window->mode = EXPIDUS_PANEL_PLUGIN_MODE_HORIZONTAL;
   window->size = 48;
   window->icon_size = 0;
   window->dark_mode = FALSE;
@@ -695,7 +695,7 @@ panel_window_set_property (GObject      *object,
   const gchar         *val_string;
   gboolean             update = FALSE;
   gint                 x, y, snap_position;
-  XfcePanelPluginMode  val_mode;
+  ExpidusPanelPluginMode  val_mode;
 
   switch (prop_id)
     {
@@ -2403,7 +2403,7 @@ panel_window_active_window_geometry_changed (WnckWindow  *active_window,
            * application window property to get its actual size without the shadows */
           gdkwindow = gdk_x11_window_foreign_new_for_display (gdk_display_get_default (),
                                                               wnck_window_get_xid (active_window));
-          if (gdkwindow && xfce_has_gtk_frame_extents (gdkwindow, &extents))
+          if (gdkwindow && expidus_has_gtk_frame_extents (gdkwindow, &extents))
             {
               window_area.x += extents.left;
               window_area.y += extents.top;
@@ -2772,7 +2772,7 @@ panel_window_set_autohide_behavior (PanelWindow *window,
                                 "resizable", TRUE,
                                 "type-hint", GDK_WINDOW_TYPE_HINT_DOCK,
                                 "gravity", GDK_GRAVITY_STATIC,
-                                "name", "XfcePanelWindowHidden",
+                                "name", "ExpidusPanelWindowHidden",
                                 NULL);
 
           /* move the window offscreen */
@@ -3125,10 +3125,10 @@ static void
 panel_window_plugin_set_mode (GtkWidget *widget,
                               gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
-  xfce_panel_plugin_provider_set_mode (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_mode (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                        PANEL_WINDOW (user_data)->mode);
 }
 
@@ -3138,10 +3138,10 @@ static void
 panel_window_plugin_set_size (GtkWidget *widget,
                               gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
-  xfce_panel_plugin_provider_set_size (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_size (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                        PANEL_WINDOW (user_data)->size);
 }
 
@@ -3151,10 +3151,10 @@ static void
 panel_window_plugin_set_icon_size (GtkWidget *widget,
                                    gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
-  xfce_panel_plugin_provider_set_icon_size (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_icon_size (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                             PANEL_WINDOW (user_data)->icon_size);
 }
 
@@ -3164,10 +3164,10 @@ static void
 panel_window_plugin_set_dark_mode (GtkWidget *widget,
                                    gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
-  xfce_panel_plugin_provider_set_dark_mode (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_dark_mode (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                             PANEL_WINDOW (user_data)->dark_mode);
 }
 
@@ -3177,10 +3177,10 @@ static void
 panel_window_plugin_set_nrows (GtkWidget *widget,
                                gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
-  xfce_panel_plugin_provider_set_nrows (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_nrows (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                         PANEL_WINDOW (user_data)->nrows);
 }
 
@@ -3191,60 +3191,60 @@ panel_window_plugin_set_screen_position (GtkWidget *widget,
                                          gpointer   user_data)
 {
   PanelWindow        *window = PANEL_WINDOW (user_data);
-  XfceScreenPosition  position;
+  ExpidusScreenPosition  position;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_WINDOW (user_data));
 
   switch (window->snap_position)
     {
     case SNAP_POSITION_NONE:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_FLOATING_H :
-          XFCE_SCREEN_POSITION_FLOATING_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_FLOATING_H :
+          EXPIDUS_SCREEN_POSITION_FLOATING_V;
       break;
 
     case SNAP_POSITION_NW:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_NW_H :
-          XFCE_SCREEN_POSITION_NW_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_NW_H :
+          EXPIDUS_SCREEN_POSITION_NW_V;
       break;
 
     case SNAP_POSITION_NE:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_NE_H :
-          XFCE_SCREEN_POSITION_NE_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_NE_H :
+          EXPIDUS_SCREEN_POSITION_NE_V;
       break;
 
     case SNAP_POSITION_SW:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_SW_H :
-          XFCE_SCREEN_POSITION_SW_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_SW_H :
+          EXPIDUS_SCREEN_POSITION_SW_V;
       break;
 
     case SNAP_POSITION_SE:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_SE_H :
-          XFCE_SCREEN_POSITION_SE_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_SE_H :
+          EXPIDUS_SCREEN_POSITION_SE_V;
       break;
 
     case SNAP_POSITION_W:
     case SNAP_POSITION_WC:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_FLOATING_H :
-          XFCE_SCREEN_POSITION_W;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_FLOATING_H :
+          EXPIDUS_SCREEN_POSITION_W;
       break;
 
     case SNAP_POSITION_E:
     case SNAP_POSITION_EC:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_FLOATING_H :
-          XFCE_SCREEN_POSITION_E;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_FLOATING_H :
+          EXPIDUS_SCREEN_POSITION_E;
       break;
 
     case SNAP_POSITION_S:
     case SNAP_POSITION_SC:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_S :
-          XFCE_SCREEN_POSITION_FLOATING_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_S :
+          EXPIDUS_SCREEN_POSITION_FLOATING_V;
       break;
 
     case SNAP_POSITION_N:
     case SNAP_POSITION_NC:
-      position = IS_HORIZONTAL (window) ? XFCE_SCREEN_POSITION_N :
-          XFCE_SCREEN_POSITION_FLOATING_V;
+      position = IS_HORIZONTAL (window) ? EXPIDUS_SCREEN_POSITION_N :
+          EXPIDUS_SCREEN_POSITION_FLOATING_V;
       break;
 
     default:
@@ -3252,7 +3252,7 @@ panel_window_plugin_set_screen_position (GtkWidget *widget,
       break;
     }
 
-  xfce_panel_plugin_provider_set_screen_position (XFCE_PANEL_PLUGIN_PROVIDER (widget),
+  expidus_panel_plugin_provider_set_screen_position (EXPIDUS_PANEL_PLUGIN_PROVIDER (widget),
                                                   position);
 }
 
@@ -3274,7 +3274,7 @@ panel_window_new (GdkScreen *screen,
                        "type-hint", GDK_WINDOW_TYPE_HINT_DOCK,
                        "gravity", GDK_GRAVITY_STATIC,
                        "role", "Panel",
-                       "name", "XfcePanelWindow",
+                       "name", "ExpidusPanelWindow",
                        NULL);
 }
 
@@ -3307,9 +3307,9 @@ panel_window_set_povider_info (PanelWindow *window,
   PanelBaseWindow *base_window = PANEL_BASE_WINDOW (window);
 
   panel_return_if_fail (PANEL_IS_WINDOW (window));
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (provider));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (provider));
 
-  xfce_panel_plugin_provider_set_locked (XFCE_PANEL_PLUGIN_PROVIDER (provider),
+  expidus_panel_plugin_provider_set_locked (EXPIDUS_PANEL_PLUGIN_PROVIDER (provider),
                                          panel_window_get_locked (window));
 
   if (PANEL_IS_PLUGIN_EXTERNAL (provider))
@@ -3416,7 +3416,7 @@ panel_window_focus (PanelWindow *window)
 
   /* we need a slightly custom version of the call through Gtk+ to
    * properly focus the panel when a plugin calls
-   * xfce_panel_plugin_focus_widget() */
+   * expidus_panel_plugin_focus_widget() */
   event.type = ClientMessage;
   event.window = GDK_WINDOW_XID (gtk_widget_get_window (GTK_WIDGET (window)));
   event.message_type = gdk_x11_get_xatom_by_name ("_NET_ACTIVE_WINDOW");
@@ -3442,45 +3442,45 @@ panel_window_focus (PanelWindow *window)
 
 void
 panel_window_migrate_autohide_property (PanelWindow   *window,
-                                        XfconfChannel *xfconf,
+                                        EsconfChannel *esconf,
                                         const gchar   *property_base)
 {
   gboolean autohide;
   gchar   *old_property;
 
   panel_return_if_fail (PANEL_IS_WINDOW (window));
-  panel_return_if_fail (XFCONF_IS_CHANNEL (xfconf));
+  panel_return_if_fail (ESCONF_IS_CHANNEL (esconf));
   panel_return_if_fail (property_base != NULL && *property_base != '\0');
 
   old_property = g_strdup_printf ("%s/autohide", property_base);
 
   /* check if we have an old "autohide" property for this panel */
-  if (xfconf_channel_has_property (xfconf, old_property))
+  if (esconf_channel_has_property (esconf, old_property))
     {
       gchar *new_property = g_strdup_printf ("%s/autohide-behavior", property_base);
 
       /* migrate from old "autohide" to new "autohide-behavior" if the latter
        * isn't set already */
-      if (!xfconf_channel_has_property (xfconf, new_property))
+      if (!esconf_channel_has_property (esconf, new_property))
         {
           /* find out whether or not autohide was enabled in the old config */
-          autohide = xfconf_channel_get_bool (xfconf, old_property, FALSE);
+          autohide = esconf_channel_get_bool (esconf, old_property, FALSE);
 
           /* set autohide behavior to always or never, depending on whether it
            * was enabled in the old configuration */
-          if (xfconf_channel_set_uint (xfconf,
+          if (esconf_channel_set_uint (esconf,
                                        new_property,
                                        autohide ? AUTOHIDE_BEHAVIOR_ALWAYS
                                                 : AUTOHIDE_BEHAVIOR_NEVER))
             {
               /* remove the old autohide property */
-              xfconf_channel_reset_property (xfconf, old_property, FALSE);
+              esconf_channel_reset_property (esconf, old_property, FALSE);
             }
         }
       else
         {
           /* the new property is already set, simply remove the old property */
-          xfconf_channel_reset_property (xfconf, old_property, FALSE);
+          esconf_channel_reset_property (esconf, old_property, FALSE);
         }
 
       g_free (new_property);

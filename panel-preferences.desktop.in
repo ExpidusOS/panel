@@ -1,15 +1,15 @@
 [Desktop Entry]
 Version=1.0
-Exec=xfce4-panel --preferences
-Icon=org.xfce.panel
+Exec=expidus1-panel --preferences
+Icon=com.expidus.panel
 Type=Application
-Categories=XFCE;GTK;Settings;DesktopSettings;X-XFCE-SettingsDialog;X-XFCE-PersonalSettings;
+Categories=EXPIDUS;GTK;Settings;DesktopSettings;X-EXPIDUS-SettingsDialog;X-EXPIDUS-PersonalSettings;
 _Keywords=panels;settings;preferences;taskbar;autohide;application menu;start;buttons;launcher;notification area;status;icons;plugins;
-OnlyShowIn=XFCE;
+OnlyShowIn=EXPIDUS;
 Terminal=false
 StartupNotify=true
-X-XfcePluggable=true
-X-XfceHelpComponent=xfce4-panel
-X-XfceHelpPage=preferences
+X-ExpidusPluggable=true
+X-ExpidusHelpComponent=expidus1-panel
+X-ExpidusHelpPage=preferences
 _Name=Panel
 _Comment=Customize the panel

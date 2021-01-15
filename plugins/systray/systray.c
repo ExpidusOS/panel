@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@xfce.org>
- * Copyright (c) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (c) 2005-2007 Jasper Huijsmans <jasper@expidus.org>
+ * Copyright (c) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -25,10 +25,10 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 
-#include <libxfce4util/libxfce4util.h>
-#include <libxfce4ui/libxfce4ui.h>
+#include <libexpidus1util/libexpidus1util.h>
+#include <libexpidus1ui/libexpidus1ui.h>
 #include <common/panel-private.h>
-#include <common/panel-xfconf.h>
+#include <common/panel-esconf.h>
 #include <common/panel-utils.h>
 #include <common/panel-debug.h>
 
@@ -66,16 +66,16 @@ void  systray_plugin_configuration_changed  (SnConfig           *config,
 
   /* icon-size */
   sn_config_get_dimensions (config, &icon_size, &n_rows, &row_size, &padding);
-  systray_box_set_dimensions (XFCE_SYSTRAY_BOX (plugin->systray_box),
+  systray_box_set_dimensions (EXPIDUS_SYSTRAY_BOX (plugin->systray_box),
                               icon_size, n_rows, row_size, padding);
 
   /* square-icons */
   square_icons = sn_config_get_square_icons (config);
-  systray_box_set_squared (XFCE_SYSTRAY_BOX (plugin->systray_box), square_icons);
+  systray_box_set_squared (EXPIDUS_SYSTRAY_BOX (plugin->systray_box), square_icons);
 
   /* single-row */
   single_row = sn_config_get_single_row (config);
-  systray_box_set_single_row (XFCE_SYSTRAY_BOX (plugin->systray_box), single_row);
+  systray_box_set_single_row (EXPIDUS_SYSTRAY_BOX (plugin->systray_box), single_row);
 
   /* known-legacy-items */
   {
@@ -111,8 +111,8 @@ void  systray_plugin_configuration_changed  (SnConfig           *config,
   /* update icons in the box */
   systray_plugin_names_update (plugin);
 
-  systray_plugin_size_changed (XFCE_PANEL_PLUGIN (plugin),
-                               xfce_panel_plugin_get_size (XFCE_PANEL_PLUGIN (plugin)));
+  systray_plugin_size_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+                               expidus_panel_plugin_get_size (EXPIDUS_PANEL_PLUGIN (plugin)));
 }
 
 
@@ -120,7 +120,7 @@ void  systray_plugin_configuration_changed  (SnConfig           *config,
 static gboolean
 systray_plugin_screen_changed_idle (gpointer user_data)
 {
-  SnPlugin      *plugin = XFCE_SN_PLUGIN (user_data);
+  SnPlugin      *plugin = EXPIDUS_SN_PLUGIN (user_data);
   GdkScreen     *screen;
   GError        *error = NULL;
 
@@ -138,12 +138,12 @@ systray_plugin_screen_changed_idle (gpointer user_data)
   if (systray_manager_register (plugin->manager, screen, &error))
     {
       /* send the plugin orientation */
-      systray_plugin_orientation_changed (XFCE_PANEL_PLUGIN (plugin),
-         xfce_panel_plugin_get_orientation (XFCE_PANEL_PLUGIN (plugin)));
+      systray_plugin_orientation_changed (EXPIDUS_PANEL_PLUGIN (plugin),
+         expidus_panel_plugin_get_orientation (EXPIDUS_PANEL_PLUGIN (plugin)));
     }
   else
     {
-      xfce_dialog_show_error (NULL, error, _("Unable to start the notification area"));
+      expidus_dialog_show_error (NULL, error, _("Unable to start the notification area"));
       g_error_free (error);
     }
 
@@ -155,7 +155,7 @@ systray_plugin_screen_changed_idle (gpointer user_data)
 static void
 systray_plugin_screen_changed_idle_destroyed (gpointer user_data)
 {
-  XFCE_SN_PLUGIN (user_data)->idle_startup = 0;
+  EXPIDUS_SN_PLUGIN (user_data)->idle_startup = 0;
 }
 
 
@@ -164,7 +164,7 @@ void
 systray_plugin_screen_changed (GtkWidget *widget,
                                GdkScreen *previous_screen)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (widget);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (widget);
 
   if (G_UNLIKELY (plugin->manager != NULL))
     {
@@ -191,13 +191,13 @@ systray_plugin_composited_changed (GtkWidget *widget)
 
 
 void
-systray_plugin_orientation_changed (XfcePanelPlugin *panel_plugin,
+systray_plugin_orientation_changed (ExpidusPanelPlugin *panel_plugin,
                                     GtkOrientation   orientation)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
 
   gtk_orientable_set_orientation (GTK_ORIENTABLE (plugin->box), orientation);
-  systray_box_set_orientation (XFCE_SYSTRAY_BOX (plugin->systray_box), orientation);
+  systray_box_set_orientation (EXPIDUS_SYSTRAY_BOX (plugin->systray_box), orientation);
 
   if (G_LIKELY (plugin->manager != NULL))
     systray_manager_set_orientation (plugin->manager, orientation);
@@ -234,10 +234,10 @@ systray_plugin_orientation_changed (XfcePanelPlugin *panel_plugin,
 
 
 gboolean
-systray_plugin_size_changed (XfcePanelPlugin *panel_plugin,
+systray_plugin_size_changed (ExpidusPanelPlugin *panel_plugin,
                              gint             size)
 {
-  SnPlugin         *plugin = XFCE_SN_PLUGIN (panel_plugin);
+  SnPlugin         *plugin = EXPIDUS_SN_PLUGIN (panel_plugin);
   GtkStyleContext  *context;
   GtkBorder         padding;
   gint              border = 0;
@@ -250,7 +250,7 @@ systray_plugin_size_changed (XfcePanelPlugin *panel_plugin,
   gtk_style_context_get_padding (context, gtk_widget_get_state_flags (plugin->box), &padding);
 
   border += MAX (padding.left + padding.right, padding.top + padding.bottom);
-  systray_box_set_size_alloc (XFCE_SYSTRAY_BOX (plugin->systray_box), size - 2 * border);
+  systray_box_set_size_alloc (EXPIDUS_SYSTRAY_BOX (plugin->systray_box), size - 2 * border);
 
   return TRUE;
 }
@@ -264,7 +264,7 @@ systray_plugin_box_draw_icon (GtkWidget *child,
   cairo_t       *cr = user_data;
   GtkAllocation  alloc;
 
-  if (systray_socket_is_composited (XFCE_SYSTRAY_SOCKET (child)))
+  if (systray_socket_is_composited (EXPIDUS_SYSTRAY_SOCKET (child)))
     {
       gtk_widget_get_allocation (child, &alloc);
 
@@ -286,8 +286,8 @@ systray_plugin_box_draw (GtkWidget *box,
                          cairo_t   *cr,
                          gpointer   user_data)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (user_data);
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (user_data);
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
   panel_return_if_fail (cr != NULL);
 
   /* separately draw all the composed tray icons after gtk
@@ -302,12 +302,12 @@ static void
 systray_plugin_names_update_icon (GtkWidget *icon,
                                   gpointer   data)
 {
-  SnPlugin *plugin = XFCE_SN_PLUGIN (data);
-  SystraySocket *socket = XFCE_SYSTRAY_SOCKET (icon);
+  SnPlugin *plugin = EXPIDUS_SN_PLUGIN (data);
+  SystraySocket *socket = EXPIDUS_SYSTRAY_SOCKET (icon);
   const gchar   *name;
 
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
-  panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (icon));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (icon));
 
   name = systray_socket_get_name (socket);
   systray_socket_set_hidden (socket,
@@ -319,11 +319,11 @@ systray_plugin_names_update_icon (GtkWidget *icon,
 static void
 systray_plugin_names_update (SnPlugin *plugin)
 {
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
 
   gtk_container_foreach (GTK_CONTAINER (plugin->systray_box),
     systray_plugin_names_update_icon, plugin);
-  systray_box_update (XFCE_SYSTRAY_BOX (plugin->systray_box),
+  systray_box_update (EXPIDUS_SYSTRAY_BOX (plugin->systray_box),
     plugin->names_ordered);
 }
 
@@ -364,9 +364,9 @@ systray_plugin_icon_added (SystrayManager *manager,
                            GtkWidget      *icon,
                            SnPlugin       *plugin)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_MANAGER (manager));
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
-  panel_return_if_fail (XFCE_IS_SYSTRAY_SOCKET (icon));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_MANAGER (manager));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_SOCKET (icon));
   panel_return_if_fail (plugin->manager == manager);
   panel_return_if_fail (GTK_IS_WIDGET (icon));
 
@@ -375,7 +375,7 @@ systray_plugin_icon_added (SystrayManager *manager,
   gtk_widget_show (icon);
 
   panel_debug_filtered (PANEL_DEBUG_SYSTRAY, "added %s[%p] icon",
-      systray_socket_get_name (XFCE_SYSTRAY_SOCKET (icon)), icon);
+      systray_socket_get_name (EXPIDUS_SYSTRAY_SOCKET (icon)), icon);
 }
 
 
@@ -385,8 +385,8 @@ systray_plugin_icon_removed (SystrayManager *manager,
                              GtkWidget      *icon,
                              SnPlugin       *plugin)
 {
-  panel_return_if_fail (XFCE_IS_SYSTRAY_MANAGER (manager));
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_MANAGER (manager));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
   panel_return_if_fail (plugin->manager == manager);
   panel_return_if_fail (GTK_IS_WIDGET (icon));
 
@@ -394,7 +394,7 @@ systray_plugin_icon_removed (SystrayManager *manager,
   gtk_container_remove (GTK_CONTAINER (plugin->systray_box), icon);
 
   panel_debug_filtered (PANEL_DEBUG_SYSTRAY, "removed %s[%p] icon",
-      systray_socket_get_name (XFCE_SYSTRAY_SOCKET (icon)), icon);
+      systray_socket_get_name (EXPIDUS_SYSTRAY_SOCKET (icon)), icon);
 }
 
 
@@ -405,12 +405,12 @@ systray_plugin_lost_selection (SystrayManager *manager,
 {
   GError error;
 
-  panel_return_if_fail (XFCE_IS_SYSTRAY_MANAGER (manager));
-  panel_return_if_fail (XFCE_IS_SN_PLUGIN (plugin));
+  panel_return_if_fail (EXPIDUS_IS_SYSTRAY_MANAGER (manager));
+  panel_return_if_fail (EXPIDUS_IS_SN_PLUGIN (plugin));
   panel_return_if_fail (plugin->manager == manager);
 
   /* create fake error and show it */
   error.message = _("Most likely another widget took over the function "
                     "of a notification area. This area will be unused.");
-  xfce_dialog_show_error (NULL, &error, _("The notification area lost selection"));
+  expidus_dialog_show_error (NULL, &error, _("The notification area lost selection"));
 }

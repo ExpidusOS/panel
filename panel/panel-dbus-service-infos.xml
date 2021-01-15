@@ -1,11 +1,11 @@
-<node name="/org/xfce/Panel">
+<node name="/com/expidus/Panel">
   <!--
-    org.xfce.PanelPlugin
+    com.expidus.PanelPlugin
 
     This interface allows external applications to commumicate
     with the panel.
   -->
-  <interface name="org.xfce.Panel">
+  <interface name="com.expidus.Panel">
     <annotation name="org.gtk.GDBus.C.Name" value="ExportedService" />
 
     <!--
@@ -15,7 +15,7 @@
                   at zero.
       socket-id : Instead of openening the dialog in a new windows, use
                   a socket to embed the dialog content in a remote
-                  window, used for the Xfce settings manager dialog.
+                  window, used for the Expidus settings manager dialog.
     -->
     <method name="DisplayPreferencesDialog">
       <arg name="active" direction="in" type="u" />
@@ -61,7 +61,7 @@
       succeed     : Boolean if a suitable plugin was found.
 
       Send a plugin to a group of plugins using the remote-event
-      XfcePanelPlugin signal.
+      ExpidusPanelPlugin signal.
     -->
     <method name="PluginEvent">
       <arg name="plugin_name" direction="in" type="s" />

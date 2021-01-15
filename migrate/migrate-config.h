@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2011 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 G_BEGIN_DECLS
 
-gboolean migrate_config (XfconfChannel  *channel,
+gboolean migrate_config (EsconfChannel  *channel,
                          gint            configver,
                          GError        **error);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2009-2010 Nick Schermer <nick@expidus.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@
 
 #include <gtk/gtk.h>
 
-#include <libxfce4panel/libxfce4panel.h>
-#include <libxfce4panel/xfce-panel-plugin-provider.h>
+#include <libexpidus1panel/libexpidus1panel.h>
+#include <libexpidus1panel/expidus-panel-plugin-provider.h>
 #include <common/panel-private.h>
 #include <common/panel-debug.h>
 #include <panel/panel-base-window.h>
@@ -36,10 +36,10 @@
 
 
 
-#define PANEL_BASE_CSS        ".xfce4-panel.background { border-style: solid; }"\
-                              ".xfce4-panel.background button { background: transparent; padding: 0; }"\
-                              ".xfce4-panel.background.marching-ants-dashed { border: 1px dashed #ff0000; }"\
-                              ".xfce4-panel.background.marching-ants-dotted { border: 1px dotted #ff0000; }"
+#define PANEL_BASE_CSS        ".expidus1-panel.background { border-style: solid; }"\
+                              ".expidus1-panel.background button { background: transparent; padding: 0; }"\
+                              ".expidus1-panel.background.marching-ants-dashed { border: 1px dashed #ff0000; }"\
+                              ".expidus1-panel.background.marching-ants-dotted { border: 1px dotted #ff0000; }"
 #define MARCHING_ANTS_DASHED  "marching-ants-dashed"
 #define MARCHING_ANTS_DOTTED  "marching-ants-dotted"
 
@@ -224,7 +224,7 @@ panel_base_window_init (PanelBaseWindow *window)
   /* set the panel class */
   context = gtk_widget_get_style_context (GTK_WIDGET (window));
   gtk_style_context_add_class (context, "panel");
-  gtk_style_context_add_class (context, "xfce4-panel");
+  gtk_style_context_add_class (context, "expidus1-panel");
 }
 
 
@@ -607,7 +607,7 @@ static void
 panel_base_window_set_background_color_css (PanelBaseWindow *window) {
   gchar                  *css_string;
   panel_return_if_fail (window->background_rgba != NULL);
-  css_string = g_strdup_printf (".xfce4-panel.background { background-color: %s; border-color: transparent; } %s",
+  css_string = g_strdup_printf (".expidus1-panel.background { background-color: %s; border-color: transparent; } %s",
                                 gdk_rgba_to_string (window->background_rgba),
                                 PANEL_BASE_CSS);
   panel_base_window_set_background_css (window, css_string);
@@ -619,7 +619,7 @@ static void
 panel_base_window_set_background_image_css (PanelBaseWindow *window) {
   gchar                  *css_string;
   panel_return_if_fail (window->background_image != NULL);
-  css_string = g_strdup_printf (".xfce4-panel.background { background-color: transparent;"
+  css_string = g_strdup_printf (".expidus1-panel.background { background-color: transparent;"
                                                           "background-image: url('%s');"
                                                           "border-color: transparent; } %s",
                                 window->background_image, PANEL_BASE_CSS);
@@ -674,7 +674,7 @@ panel_base_window_reset_background_css (PanelBaseWindow *window) {
   if (border_side)
     {
       color_text = gdk_rgba_to_string (background_rgba);
-      base_css = g_strdup_printf ("%s .xfce4-panel.background { border-style: %s; border-width: 1px; border-color: shade(%s, 0.7); }",
+      base_css = g_strdup_printf ("%s .expidus1-panel.background { border-style: %s; border-width: 1px; border-color: shade(%s, 0.7); }",
                                   PANEL_BASE_CSS, border_side, color_text);
       gtk_css_provider_load_from_data (window->priv->css_provider, base_css, -1, NULL);
       g_free (base_css);
@@ -760,7 +760,7 @@ panel_base_window_set_plugin_opacity (GtkWidget *widget,
                                       gpointer   user_data,
                                       gdouble    opacity)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_BASE_WINDOW (user_data));
 
   if (PANEL_IS_PLUGIN_EXTERNAL (widget))
@@ -776,7 +776,7 @@ panel_base_window_set_plugin_background_color (GtkWidget *widget,
   PanelBaseWindow *window = PANEL_BASE_WINDOW (user_data);
   GdkRGBA         *color;
 
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_BASE_WINDOW (user_data));
 
   /* send null if the style is not a bg color */
@@ -791,7 +791,7 @@ static void
 panel_base_window_set_plugin_background_image (GtkWidget *widget,
                                                gpointer   user_data)
 {
-  panel_return_if_fail (XFCE_IS_PANEL_PLUGIN_PROVIDER (widget));
+  panel_return_if_fail (EXPIDUS_IS_PANEL_PLUGIN_PROVIDER (widget));
   panel_return_if_fail (PANEL_IS_BASE_WINDOW (user_data));
 
   if (PANEL_IS_PLUGIN_EXTERNAL (widget))

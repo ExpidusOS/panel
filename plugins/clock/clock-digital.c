@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2010 Nick Schermer <nick@xfce.org>
+ * Copyright (C) 2007-2010 Nick Schermer <nick@expidus.org>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -28,16 +28,16 @@
 
 
 
-static void     xfce_clock_digital_set_property (GObject               *object,
+static void     expidus_clock_digital_set_property (GObject               *object,
                                                  guint                  prop_id,
                                                  const GValue          *value,
                                                  GParamSpec            *pspec);
-static void     xfce_clock_digital_get_property (GObject               *object,
+static void     expidus_clock_digital_get_property (GObject               *object,
                                                  guint                  prop_id,
                                                  GValue                *value,
                                                  GParamSpec            *pspec);
-static void     xfce_clock_digital_finalize     (GObject               *object);
-static gboolean xfce_clock_digital_update       (XfceClockDigital      *digital,
+static void     expidus_clock_digital_finalize     (GObject               *object);
+static gboolean expidus_clock_digital_update       (ExpidusClockDigital      *digital,
                                                  ClockTime             *time);
 
 
@@ -51,12 +51,12 @@ enum
   PROP_ORIENTATION
 };
 
-struct _XfceClockDigitalClass
+struct _ExpidusClockDigitalClass
 {
  GtkLabelClass __parent__;
 };
 
-struct _XfceClockDigital
+struct _ExpidusClockDigital
 {
   GtkLabel __parent__;
 
@@ -68,19 +68,19 @@ struct _XfceClockDigital
 
 
 
-XFCE_PANEL_DEFINE_TYPE (XfceClockDigital, xfce_clock_digital, GTK_TYPE_LABEL)
+EXPIDUS_PANEL_DEFINE_TYPE (ExpidusClockDigital, expidus_clock_digital, GTK_TYPE_LABEL)
 
 
 
 static void
-xfce_clock_digital_class_init (XfceClockDigitalClass *klass)
+expidus_clock_digital_class_init (ExpidusClockDigitalClass *klass)
 {
   GObjectClass *gobject_class;
 
   gobject_class = G_OBJECT_CLASS (klass);
-  gobject_class->finalize = xfce_clock_digital_finalize;
-  gobject_class->set_property = xfce_clock_digital_set_property;
-  gobject_class->get_property = xfce_clock_digital_get_property;
+  gobject_class->finalize = expidus_clock_digital_finalize;
+  gobject_class->set_property = expidus_clock_digital_set_property;
+  gobject_class->get_property = expidus_clock_digital_get_property;
 
   g_object_class_install_property (gobject_class,
                                    PROP_SIZE_RATIO,
@@ -108,7 +108,7 @@ xfce_clock_digital_class_init (XfceClockDigitalClass *klass)
 
 
 static void
-xfce_clock_digital_init (XfceClockDigital *digital)
+expidus_clock_digital_init (ExpidusClockDigital *digital)
 {
   digital->format = g_strdup (DEFAULT_DIGITAL_FORMAT);
 
@@ -118,12 +118,12 @@ xfce_clock_digital_init (XfceClockDigital *digital)
 
 
 static void
-xfce_clock_digital_set_property (GObject      *object,
+expidus_clock_digital_set_property (GObject      *object,
                                  guint         prop_id,
                                  const GValue *value,
                                  GParamSpec   *pspec)
 {
-  XfceClockDigital *digital = XFCE_CLOCK_DIGITAL (object);
+  ExpidusClockDigital *digital = EXPIDUS_CLOCK_DIGITAL (object);
 
   switch (prop_id)
     {
@@ -146,18 +146,18 @@ xfce_clock_digital_set_property (GObject      *object,
   /* reschedule the timeout and redraw */
   clock_time_timeout_set_interval (digital->timeout,
       clock_time_interval_from_format (digital->format));
-  xfce_clock_digital_update (digital, digital->time);
+  expidus_clock_digital_update (digital, digital->time);
 }
 
 
 
 static void
-xfce_clock_digital_get_property (GObject    *object,
+expidus_clock_digital_get_property (GObject    *object,
                                  guint       prop_id,
                                  GValue     *value,
                                  GParamSpec *pspec)
 {
-  XfceClockDigital *digital = XFCE_CLOCK_DIGITAL (object);
+  ExpidusClockDigital *digital = EXPIDUS_CLOCK_DIGITAL (object);
 
   switch (prop_id)
     {
@@ -178,28 +178,28 @@ xfce_clock_digital_get_property (GObject    *object,
 
 
 static void
-xfce_clock_digital_finalize (GObject *object)
+expidus_clock_digital_finalize (GObject *object)
 {
-  XfceClockDigital *digital = XFCE_CLOCK_DIGITAL (object);
+  ExpidusClockDigital *digital = EXPIDUS_CLOCK_DIGITAL (object);
 
   /* stop the timeout */
   clock_time_timeout_free (digital->timeout);
 
   g_free (digital->format);
 
-  (*G_OBJECT_CLASS (xfce_clock_digital_parent_class)->finalize) (object);
+  (*G_OBJECT_CLASS (expidus_clock_digital_parent_class)->finalize) (object);
 }
 
 
 
 static gboolean
-xfce_clock_digital_update (XfceClockDigital *digital,
+expidus_clock_digital_update (ExpidusClockDigital *digital,
                            ClockTime        *time)
 {
   gchar            *string;
 
-  panel_return_val_if_fail (XFCE_CLOCK_IS_DIGITAL (digital), FALSE);
-  panel_return_val_if_fail (XFCE_IS_CLOCK_TIME (time), FALSE);
+  panel_return_val_if_fail (EXPIDUS_CLOCK_IS_DIGITAL (digital), FALSE);
+  panel_return_val_if_fail (EXPIDUS_IS_CLOCK_TIME (time), FALSE);
 
   /* set time string */
   string = clock_time_strdup_strftime (digital->time, digital->format);
@@ -212,14 +212,14 @@ xfce_clock_digital_update (XfceClockDigital *digital,
 
 
 GtkWidget *
-xfce_clock_digital_new (ClockTime *time)
+expidus_clock_digital_new (ClockTime *time)
 {
-  XfceClockDigital *digital = g_object_new (XFCE_CLOCK_TYPE_DIGITAL, NULL);
+  ExpidusClockDigital *digital = g_object_new (EXPIDUS_CLOCK_TYPE_DIGITAL, NULL);
 
   digital->time = time;
   digital->timeout = clock_time_timeout_new (clock_time_interval_from_format (digital->format),
                                              digital->time,
-                                             G_CALLBACK (xfce_clock_digital_update), digital);
+                                             G_CALLBACK (expidus_clock_digital_update), digital);
 
   return GTK_WIDGET (digital);
 }

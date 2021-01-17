@@ -4,7 +4,6 @@
   <property name="configver" type="int" value="@EXPIDUS1_PANEL_CONFIG_VERSION@"/>
   <property name="panels" type="array">
     <value type="int" value="1"/>
-    <value type="int" value="2"/>
     <property name="dark-mode" type="bool" value="true"/>
     <property name="panel-1" type="empty">
       <property name="position" type="string" value="p=6;x=0;y=0"/>
@@ -25,7 +24,6 @@
         <value type="int" value="10"/>
         <value type="int" value="11"/>
         <value type="int" value="12"/>
-        <value type="int" value="13"/>
       </property>
     </property>
   </property>
@@ -56,6 +54,5 @@
       <property name="style" type="uint" value="0"/>
     </property>
     <property name="plugin-12" type="string" value="actions"/>
-    <property name="plugin-13" type="string" value="showdesktop"/>
   </property>
 </channel>

@@ -1,0 +1,8 @@
+[Expidus Panel]
+Type=X-EXPIDUS-PanelPlugin
+_Name=ExpidusOS Menu
+_Comment=The ExpidusOS Menu
+Icon=com.expidus.panel.applicationsmenu
+X-EXPIDUS-Module=expidusmenu
+X-EXPIDUS-Internal=TRUE
+X-EXPIDUS-API=@LIBEXPIDUS1PANEL_VERSION_API@

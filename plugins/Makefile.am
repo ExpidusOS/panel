@@ -4,6 +4,7 @@ SUBDIRS = \
 	applicationsmenu \
 	clock \
 	directorymenu \
+	expidusmenu \
 	launcher \
 	pager \
 	separator \

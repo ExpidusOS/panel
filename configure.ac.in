@@ -272,6 +272,8 @@ plugins/clock/Makefile
 plugins/clock/clock.desktop.in
 plugins/directorymenu/Makefile
 plugins/directorymenu/directorymenu.desktop.in
+plugins/expidusmenu/Makefile
+plugins/expidusmenu/expidusmenu.desktop.in
 plugins/launcher/Makefile
 plugins/launcher/launcher.desktop.in
 plugins/pager/Makefile
